@@ -110,9 +110,9 @@ make stack/up STACK_ARGS="-d --build"
 
 Then open:
 
-- `http://localhost:20001` for the app
-- `http://localhost:20001/up` for health
-- `http://localhost:20001/letter_opener` in development for email previews
+- `http://localhost:10101` for the app
+- `http://localhost:10101/up` for health
+- `http://localhost:10101/letter_opener` in development for email previews
 
 Stop it with:
 

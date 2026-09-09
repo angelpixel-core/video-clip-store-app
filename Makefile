@@ -8,6 +8,10 @@ TEST_ARGS ?=
 STACK_ARGS ?=
 ENV ?= $(STACK_ENV)
 
+# Pass additional Docker Compose flags through STACK_ARGS, for example:
+#   make stack/up STACK_ARGS="--build"
+#   make stack/up STACK_ARGS="--build web"
+#   make stack/down STACK_ARGS="--volumes"
 .PHONY: stack/%
 stack/%:
 	@STACK_ENV="$(STACK_ENV)" sh $(STACK_SCRIPT) "$*" $(STACK_ARGS)

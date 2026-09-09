@@ -75,6 +75,6 @@ title: Mail Delivery Environment Setup
 ## Notes
 
 - `letter_opener_web` is the chosen development preview tool.
-- In development, open `http://localhost:20001/letter_opener` to browse generated emails, or use the configured `APP_HOST_PORT` if you override it.
+- In development, open `http://localhost:10101/letter_opener` to browse generated emails, or use the configured `APP_HOST_PORT` if you override it.
 - Keep this work item separate from the mailer content so provider setup stays isolated.
 - QA/production should keep using the repo's existing environment-variable secret wiring; do not switch this work item to Rails credentials.

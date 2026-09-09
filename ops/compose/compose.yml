@@ -38,9 +38,13 @@ services:
     entrypoint: ["/bin/sh", "/app/ops/containers/app/entrypoint.sh"]
     command: ["bundle", "exec", "rails", "server", "-b", "0.0.0.0"]
     ports:
-      - "${APP_HOST_PORT:-20001}:${APP_PORT:-3000}"
+      - "${APP_HOST_PORT:-10101}:${APP_PORT:-3000}"
     healthcheck:
-      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:${APP_PORT:-3000}/up >/dev/null"]
+      test:
+        [
+          "CMD-SHELL",
+          "curl -fsS http://127.0.0.1:${APP_PORT:-3000}/up >/dev/null",
+        ]
       interval: 5s
       timeout: 5s
       retries: 20
@@ -114,7 +118,7 @@ services:
         "if [ ! -d node_modules/bootstrap ] || [ ! -d node_modules/jquery ] || [ ! -d node_modules/@popperjs/core ]; then npm ci; fi; exec bundle exec vite dev",
       ]
     ports:
-      - "${ASSETS_HOST_PORT:-20003}:${ASSETS_PORT:-5173}"
+      - "${ASSETS_HOST_PORT:-10103}:${ASSETS_PORT:-5173}"
     networks:
       - video_project_submission_app_net
 
@@ -130,13 +134,16 @@ services:
       MYSQL_PASSWORD: "${MYSQL_PASSWORD:-app_password}"
     command: ["mysqld", "--port=${DB_PORT:-3306}"]
     ports:
-      - "${DB_HOST_PORT:-20002}:${DB_PORT:-3306}"
+      - "${DB_HOST_PORT:-10102}:${DB_PORT:-3306}"
     volumes:
       - db_data:/var/lib/mysql
       - ../containers/db/entrypoint/initdb.d:/docker-entrypoint-initdb.d:ro
     healthcheck:
       test:
-        ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -P ${DB_PORT:-3306} -u root -p$$MYSQL_ROOT_PASSWORD --silent"]
+        [
+          "CMD-SHELL",
+          "mysqladmin ping -h 127.0.0.1 -P ${DB_PORT:-3306} -u root -p$$MYSQL_ROOT_PASSWORD --silent",
+        ]
       interval: 5s
       timeout: 5s
       retries: 20
