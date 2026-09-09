@@ -147,12 +147,12 @@ Implementation phases:
 
 ### Checkout Phase 1: Add the workflow
 
-- [ ] Create `Marketplace::Application::Workflows::Checkout`.
-- [ ] Require explicit payment, availability, capacity, invoicing, and notification ports.
-- [ ] Preserve the current `Core::Result` success and failure contract.
-- [ ] Preserve the order of reserve, payment, commit, and follow-up operations.
-- [ ] Preserve capacity compensation after payment or checkpoint failure.
-- [ ] Add parity specs without deleting `ProcessSubmission` yet.
+- [x] Create `Marketplace::Application::Workflows::Checkout`.
+- [x] Require explicit payment, availability, capacity, invoicing, and notification ports.
+- [x] Preserve the current `Core::Result` success and failure contract.
+- [x] Preserve the order of reserve, payment, commit, and follow-up operations.
+- [x] Preserve capacity compensation after payment or checkpoint failure.
+- [x] Add parity specs without deleting `ProcessSubmission` yet.
 
 Commit sequence:
 

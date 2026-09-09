@@ -1,12 +1,14 @@
 ---
-title: Ordering Package Cycle Breakdown
-work_item: ordering-boundary-extraction-prep
-status: planned
+id: 01-package-cycle-breakdown
+aliases: []
 tags:
   - ordering
   - boundaries
   - package-cycles
   - architecture
+status: planned
+title: Ordering Package Cycle Breakdown
+work_item: ordering-boundary-extraction-prep
 ---
 
 # Ordering Package Cycle Breakdown
@@ -102,7 +104,8 @@ Catalog
 
 ## Implementation Sequence
 
-1. Create `Marketplace::Application::Workflows::Checkout` and move submission orchestration there.
+- [ ] 1. Create `Marketplace::Application::Workflows::Checkout` and move submission orchestration there.
+
 2. Remove downstream dependencies from `ordering/package.yml`.
 3. Define and publish the `PaymentCaptured` event contract.
 4. Migrate Billing to consume the event and remove direct Payment aggregate access.
