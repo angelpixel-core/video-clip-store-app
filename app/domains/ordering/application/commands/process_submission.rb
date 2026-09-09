@@ -10,8 +10,8 @@ module Ordering
           capacity_reserve_command: nil,
           capacity_commit_command: nil,
           capacity_release_command: nil,
-          payment_port: Ordering::Adapters::Outbound::Payments::PaymentCommand,
-          availability_port: Ordering::Adapters::Outbound::Catalog::AvailabilityPolicy,
+           payment_port: Ordering::Adapters::Outbound::Payments::PaymentCommand.new,
+           availability_port: Ordering::Adapters::Outbound::Catalog::AvailabilityPolicy.new,
           capacity_port: Ordering::Adapters::Outbound::Capacity::Commands.new,
           invoicing_port: Ordering::Application::Ports::InvoicingPort,
           notification_port: Ordering::Application::Ports::NotificationPort

@@ -3,7 +3,7 @@ module Ordering
     module Outbound
       module Catalog
         class AvailabilityPolicy < Ordering::Application::Ports::AvailabilityPort
-          def self.evaluate(...)
+          def evaluate(...)
             ::Catalog::Domain::Policies::AvailabilityPolicy.evaluate(...)
           end
         end

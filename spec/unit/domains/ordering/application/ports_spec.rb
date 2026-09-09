@@ -34,8 +34,11 @@ RSpec.describe "Ordering outbound ports" do
     allow(Payments::Application::Commands::CreatePayment).to receive(:call).and_return(payment_result)
     allow(Catalog::Domain::Policies::AvailabilityPolicy).to receive(:evaluate).and_return(:availability)
 
-    expect(Ordering::Adapters::Outbound::Payments::PaymentCommand.call(order: :order)).to eq(payment_result)
-    expect(Ordering::Adapters::Outbound::Catalog::AvailabilityPolicy.evaluate(:offerable, quantity: 2, context: {})).to eq(:availability)
+    payment_port = Ordering::Adapters::Outbound::Payments::PaymentCommand.new
+    availability_port = Ordering::Adapters::Outbound::Catalog::AvailabilityPolicy.new
+
+    expect(payment_port.call(order: :order)).to eq(payment_result)
+    expect(availability_port.evaluate(:offerable, quantity: 2, context: {})).to eq(:availability)
   end
 
   it "adapts capacity commands through one ordering port" do
