@@ -255,5 +255,6 @@ Each commit should preserve the current runtime behavior and remain independentl
 - This is a preparation plan, not an extraction implementation.
 - The first code slice is intentionally small: replace direct follow-up job calls with explicit ports.
 - `ProcessSubmission` no longer accepts legacy follow-up keywords; concrete invoicing and notification adapters are composed by `SubmitOrder`.
+- Package-cycle analysis and the dependency-breakdown plan live in `01-package-cycle-breakdown.md`.
 - `billing` remains the physical namespace; `invoicing` remains the product vocabulary.
 - The main unresolved architectural boundary is the split between `ordering` submission workflow and `fulfillment` operational work.
