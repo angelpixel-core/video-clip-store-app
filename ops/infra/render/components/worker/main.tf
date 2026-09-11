@@ -7,7 +7,7 @@ resource "render_background_worker" "this" {
   runtime_source = {
     native_runtime = {
       runtime       = "ruby"
-      repo_url      = "https://github.com/angelpixel-core/video-project-submission-app"
+      repo_url      = "https://github.com/angelpixel-core/video-clip-store-app"
       branch        = var.branch
       build_command = "bundle install"
     }

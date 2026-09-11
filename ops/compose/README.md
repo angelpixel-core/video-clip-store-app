@@ -11,4 +11,4 @@ This directory contains compose entrypoints for running the local stack.
 - Prefer environment-driven configuration.
 - Keep the stack minimal and scoped to the current work item.
 - Use `env/<env>/stack/compose.env` as the source of stack-level values when invoking Compose.
-- The stack currently uses a dedicated bridge network named `video_project_submission_app_net`.
+- The stack currently uses a dedicated bridge network named `video_clip_store_app_net`.

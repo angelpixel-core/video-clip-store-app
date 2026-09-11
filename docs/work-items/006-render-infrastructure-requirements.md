@@ -45,50 +45,50 @@ title: Render Infrastructure Requirements
 
 ### Render Onboarding Choices
 
-| Item | Selected Value | Manual Verification |
-| --- | --- | --- |
-| Workspace name | `video-project-submission-app` | I can identify the workspace by the repo name without ambiguity. |
-| Workspace type | `Work` | I can confirm the workspace is for a real project, not a personal sandbox. |
-| Team size | `Just me` | I can confirm the workspace is currently scoped to a solo maintainer. |
-| What are you building? | `Website / landing page` | I can treat the app as a customer-facing web application in Render onboarding language. |
-| Primary capability | `Developer velocity` | I can justify that fast deploy feedback matters more than advanced platform capabilities at this stage. |
-| Secondary capability | `Security` | I can keep access control and credentials management explicit from the start. |
+| Item                   | Selected Value           | Manual Verification                                                                                     |
+| ---------------------- | ------------------------ | ------------------------------------------------------------------------------------------------------- |
+| Workspace name         | `video-clip-store-app`   | I can identify the workspace by the repo name without ambiguity.                                        |
+| Workspace type         | `Work`                   | I can confirm the workspace is for a real project, not a personal sandbox.                              |
+| Team size              | `Just me`                | I can confirm the workspace is currently scoped to a solo maintainer.                                   |
+| What are you building? | `Website / landing page` | I can treat the app as a customer-facing web application in Render onboarding language.                 |
+| Primary capability     | `Developer velocity`     | I can justify that fast deploy feedback matters more than advanced platform capabilities at this stage. |
+| Secondary capability   | `Security`               | I can keep access control and credentials management explicit from the start.                           |
 
 ### Web Service Bootstrap Snapshot
 
-| Field | Selected Value | Manual Verification |
-| --- | --- | --- |
-| Source code | `angelpixel-core / video-project-submission-app` | I can confirm the service is connected to the correct repository. |
-| Service name | `video-project-submission-app` | I can see the current service name in Render. |
-| Language | `Ruby` | I can confirm Render is treating the app as a Ruby runtime. |
-| Branch | `development` | I can confirm the service deploys from the `development` branch. |
-| Region | `Oregon (US West)` | I can confirm the Render region for this service. |
+| Field         | Selected Value                                       | Manual Verification                                                                   |
+| ------------- | ---------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| Source code   | `angelpixel-core / video-clip-store-app`             | I can confirm the service is connected to the correct repository.                     |
+| Service name  | `video-clip-store-app`                               | I can see the current service name in Render.                                         |
+| Language      | `Ruby`                                               | I can confirm Render is treating the app as a Ruby runtime.                           |
+| Branch        | `development`                                        | I can confirm the service deploys from the `development` branch.                      |
+| Region        | `Oregon (US West)`                                   | I can confirm the Render region for this service.                                     |
 | Build command | `bundle install && npm ci && bundle exec vite build` | I can confirm the build step installs Ruby and Node dependencies and compiles assets. |
-| Start command | `bundle exec puma -C config/puma.rb` | I can confirm the service starts through Puma. |
-| Env var | `RAILS_LOG_TO_STDOUT=true` | I can confirm Rails logs are routed to stdout. |
-| Env var | `RAILS_MASTER_KEY=<secret>` | I can confirm the Rails master key is configured as a secret. |
-| Env var | `DATABASE_URL=<secret>` | I can confirm the service reads its DB connection from Render secrets. |
+| Start command | `bundle exec puma -C config/puma.rb`                 | I can confirm the service starts through Puma.                                        |
+| Env var       | `RAILS_LOG_TO_STDOUT=true`                           | I can confirm Rails logs are routed to stdout.                                        |
+| Env var       | `RAILS_MASTER_KEY=<secret>`                          | I can confirm the Rails master key is configured as a secret.                         |
+| Env var       | `DATABASE_URL=<secret>`                              | I can confirm the service reads its DB connection from Render secrets.                |
 
 - If this service is the production runtime, keep the legacy `-qa` slug in mind until the service is renamed or replaced.
 
 ### Render Workspace
 
-| Item | Manual Verification |
-| --- | --- |
-| Render workspace URL | `https://dashboard.render.com/project/prj-d9a05upo3t8c7383lhag` | I can open the exact Render project page for this workspace. |
-| Owner / team name | `video-project-submission-app` | I can identify the workspace team from the CLI workspace listing. |
-| Create or confirm the Render account/workspace. | I can sign in to Render and see the workspace that will host the app. |
-| Record the Render workspace URL and owner/team name. | I can point to the exact Render workspace URL and the responsible team/owner. |
-| Create a Render API token for automation. | I can identify the token name and where it is stored without exposing the secret value. |
-| Confirm the onboarding responses are recorded for the workspace. | I can point to the saved workspace name and selected onboarding options. |
+| Item                                                             | Manual Verification                                                                     |
+| ---------------------------------------------------------------- | --------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| Render workspace URL                                             | `https://dashboard.render.com/project/prj-d9a05upo3t8c7383lhag`                         | I can open the exact Render project page for this workspace.      |
+| Owner / team name                                                | `video-clip-store-app`                                                                  | I can identify the workspace team from the CLI workspace listing. |
+| Create or confirm the Render account/workspace.                  | I can sign in to Render and see the workspace that will host the app.                   |
+| Record the Render workspace URL and owner/team name.             | I can point to the exact Render workspace URL and the responsible team/owner.           |
+| Create a Render API token for automation.                        | I can identify the token name and where it is stored without exposing the secret value. |
+| Confirm the onboarding responses are recorded for the workspace. | I can point to the saved workspace name and selected onboarding options.                |
 
 ### CLI Validation Snapshot
 
-| Command | Result |
-| --- | --- |
-| `render --version` | `render v2.21.0` |
-| `render workspaces -o text` | `video-project-submission-app / angel.szymczak@hotmail.com / tea-d99u3cnaqgkc738r033g` |
-| `render services -o text` | `video-project-submission-app-qa` and `video-project-submission-app-qa-db` are visible in the active workspace. |
+| Command                     | Result                                                                                          |
+| --------------------------- | ----------------------------------------------------------------------------------------------- |
+| `render --version`          | `render v2.21.0`                                                                                |
+| `render workspaces -o text` | `video-clip-store-app / angel.szymczak@hotmail.com / tea-d99u3cnaqgkc738r033g`                  |
+| `render services -o text`   | `video-clip-store-app-qa` and `video-clip-store-app-qa-db` are visible in the active workspace. |
 
 - The CLI installation is confirmed locally.
 - The CLI can list the active workspace and services without exposing secrets.
@@ -126,75 +126,70 @@ render services -o text
 
 ### URLs and External Access
 
-| Item | Manual Verification |
-| --- | --- |
-| Define the public URL for `production`. | I can name the hostname for the active public environment. |
-| Define the DNS registrar/provider access path. | I can say who controls DNS and how records will be updated. |
+| Item                                                          | Manual Verification                                                    |
+| ------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| Define the public URL for `production`.                       | I can name the hostname for the active public environment.             |
+| Define the DNS registrar/provider access path.                | I can say who controls DNS and how records will be updated.            |
 | Define the GitHub Actions secret names needed for deployment. | I can list the secret names required for Render promotion and deploys. |
 
 - DNS provider is not yet selected because the custom domain has not been purchased or wired up.
 - Production currently uses the Render-managed `onrender.com` hostname, so no external DNS change is needed yet.
 - Revisit this section once a custom domain is chosen.
 
-
 ### Public URLs
 
-| Environment | Public URL | Notes |
-| --- | --- | --- |
-| `qa` | `https://video-project-submission-app-qa.onrender.com` | Confirmed from the Render CLI. |
+| Environment | Public URL                                     | Notes                          |
+| ----------- | ---------------------------------------------- | ------------------------------ |
+| `qa`        | `https://video-clip-store-app-qa.onrender.com` | Confirmed from the Render CLI. |
 
 - Use the Render-generated `onrender.com` URL for QA until the custom domain is ready.
 
-
 ### Custom Domains and TLS
 
-| Environment | Public Hostname | TLS Termination | Notes |
-| --- | --- | --- | --- |
-| `qa` | `qa.<placeholder-domain>` | Render-managed certificate | Used for automated deploy and QA validation. |
+| Environment | Public Hostname           | TLS Termination            | Notes                                        |
+| ----------- | ------------------------- | -------------------------- | -------------------------------------------- |
+| `qa`        | `qa.<placeholder-domain>` | Render-managed certificate | Used for automated deploy and QA validation. |
 
 - Render should terminate TLS for each public hostname.
 - Keep the hostname values as placeholders until the real DNS zone is finalized.
 - DNS records should point the public hostname to the matching Render service target when QA leaves placeholder mode.
 
-
 ### Keys and Tokens
 
-| Item | Manual Verification |
-| --- | --- |
-| Create a Render API token for automation. | I can confirm the API key exists and is stored as the `RENDER_API_KEY` GitHub Actions secret. |
-| Keep Render access credentials out of git. | I know where the token lives and can rotate it without a repo change. |
-| Keep DNS provider credentials out of git. | I know which secret store or account holds DNS access. |
-| Keep deployment tokens separate from human login credentials. | I can distinguish the automation token from personal account access. |
+| Item                                                          | Manual Verification                                                                           |
+| ------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| Create a Render API token for automation.                     | I can confirm the API key exists and is stored as the `RENDER_API_KEY` GitHub Actions secret. |
+| Keep Render access credentials out of git.                    | I know where the token lives and can rotate it without a repo change.                         |
+| Keep DNS provider credentials out of git.                     | I know which secret store or account holds DNS access.                                        |
+| Keep deployment tokens separate from human login credentials. | I can distinguish the automation token from personal account access.                          |
 
 ### Credential Policies
 
 #### Render Access Credentials
 
-| Credential | Stored In | Never Commit | Rotation | Verification |
-| --- | --- | --- | --- | --- |
-| Render API key | GitHub Actions secret `RENDER_API_KEY` | Raw key material, CLI token dumps, or Render dashboard exports | Recreate in Render, then update the GitHub secret | `gh secret list --repo angelpixel-core/video-project-submission-app --app actions` |
-| Render CLI token | Local Render CLI config (`~/.render/cli.yaml`) | Local config files, dotfiles, or repo env files | Re-run `render login` | `render workspaces -o text` |
-| Render service ID for production | GitHub Actions secret `RENDER_PROD_SERVICE_ID` | Service ID values in tracked env files | Recopy from Render after service changes | `gh secret list --repo angelpixel-core/video-project-submission-app --app actions` |
-
-
+| Credential                       | Stored In                                      | Never Commit                                                   | Rotation                                          | Verification                                                               |
+| -------------------------------- | ---------------------------------------------- | -------------------------------------------------------------- | ------------------------------------------------- | -------------------------------------------------------------------------- |
+| Render API key                   | GitHub Actions secret `RENDER_API_KEY`         | Raw key material, CLI token dumps, or Render dashboard exports | Recreate in Render, then update the GitHub secret | `gh secret list --repo angelpixel-core/video-clip-store-app --app actions` |
+| Render CLI token                 | Local Render CLI config (`~/.render/cli.yaml`) | Local config files, dotfiles, or repo env files                | Re-run `render login`                             | `render workspaces -o text`                                                |
+| Render service ID for production | GitHub Actions secret `RENDER_PROD_SERVICE_ID` | Service ID values in tracked env files                         | Recopy from Render after service changes          | `gh secret list --repo angelpixel-core/video-clip-store-app --app actions` |
 
 #### DNS Provider Credentials
 
-| Credential | Stored In | Never Commit | Rotation | Verification |
-| --- | --- | --- | --- | --- |
+| Credential          | Stored In                            | Never Commit                                                              | Rotation                                                | Verification                            |
+| ------------------- | ------------------------------------ | ------------------------------------------------------------------------- | ------------------------------------------------------- | --------------------------------------- |
 | DNS API key / token | DNS provider account or secret store | `env/`, docs, or repo secrets unless the provider is the system of record | Reissue in the DNS provider and update the secret store | Provider dashboard and secret inventory |
-| DNS zone ownership | Registrar / DNS provider account | Repo files or Render settings | Update registrar access when ownership changes | Domain registrar / DNS console |
+| DNS zone ownership  | Registrar / DNS provider account     | Repo files or Render settings                                             | Update registrar access when ownership changes          | Domain registrar / DNS console          |
 
 - DNS provider access remains undecided until a custom domain exists.
 - When the provider is chosen, store its credentials in the provider or a secret store, not in git.
 
 #### Deployment Tokens
 
-| Token Type | Stored In | Never Commit | Rotation | Verification |
-| --- | --- | --- | --- | --- |
-| GitHub Actions runtime token | GitHub-managed `GITHUB_TOKEN` | Hardcoded token values | Automatic per workflow run | Presence in workflow context |
-| Render deploy automation secret | GitHub Actions secret `RENDER_API_KEY` | Repo files or plaintext envs | Recreate in Render, then update the secret | Smoke workflow or `gh secret list` |
-| Human login credentials | Human password / SSO / browser session | Any repo file or automation secret | Account settings / identity provider | Login in browser or SSO flow |
+| Token Type                      | Stored In                              | Never Commit                       | Rotation                                   | Verification                       |
+| ------------------------------- | -------------------------------------- | ---------------------------------- | ------------------------------------------ | ---------------------------------- |
+| GitHub Actions runtime token    | GitHub-managed `GITHUB_TOKEN`          | Hardcoded token values             | Automatic per workflow run                 | Presence in workflow context       |
+| Render deploy automation secret | GitHub Actions secret `RENDER_API_KEY` | Repo files or plaintext envs       | Recreate in Render, then update the secret | Smoke workflow or `gh secret list` |
+| Human login credentials         | Human password / SSO / browser session | Any repo file or automation secret | Account settings / identity provider       | Login in browser or SSO flow       |
 
 - Keep human login credentials and automation tokens in separate systems.
 - Use `gh secret set` for repository or environment secrets.
@@ -203,20 +198,20 @@ render services -o text
 
 ### GitHub Actions Secrets and Vars
 
-| Kind | Name | Purpose |
-| --- | --- | --- |
-| Secret | `RENDER_API_KEY` | Authenticates the Render CLI in GitHub Actions. |
-| Variable | `RENDER_OWNER_ID` | Supplies the Render workspace owner identifier to Terraform. |
+| Kind     | Name                               | Purpose                                                      |
+| -------- | ---------------------------------- | ------------------------------------------------------------ |
+| Secret   | `RENDER_API_KEY`                   | Authenticates the Render CLI in GitHub Actions.              |
+| Variable | `RENDER_OWNER_ID`                  | Supplies the Render workspace owner identifier to Terraform. |
 | Variable | `RENDER_QA_ADOPTED_WEB_SERVICE_ID` | Supplies the adopted QA web service ID to Terraform imports. |
-| Variable | `RENDER_QA_ADOPTED_DATABASE_ID` | Supplies the adopted QA database ID to Terraform imports. |
+| Variable | `RENDER_QA_ADOPTED_DATABASE_ID`    | Supplies the adopted QA database ID to Terraform imports.    |
 | Variable | `RENDER_QA_ADOPTED_ENVIRONMENT_ID` | Supplies the adopted QA environment ID to Terraform imports. |
-| Secret | `RAILS_MASTER_KEY` | Shared Rails master key for QA, staging, and prod. |
-| Secret | `RENDER_QA_SERVICE_ID` | Targets the QA Render web service. |
-| Secret | `RENDER_STAGING_SERVICE_ID` | Targets the staging Render web service. |
-| Secret | `RENDER_PROD_SERVICE_ID` | Targets the production Render web service. |
-| Variable | `RENDER_QA_ENVIRONMENT_ID` | Supplies the QA Render environment ID to Terraform. |
-| Variable | `RENDER_STAGING_ENVIRONMENT_ID` | Supplies the staging Render environment ID to Terraform. |
-| Variable | `RENDER_PROD_ENVIRONMENT_ID` | Supplies the production Render environment ID to Terraform. |
+| Secret   | `RAILS_MASTER_KEY`                 | Shared Rails master key for QA, staging, and prod.           |
+| Secret   | `RENDER_QA_SERVICE_ID`             | Targets the QA Render web service.                           |
+| Secret   | `RENDER_STAGING_SERVICE_ID`        | Targets the staging Render web service.                      |
+| Secret   | `RENDER_PROD_SERVICE_ID`           | Targets the production Render web service.                   |
+| Variable | `RENDER_QA_ENVIRONMENT_ID`         | Supplies the QA Render environment ID to Terraform.          |
+| Variable | `RENDER_STAGING_ENVIRONMENT_ID`    | Supplies the staging Render environment ID to Terraform.     |
+| Variable | `RENDER_PROD_ENVIRONMENT_ID`       | Supplies the production Render environment ID to Terraform.  |
 
 - Use one Rails master key secret unless the app later proves it needs per-environment keys.
 - Use one service ID secret per environment so deploys stay explicit.
@@ -226,13 +221,13 @@ render services -o text
 
 ### Secret Operations
 
-| Operation | Tool / Protocol | Notes |
-| --- | --- | --- |
-| Generate | Render dashboard / provider UI | Create the secret at the source system first. |
-| Set | `gh secret set` | Store repository or environment secrets in GitHub Actions. |
-| Bulk set | `gh secret set -f <dotenv-file>` | Load multiple secret names from a dotenv-formatted file. |
-| List / verify presence | `gh secret list` | Confirms the secret name exists and shows metadata only. |
-| Validate runtime use | GitHub Actions smoke job | Confirms the workflow can read the secret without exposing the value. |
+| Operation              | Tool / Protocol                  | Notes                                                                 |
+| ---------------------- | -------------------------------- | --------------------------------------------------------------------- |
+| Generate               | Render dashboard / provider UI   | Create the secret at the source system first.                         |
+| Set                    | `gh secret set`                  | Store repository or environment secrets in GitHub Actions.            |
+| Bulk set               | `gh secret set -f <dotenv-file>` | Load multiple secret names from a dotenv-formatted file.              |
+| List / verify presence | `gh secret list`                 | Confirms the secret name exists and shows metadata only.              |
+| Validate runtime use   | GitHub Actions smoke job         | Confirms the workflow can read the secret without exposing the value. |
 
 - Do not expect a true `get` for secret values from GitHub; GitHub only exposes metadata for security.
 - For Render API keys, generate in Render first, then store the resulting value in `RENDER_API_KEY`.
@@ -244,16 +239,16 @@ render services -o text
 
 Use `make` as the user-facing entry point and `ops/scripts/secrets.sh` as the implementation layer.
 
-| Command | Purpose | Target |
-| --- | --- | --- |
-| `make secrets/init ENV=qa` | Ensure placeholder secret files exist for the selected environment. | local filesystem |
-| `make secrets/set ENV=qa TARGET=github` | Push exported `RENDER_*` values or one-off `SECRET_NAME/SECRET_VALUE` pairs into GitHub Actions secrets. | GitHub |
-| `make secrets/set ENV=prod TARGET=github-vars` | Push `RENDER_*_ENVIRONMENT_ID` values or one-off `SECRET_NAME/SECRET_VALUE` pairs into GitHub repository variables. | GitHub |
-| `make secrets/set ENV=qa TARGET=render` | Prepare or validate Render-side deployment secrets. | Render |
-| `make secrets/set ENV=qa TARGET=local` | Materialize local Docker/runtime secret values from the selected environment. | local Docker |
-| `make secrets/list ENV=qa TARGET=github` | List secret metadata for the selected environment. | GitHub |
-| `make secrets/list ENV=prod TARGET=github-vars` | List repository variable metadata for the selected environment. | GitHub |
-| `make secrets/validate ENV=qa TARGET=github` | Smoke-test that GitHub Actions can read the configured secrets at runtime. | GitHub Actions |
+| Command                                         | Purpose                                                                                                             | Target           |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- | ---------------- |
+| `make secrets/init ENV=qa`                      | Ensure placeholder secret files exist for the selected environment.                                                 | local filesystem |
+| `make secrets/set ENV=qa TARGET=github`         | Push exported `RENDER_*` values or one-off `SECRET_NAME/SECRET_VALUE` pairs into GitHub Actions secrets.            | GitHub           |
+| `make secrets/set ENV=prod TARGET=github-vars`  | Push `RENDER_*_ENVIRONMENT_ID` values or one-off `SECRET_NAME/SECRET_VALUE` pairs into GitHub repository variables. | GitHub           |
+| `make secrets/set ENV=qa TARGET=render`         | Prepare or validate Render-side deployment secrets.                                                                 | Render           |
+| `make secrets/set ENV=qa TARGET=local`          | Materialize local Docker/runtime secret values from the selected environment.                                       | local Docker     |
+| `make secrets/list ENV=qa TARGET=github`        | List secret metadata for the selected environment.                                                                  | GitHub           |
+| `make secrets/list ENV=prod TARGET=github-vars` | List repository variable metadata for the selected environment.                                                     | GitHub           |
+| `make secrets/validate ENV=qa TARGET=github`    | Smoke-test that GitHub Actions can read the configured secrets at runtime.                                          | GitHub Actions   |
 
 - `Makefile` should remain a thin wrapper around `ops/scripts/secrets.sh`.
 - `ops/scripts/secrets.sh` should read versioned placeholders from `env/${ENV}/app/secrets.local.env`, `env/${ENV}/db/secrets.local.env`, and `env/${ENV}/stack/secrets.local.env`, then write runtime values to `env/.local/${ENV}.env`.
@@ -268,17 +263,17 @@ Use `make` as the user-facing entry point and `ops/scripts/secrets.sh` as the im
 
 ### PostgreSQL Bootstrap Snapshot
 
-| Item | Selected Value | Manual Verification |
-| --- | --- | --- |
-| Database name | `video_project_submission_app_qa_db` | I can identify the QA database by a stable environment-specific name. |
-| Database user | `video_project_submission_app_qa` | I can identify the dedicated DB user for the QA environment. |
-| Region | `Oregon (US West)` | I can confirm the database lives in the same region as the app service. |
-| PostgreSQL version | `18` | I can confirm the version selected in Render. |
-| Plan | `Free` | I can confirm the initial plan choice for the bootstrap phase. |
-| Storage | `1 GB` | I can confirm the initial storage allocation. |
-| Storage autoscaling | `Disabled` | I can confirm autoscaling is off for the bootstrap database. |
-| High availability | `Disabled` | I can confirm HA is off for the bootstrap database. |
-| Inbound IP policy | `0.0.0.0/0` visible in the UI | I can confirm the current network exposure setting that Render shows for this database. |
+| Item                | Selected Value                | Manual Verification                                                                     |
+| ------------------- | ----------------------------- | --------------------------------------------------------------------------------------- |
+| Database name       | `video_clip_store_app_qa_db`  | I can identify the QA database by a stable environment-specific name.                   |
+| Database user       | `video_clip_store_app_qa`     | I can identify the dedicated DB user for the QA environment.                            |
+| Region              | `Oregon (US West)`            | I can confirm the database lives in the same region as the app service.                 |
+| PostgreSQL version  | `18`                          | I can confirm the version selected in Render.                                           |
+| Plan                | `Free`                        | I can confirm the initial plan choice for the bootstrap phase.                          |
+| Storage             | `1 GB`                        | I can confirm the initial storage allocation.                                           |
+| Storage autoscaling | `Disabled`                    | I can confirm autoscaling is off for the bootstrap database.                            |
+| High availability   | `Disabled`                    | I can confirm HA is off for the bootstrap database.                                     |
+| Inbound IP policy   | `0.0.0.0/0` visible in the UI | I can confirm the current network exposure setting that Render shows for this database. |
 
 ### DATABASE_URL Source
 
@@ -290,18 +285,18 @@ Use `make` as the user-facing entry point and `ops/scripts/secrets.sh` as the im
 
 ### Render Runtime Environments
 
-| Environment | Web Service | Database | Domain | Notes |
-| --- | --- | --- | --- | --- |
-| `production` | `video-project-submission-app-qa` | Managed PostgreSQL | `production.<placeholder-domain>` | Active production runtime; legacy service slug still uses `-qa`. |
+| Environment  | Web Service               | Database           | Domain                            | Notes                                                            |
+| ------------ | ------------------------- | ------------------ | --------------------------------- | ---------------------------------------------------------------- |
+| `production` | `video-clip-store-app-qa` | Managed PostgreSQL | `production.<placeholder-domain>` | Active production runtime; legacy service slug still uses `-qa`. |
 
 - Production is the only active deployment target right now.
 
 ### Local Development Context
 
-| Environment | Web Service | Database | Domain | Notes |
-| --- | --- | --- | --- | --- |
-| `dev` | Local Rails web service | Local MySQL | `dev.lvh.me` | Developer loop only; not a Render environment. |
-| `test` | Local Rails web service | Local MySQL | `test.lvh.me` | Automated test context; not a Render environment. |
+| Environment | Web Service             | Database    | Domain        | Notes                                             |
+| ----------- | ----------------------- | ----------- | ------------- | ------------------------------------------------- |
+| `dev`       | Local Rails web service | Local MySQL | `dev.lvh.me`  | Developer loop only; not a Render environment.    |
+| `test`      | Local Rails web service | Local MySQL | `test.lvh.me` | Automated test context; not a Render environment. |
 
 ### Render vs Local Boundary
 
@@ -320,8 +315,8 @@ Use `make` as the user-facing entry point and `ops/scripts/secrets.sh` as the im
 
 Use one Render-managed PostgreSQL database per runtime environment.
 
-| Environment | Database Mode | Notes |
-| --- | --- | --- |
+| Environment  | Database Mode              | Notes                                                 |
+| ------------ | -------------------------- | ----------------------------------------------------- |
 | `production` | Managed PostgreSQL service | Dedicated database for the active production runtime. |
 
 ### Rationale
@@ -331,14 +326,11 @@ Use one Render-managed PostgreSQL database per runtime environment.
 - Use the native managed PostgreSQL product offered by Render.
 - Keep local `dev/test` on MySQL, since those contexts are already defined outside Render.
 
-
 ### Web Service by Environment
 
-| Environment | Web Service | Purpose | Deployment Source | Notes |
-| --- | --- | --- | --- | --- |
-| `production` | `video-project-submission-app-qa` | Active production runtime | GitHub Actions promotion from the release branch | Legacy slug remains `-qa` until renamed. |
-
-
+| Environment  | Web Service               | Purpose                   | Deployment Source                                | Notes                                    |
+| ------------ | ------------------------- | ------------------------- | ------------------------------------------------ | ---------------------------------------- |
+| `production` | `video-clip-store-app-qa` | Active production runtime | GitHub Actions promotion from the release branch | Legacy slug remains `-qa` until renamed. |
 
 ### Manual Verification
 

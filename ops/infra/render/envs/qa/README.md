@@ -2,13 +2,13 @@
 
 ## Inventory
 
-| Resource | Name | Notes |
-| --- | --- | --- |
-| Web service | `video-project-submission-app-qa` | Existing Render service; Rails web runtime for QA. |
-| Worker service | `video-project-submission-app-qa-worker` | Scaffolded in Terraform, but `enable_worker` stays `false` until Render can host a dedicated QA worker. |
-| PostgreSQL service | `video-project-submission-app-qa-db` | Managed Postgres adopted from the live QA environment. |
-| Hostname | `video-project-submission-app-qa.onrender.com` | Current Render hostname for QA. |
-| TLS | Render-managed | Certificate termination handled by Render. |
+| Resource           | Name                                   | Notes                                                                                                   |
+| ------------------ | -------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| Web service        | `video-clip-store-app-qa`              | Existing Render service; Rails web runtime for QA.                                                      |
+| Worker service     | `video-clip-store-app-qa-worker`       | Scaffolded in Terraform, but `enable_worker` stays `false` until Render can host a dedicated QA worker. |
+| PostgreSQL service | `video-clip-store-app-qa-db`           | Managed Postgres adopted from the live QA environment.                                                  |
+| Hostname           | `video-clip-store-app-qa.onrender.com` | Current Render hostname for QA.                                                                         |
+| TLS                | Render-managed                         | Certificate termination handled by Render.                                                              |
 
 ## Runtime Inputs
 
@@ -22,7 +22,7 @@
 - Run this from your local machine after the QA deploy finishes:
 
 ```shell
-curl -fsS https://video-project-submission-app-qa.onrender.com/up/db
+curl -fsS https://video-clip-store-app-qa.onrender.com/up/db
 ```
 
 - Expected response: `ok`
@@ -42,11 +42,11 @@ curl -fsS https://video-project-submission-app-qa.onrender.com/up/db
 
 ### Verified Render Resources
 
-| Resource | Render ID | Status |
-| --- | --- | --- |
-| Web service | `srv-d9a05ut7vvec738cb0n0` | Exists |
-| PostgreSQL service | `dpg-d9a0goecjfls73928u5g-a` | Exists |
-| Worker service | n/a | Not created yet |
+| Resource           | Render ID                    | Status          |
+| ------------------ | ---------------------------- | --------------- |
+| Web service        | `srv-d9a05ut7vvec738cb0n0`   | Exists          |
+| PostgreSQL service | `dpg-d9a0goecjfls73928u5g-a` | Exists          |
+| Worker service     | n/a                          | Not created yet |
 
 ### Import Blocks
 

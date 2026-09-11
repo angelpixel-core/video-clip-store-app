@@ -21,15 +21,15 @@ default: &default
 development:
   primary: &primary_development
     <<: *default
-    database: <%= ENV.fetch("DB_NAME") { "video_project_submission_app_development" } %>
+    database: <%= ENV.fetch("DB_NAME") { "video_clip_store_app_development" } %>
     ssl_mode: disabled
   queue:
     <<: *primary_development
-    database: <%= ENV.fetch("DB_QUEUE_NAME") { "video_project_submission_app_development_queue" } %>
+    database: <%= ENV.fetch("DB_QUEUE_NAME") { "video_clip_store_app_development_queue" } %>
     migrations_paths: db/queue_migrate
   cable:
     <<: *primary_development
-    database: <%= ENV.fetch("DB_CABLE_NAME") { "video_project_submission_app_development_cable" } %>
+    database: <%= ENV.fetch("DB_CABLE_NAME") { "video_clip_store_app_development_cable" } %>
     migrations_paths: db/cable_migrate
 
 # Warning: The database defined as "test" will be erased and
@@ -38,11 +38,11 @@ development:
 test:
   primary: &primary_test
     <<: *default
-    database: <%= ENV.fetch("DB_NAME") { "video_project_submission_app_test" } %>
+    database: <%= ENV.fetch("DB_NAME") { "video_clip_store_app_test" } %>
     ssl_mode: disabled
   cable:
     <<: *primary_test
-    database: <%= ENV.fetch("DB_CABLE_NAME") { "video_project_submission_app_test_cable" } %>
+    database: <%= ENV.fetch("DB_CABLE_NAME") { "video_clip_store_app_test_cable" } %>
     migrations_paths: db/cable_migrate
 
 qa:

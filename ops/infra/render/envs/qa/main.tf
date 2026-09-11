@@ -1,6 +1,6 @@
 module "web" {
   source              = "../../components/web"
-  name                = "video-project-submission-app-qa"
+  name                = "video-clip-store-app-qa"
   branch              = "development"
   build_command       = "bundle install && npm ci && bundle exec vite build"
   start_command       = "bundle exec puma -C config/puma.rb"
@@ -52,7 +52,7 @@ module "worker" {
   count = var.enable_worker ? 1 : 0
 
   source        = "../../components/worker"
-  name          = "video-project-submission-app-qa-worker"
+  name          = "video-clip-store-app-qa-worker"
   environment   = "qa"
   branch        = "development"
   start_command = "bundle exec rails solid_queue:start"
@@ -63,10 +63,10 @@ module "worker" {
 
 module "database" {
   source           = "../../components/database"
-  name             = "video-project-submission-app-qa-db"
+  name             = "video-clip-store-app-qa-db"
   environment      = "qa"
-  database_name    = "video_project_submission_app_qa"
-  database_user    = "video_project_submission_app_qa"
+  database_name    = "video_clip_store_app_qa"
+  database_user    = "video_clip_store_app_qa"
   plan             = "free"
   postgres_version = "18"
   region           = "oregon"

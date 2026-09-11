@@ -34,28 +34,28 @@ title: Database Engine and IaC Strategy
 
 ## Current Flow
 
-| Event | Workflow | Action |
-| --- | --- | --- |
-| Push to `work-items/*` | `ci.yml` | Run lint and tests, then open or update the PR to `development`. |
-| Merge to `development` | Render deploy path | Deploy the active runtime to QA. |
-| Manual approval in QA | `promote-staging.yml` | Keep the `Promote` gate, but do not deploy to staging on Hobby. |
-| QA approval succeeds | `promote-staging.yml` | Create or update the `development -> main` release PR. |
-| Push / merge to `main` | release flow | Run the usual checks and create the release tag when applicable. |
-| Any staging/prod deploy trigger | `promote-staging.yml` / infra workflows | Disabled until the workspace plan changes. |
+| Event                           | Workflow                                | Action                                                           |
+| ------------------------------- | --------------------------------------- | ---------------------------------------------------------------- |
+| Push to `work-items/*`          | `ci.yml`                                | Run lint and tests, then open or update the PR to `development`. |
+| Merge to `development`          | Render deploy path                      | Deploy the active runtime to QA.                                 |
+| Manual approval in QA           | `promote-staging.yml`                   | Keep the `Promote` gate, but do not deploy to staging on Hobby.  |
+| QA approval succeeds            | `promote-staging.yml`                   | Create or update the `development -> main` release PR.           |
+| Push / merge to `main`          | release flow                            | Run the usual checks and create the release tag when applicable. |
+| Any staging/prod deploy trigger | `promote-staging.yml` / infra workflows | Disabled until the workspace plan changes.                       |
 
 ## Portability Matrix
 
-| Area | Hardcoded | Variable / Secret |
-| --- | --- | --- |
-| Terraform module names | `web`, `database`, `worker`, `dns` | n/a |
-| Environment names | `qa`, `staging`, `prod` | n/a |
-| GitHub Actions workflow names | `CI`, `Infra Render`, `Promote Staging` | n/a |
-| Render workspace owner | n/a | `RENDER_OWNER_ID` |
-| Render API auth | n/a | `RENDER_API_KEY` |
-| Rails master key | n/a | `RAILS_MASTER_KEY` |
-| Render service IDs | n/a | `RENDER_QA_SERVICE_ID`, `RENDER_STAGING_SERVICE_ID`, `RENDER_PROD_SERVICE_ID` |
-| Render environment IDs | n/a | `RENDER_QA_ENVIRONMENT_ID`, `RENDER_STAGING_ENVIRONMENT_ID`, `RENDER_PROD_ENVIRONMENT_ID` |
-| Service/import IDs currently adopted | `srv-d9a05ut7vvec738cb0n0`, `dpg-d9a0goecjfls73928u5g-a` | n/a until re-adopting elsewhere |
+| Area                                 | Hardcoded                                                | Variable / Secret                                                                         |
+| ------------------------------------ | -------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| Terraform module names               | `web`, `database`, `worker`, `dns`                       | n/a                                                                                       |
+| Environment names                    | `qa`, `staging`, `prod`                                  | n/a                                                                                       |
+| GitHub Actions workflow names        | `CI`, `Infra Render`, `Promote Staging`                  | n/a                                                                                       |
+| Render workspace owner               | n/a                                                      | `RENDER_OWNER_ID`                                                                         |
+| Render API auth                      | n/a                                                      | `RENDER_API_KEY`                                                                          |
+| Rails master key                     | n/a                                                      | `RAILS_MASTER_KEY`                                                                        |
+| Render service IDs                   | n/a                                                      | `RENDER_QA_SERVICE_ID`, `RENDER_STAGING_SERVICE_ID`, `RENDER_PROD_SERVICE_ID`             |
+| Render environment IDs               | n/a                                                      | `RENDER_QA_ENVIRONMENT_ID`, `RENDER_STAGING_ENVIRONMENT_ID`, `RENDER_PROD_ENVIRONMENT_ID` |
+| Service/import IDs currently adopted | `srv-d9a05ut7vvec738cb0n0`, `dpg-d9a0goecjfls73928u5g-a` | n/a until re-adopting elsewhere                                                           |
 
 ## Scope
 
@@ -182,14 +182,14 @@ title: Database Engine and IaC Strategy
   - [x] Document how Terraform will adopt the live QA Render state before staging is introduced.
   - [x] Capture the concrete Render resource names and hostnames when the Terraform stack is introduced.
 
-## Validation 
+## Validation
 
 - [x] The environment matrix is explicit and documented.
 - [x] The Terraform strategy is explicit and documented.
 - [x] The Rails database configuration supports all runtime environments.
   - [x] QA-specific Rails database config is present and wired through `DATABASE_URL`.
 - [x] The Rails app can connect to PostgreSQL in Render without affecting local MySQL.
-  - [x] Verified with `curl -fsS https://video-project-submission-app-qa.onrender.com/up/db` after the QA deploy finished.
+  - [x] Verified with `curl -fsS https://video-clip-store-app-qa.onrender.com/up/db` after the QA deploy finished.
 - [x] The infra pipeline can be run independently of app feature work.
   - [x] `ops/infra/render/` exists, the workflow is in place, and QA `terraform fmt`, `init`, and `plan` are validated.
 

@@ -1,5 +1,5 @@
 class LocaleMiddleware
-  LOCALE_ENV_KEY = "video_project_submission_app.locale"
+  LOCALE_ENV_KEY = "video_clip_store_app.locale"
   SUPPORTED_LOCALE_PATTERN = /\A[a-z]{2}(?:-[a-z]{2})?\z/i
 
   def initialize(app)

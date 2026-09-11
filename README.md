@@ -1,4 +1,4 @@
-# Video Project Submission App
+# Video Clip Store App
 
 Rails application for collecting video editing orders, simulating checkout, and coordinating fulfillment between a client workspace and a project-manager workspace.
 

@@ -1,6 +1,6 @@
 module "web" {
   source              = "../../components/web"
-  name                = "video-project-submission-app-staging"
+  name                = "video-clip-store-app-staging"
   branch              = "development"
   build_command       = "bundle install && npm ci && bundle exec vite build"
   start_command       = "bundle exec puma -C config/puma.rb"
@@ -25,10 +25,10 @@ module "web" {
 
 module "database" {
   source           = "../../components/database"
-  name             = "video-project-submission-app-staging-db"
+  name             = "video-clip-store-app-staging-db"
   environment      = "staging"
-  database_name    = "video_project_submission_app_staging"
-  database_user    = "video_project_submission_app_staging"
+  database_name    = "video_clip_store_app_staging"
+  database_user    = "video_clip_store_app_staging"
   plan             = "free"
   postgres_version = "18"
   region           = "oregon"

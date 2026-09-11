@@ -1,6 +1,6 @@
 module "web" {
   source              = "../../components/web"
-  name                = "video-project-submission-app"
+  name                = "video-clip-store-app"
   branch              = "main"
   build_command       = "bundle install && npm ci && bundle exec vite build"
   start_command       = "bundle exec puma -C config/puma.rb"
@@ -50,10 +50,10 @@ locals {
 
 module "database" {
   source           = "../../components/database"
-  name             = "video-project-submission-app-db"
+  name             = "video-clip-store-app-db"
   environment      = "prod"
-  database_name    = "video_project_submission_app_prod"
-  database_user    = "video_project_submission_app_prod"
+  database_name    = "video_clip_store_app_prod"
+  database_user    = "video_clip_store_app_prod"
   plan             = "free"
   postgres_version = "18"
   region           = "oregon"
@@ -69,7 +69,7 @@ module "worker" {
   count = var.enable_worker ? 1 : 0
 
   source        = "../../components/worker"
-  name          = "video-project-submission-app-worker"
+  name          = "video-clip-store-app-worker"
   environment   = "prod"
   branch        = "main"
   start_command = "bundle exec rails solid_queue:start"

@@ -13,7 +13,7 @@ services:
         BUNDLE_RETRY: "${BUNDLE_RETRY:-3}"
         UID: "${UID:-1000}"
         GID: "${GID:-1000}"
-    container_name: video-project-submission-app-web
+    container_name: video-clip-store-app-web
     depends_on:
       db:
         condition: service_healthy
@@ -50,7 +50,7 @@ services:
       retries: 20
       start_period: 20s
     networks:
-      - video_project_submission_app_net
+      - video_clip_store_app_net
 
   worker:
     build:
@@ -66,7 +66,7 @@ services:
         BUNDLE_RETRY: "${BUNDLE_RETRY:-3}"
         UID: "${UID:-1000}"
         GID: "${GID:-1000}"
-    container_name: video-project-submission-app-worker
+    container_name: video-clip-store-app-worker
     depends_on:
       db:
         condition: service_healthy
@@ -88,7 +88,7 @@ services:
     entrypoint: ["/bin/sh", "/app/ops/containers/app/entrypoint.sh"]
     command: ["bin/jobs"]
     networks:
-      - video_project_submission_app_net
+      - video_clip_store_app_net
 
   assets:
     build:
@@ -104,7 +104,7 @@ services:
         BUNDLE_RETRY: "${BUNDLE_RETRY:-3}"
         UID: "${UID:-1000}"
         GID: "${GID:-1000}"
-    container_name: video-project-submission-app-assets
+    container_name: video-clip-store-app-assets
     env_file:
       - ../../env/${STACK_ENV}/app/core.env
     volumes:
@@ -120,16 +120,16 @@ services:
     ports:
       - "${ASSETS_HOST_PORT:-10103}:${ASSETS_PORT:-5173}"
     networks:
-      - video_project_submission_app_net
+      - video_clip_store_app_net
 
   db:
     image: mysql:8.4
-    container_name: video-project-submission-app-db
+    container_name: video-clip-store-app-db
     env_file:
       - ../../env/${STACK_ENV}/db/bootstrap.env
     environment:
       MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD:-root_password}"
-      MYSQL_DATABASE: "${MYSQL_DATABASE:-video_project_submission_app_development}"
+      MYSQL_DATABASE: "${MYSQL_DATABASE:-video_clip_store_app_development}"
       MYSQL_USER: "${MYSQL_USER:-app}"
       MYSQL_PASSWORD: "${MYSQL_PASSWORD:-app_password}"
     command: ["mysqld", "--port=${DB_PORT:-3306}"]
@@ -148,19 +148,19 @@ services:
       timeout: 5s
       retries: 20
     networks:
-      - video_project_submission_app_net
+      - video_clip_store_app_net
 
 volumes:
   db_data:
-    name: video_project_submission_app_db_data
+    name: video_clip_store_app_db_data
   deps_cache:
-    name: video_project_submission_app_deps_cache
+    name: video_clip_store_app_deps_cache
   assets_node_modules:
-    name: video_project_submission_app_assets_node_modules
+    name: video_clip_store_app_assets_node_modules
 
 networks:
-  video_project_submission_app_net:
-    name: video_project_submission_app_net
+  video_clip_store_app_net:
+    name: video_clip_store_app_net
     driver: bridge
     ipam:
       config:
