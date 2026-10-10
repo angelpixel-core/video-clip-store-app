@@ -143,6 +143,40 @@ services:
     networks:
       - video_project_submission_app_net
 
+  payment-postgres:
+    image: postgres:16-alpine
+    container_name: video-project-submission-app-payment-postgres
+    environment:
+      POSTGRES_USER: ${PAYMENT_POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${PAYMENT_POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${PAYMENT_POSTGRES_DB:-payment_sandbox}
+    ports:
+      - "${PAYMENT_POSTGRES_PORT:-10202}:5432"
+    volumes:
+      - payment_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - video_project_submission_app_net
+
+  payment-sandbox:
+    image: angelszymczak/payment-sandbox:0.1.0
+    container_name: video-project-submission-app-payment-sandbox
+    environment:
+      PORT: 8080
+      DATABASE_URL: ${PAYMENT_DATABASE_URL:-postgres://postgres:postgres@payment-postgres:5432/payment_sandbox?sslmode=disable}
+      NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_LICENSE_KEY:-}
+    ports:
+      - "${PAYMENT_SANDBOX_PORT:-10201}:8080"
+    depends_on:
+      payment-postgres:
+        condition: service_healthy
+    networks:
+      - video_project_submission_app_net
+
 volumes:
   db_data:
     name: video_project_submission_app_db_data
@@ -150,6 +184,8 @@ volumes:
     name: video_project_submission_app_deps_cache
   assets_node_modules:
     name: video_project_submission_app_assets_node_modules
+  payment_db_data:
+    name: video_project_submission_app_payment_db_data
 
 networks:
   video_project_submission_app_net:
