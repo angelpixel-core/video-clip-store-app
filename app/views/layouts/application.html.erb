@@ -68,7 +68,7 @@
 
               <div id="client-notifications-menu-list" class="client-notifications-menu-list">
                 <% if workspace_notifications_for(:client).any? %>
-                  <%= render partial: "notification_row", collection: workspace_notifications_for(:client), as: :notification, locals: { role: :client } %>
+                  <%= render partial: "orders/notification_row", collection: workspace_notifications_for(:client), as: :notification, locals: { role: :client } %>
                 <% else %>
                   <div class="px-3 py-3 text-body-secondary">No unread client notifications.</div>
                 <% end %>
@@ -99,7 +99,7 @@
 
               <div id="pm-notifications-menu-list" class="pm-notifications-menu-list">
                 <% if workspace_notifications_for(:pm).any? %>
-                  <%= render partial: "notification_row", collection: workspace_notifications_for(:pm), as: :notification, locals: { role: :pm } %>
+                  <%= render partial: "orders/notification_row", collection: workspace_notifications_for(:pm), as: :notification, locals: { role: :pm } %>
                 <% else %>
                   <div class="px-3 py-3 text-body-secondary">No unread PM notifications.</div>
                 <% end %>
@@ -163,7 +163,7 @@
           </div>
 
           <div class="vstack gap-3 w-100 align-items-end">
-            <%= render partial: "notification", collection: workspace_notifications_for(:client), as: :notification, locals: { role: :client } %>
+            <%= render partial: "orders/notification", collection: workspace_notifications_for(:client), as: :notification, locals: { role: :client } %>
           </div>
         </div>
       <% end %>
@@ -181,7 +181,7 @@
           </div>
 
           <div class="vstack gap-3 w-100 align-items-end">
-            <%= render partial: "notification", collection: workspace_notifications_for(:pm), as: :notification, locals: { role: :pm } %>
+            <%= render partial: "orders/notification", collection: workspace_notifications_for(:pm), as: :notification, locals: { role: :pm } %>
           </div>
         </div>
       <% end %>

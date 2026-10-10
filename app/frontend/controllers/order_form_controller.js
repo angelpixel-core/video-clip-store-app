@@ -1,6 +1,18 @@
 import { Controller } from "@hotwired/stimulus";
 import Modal from "bootstrap/js/dist/modal";
 
+const DEFAULT_CARD_RULES = [
+  { id: "visa", name: "Visa", pattern: "^4", lengths: [13, 16, 19], format: "4-4-4-4", cvc_length: 3 },
+  { id: "mastercard", name: "Mastercard", pattern: "^(5[1-5]|2[2-7])", lengths: [16], format: "4-4-4-4", cvc_length: 3 },
+  { id: "amex", name: "American Express", pattern: "^3[47]", lengths: [15], format: "4-6-5", cvc_length: 4 },
+  { id: "discover", name: "Discover", pattern: "^(6011|65|64[4-9]|622)", lengths: [16, 19], format: "4-4-4-4", cvc_length: 3 },
+  { id: "diners", name: "Diners Club", pattern: "^(36|38|30[0-5])", lengths: [14, 16], format: "4-6-4", cvc_length: 3 },
+  { id: "jcb", name: "JCB", pattern: "^35(2[89]|[3-8][0-9])", lengths: [16, 19], format: "4-4-4-4", cvc_length: 3 },
+  { id: "unionpay", name: "UnionPay", pattern: "^62", lengths: [16, 19], format: "4-4-4-4", cvc_length: 3 },
+  { id: "maestro", name: "Maestro", pattern: "^(5018|5020|5038|5893|6304|6759|676[1-3])", lengths: [12, 13, 14, 15, 16, 18, 19], format: "4-4-4-4", cvc_length: 3 },
+  { id: "elo", name: "Elo", pattern: "^(4011|4312|4389|4514|4576|5041|5067|5090|6277|6362|6363)", lengths: [16], format: "4-4-4-4", cvc_length: 3 }
+];
+
 export default class extends Controller {
   static targets = [
     "form",
@@ -17,6 +29,7 @@ export default class extends Controller {
     "paymentCardFront",
     "paymentCardBack",
     "paymentCardError",
+    "paymentCardBrandBadge",
     "paymentName",
     "paymentEmail",
     "paymentCardNumber",
@@ -27,6 +40,10 @@ export default class extends Controller {
     "finalizeButtonLabel",
     "finalizeButtonSpinner",
   ];
+
+  static values = {
+    cardRules: Array,
+  };
 
   connect() {
     this.modal = this.hasPaymentModalTarget
@@ -149,6 +166,37 @@ export default class extends Controller {
   unflipPaymentCard() {
     this.isPaymentCardFlipped = false;
     this.updatePaymentCardFlipState();
+  }
+
+  stopCardFlipPropagation(event) {
+    event.stopPropagation();
+  }
+
+  handleExpiryKeydown(event) {
+    if (event.key === "Tab" && !event.shiftKey) {
+      event.preventDefault();
+      this.focusPaymentCvc();
+    }
+  }
+
+  handleCvcKeydown(event) {
+    if (event.key === "Tab" && event.shiftKey) {
+      event.preventDefault();
+      this.unflipPaymentCard();
+      if (this.hasPaymentCardExpiryTarget) {
+        window.requestAnimationFrame(() => this.paymentCardExpiryTarget.focus());
+      }
+    } else if (event.key === "Tab" && !event.shiftKey) {
+      event.preventDefault();
+      this.unflipPaymentCard();
+      if (this.hasPaymentEmailTarget) {
+        window.requestAnimationFrame(() => this.paymentEmailTarget.focus());
+      }
+    }
+  }
+
+  onCvcBlur() {
+    this.validatePaymentFieldsOnBlur();
   }
 
   openPaymentModal(event) {
@@ -445,6 +493,55 @@ export default class extends Controller {
     this.setFinalizeButtonEnabled(canReview);
   }
 
+  getCardRules() {
+    if (this.hasCardRulesValue && Array.isArray(this.cardRulesValue) && this.cardRulesValue.length > 0) {
+      return this.cardRulesValue;
+    }
+    return DEFAULT_CARD_RULES;
+  }
+
+  detectCardBrand(numberDigits) {
+    if (!numberDigits) return null;
+    const rules = this.getCardRules();
+    for (const rule of rules) {
+      try {
+        const regex = new RegExp(rule.pattern);
+        if (regex.test(numberDigits)) {
+          return rule;
+        }
+      } catch (_e) {
+        // ignore regex compilation issues
+      }
+    }
+    return null;
+  }
+
+  updateBrandBadge(brand) {
+    if (!this.hasPaymentCardBrandBadgeTarget) return;
+
+    if (!brand) {
+      this.paymentCardBrandBadgeTarget.innerHTML = `<span class="payment-card-brand-text">CARD</span>`;
+      return;
+    }
+
+    if (brand.id === "visa") {
+      this.paymentCardBrandBadgeTarget.innerHTML = `<span style="font-weight:900; font-size:1.15rem; letter-spacing:0.12em; color:#ffffff; font-style:italic;">VISA</span>`;
+    } else if (brand.id === "mastercard") {
+      this.paymentCardBrandBadgeTarget.innerHTML = `
+        <svg viewBox="0 0 36 22" height="24" aria-label="Mastercard" role="img">
+          <circle cx="12" cy="11" r="10" fill="#EB001B"/>
+          <circle cx="24" cy="11" r="10" fill="#F79E1B" fill-opacity="0.86"/>
+        </svg>
+      `;
+    } else if (brand.id === "amex") {
+      this.paymentCardBrandBadgeTarget.innerHTML = `<span style="background:#006fcf; color:#fff; font-size:0.75rem; font-weight:800; padding:2px 7px; border-radius:4px; letter-spacing:0.08em;">AMEX</span>`;
+    } else if (brand.id === "discover") {
+      this.paymentCardBrandBadgeTarget.innerHTML = `<span style="color:#ff6000; font-weight:800; font-size:0.85rem; letter-spacing:0.06em;">DISCOVER</span>`;
+    } else {
+      this.paymentCardBrandBadgeTarget.innerHTML = `<span class="payment-card-brand-text">${brand.name.toUpperCase()}</span>`;
+    }
+  }
+
   updatePaymentCardPreview() {
     if (!this.hasPaymentCardShellTarget) return;
 
@@ -452,6 +549,10 @@ export default class extends Controller {
   }
 
   normalizePaymentInputs() {
+    const rawDigits = (this.paymentCardNumberTarget?.value || "").replace(/\D/g, "");
+    const brand = this.detectCardBrand(rawDigits);
+    const maxCvc = brand && brand.cvc_length ? brand.cvc_length : 3;
+
     if (this.hasPaymentCardNumberTarget) {
       this.paymentCardNumberTarget.value = this.formatCardNumber(
         this.paymentCardNumberTarget.value,
@@ -467,8 +568,11 @@ export default class extends Controller {
     if (this.hasPaymentCardCvcTarget) {
       this.paymentCardCvcTarget.value = (this.paymentCardCvcTarget.value || "")
         .replace(/\D/g, "")
-        .slice(0, 3);
+        .slice(0, maxCvc);
+      this.paymentCardCvcTarget.placeholder = maxCvc === 4 ? "1234" : "123";
     }
+
+    this.updateBrandBadge(brand);
   }
 
   validatePaymentFields(options = {}) {
@@ -482,11 +586,14 @@ export default class extends Controller {
     const expiryValue = (this.paymentCardExpiryTarget?.value || "").trim();
     const cvcDigits = (this.paymentCardCvcTarget?.value || "").replace(/\D/g, "");
 
+    const brand = this.detectCardBrand(numberDigits);
+    const requiredCvcLength = brand && brand.cvc_length ? brand.cvc_length : 3;
+
     const errors = {
       name: !name ? "Name on card is required." : null,
       number: this.validateCardNumber(numberDigits),
       expiry: this.validateCardExpiry(expiryValue),
-      cvc: cvcDigits.length !== 3 ? "CVC must be 3 digits." : null,
+      cvc: cvcDigits.length !== requiredCvcLength ? `CVC must be ${requiredCvcLength} digits.` : null,
     };
 
     this.setPaymentFieldState("paymentName", !errors.name, showErrors || !!name);
@@ -508,7 +615,15 @@ export default class extends Controller {
 
   validateCardNumber(numberDigits) {
     if (numberDigits.length === 0) return "Card number is required.";
-    if (numberDigits.length !== 16) return "Card number must be 16 digits.";
+    const brand = this.detectCardBrand(numberDigits);
+    const allowedLengths = brand && brand.lengths ? brand.lengths : [16];
+
+    if (!allowedLengths.includes(numberDigits.length)) {
+      if (allowedLengths.length === 1) {
+        return `Card number must be ${allowedLengths[0]} digits.`;
+      }
+      return `Card number must be ${allowedLengths.join(" or ")} digits.`;
+    }
 
     const digits = numberDigits.split("").map((digit) => Number(digit));
     const checksum = digits
@@ -581,8 +696,24 @@ export default class extends Controller {
   }
 
   formatCardNumber(value) {
-    return (value || "")
-      .replace(/\D/g, "")
+    const digits = (value || "").replace(/\D/g, "");
+    const brand = this.detectCardBrand(digits);
+
+    if (brand && brand.id === "amex") {
+      const p1 = digits.slice(0, 4);
+      const p2 = digits.slice(4, 10);
+      const p3 = digits.slice(10, 15);
+      return [p1, p2, p3].filter(Boolean).join(" ");
+    }
+
+    if (brand && brand.format === "4-6-4") {
+      const p1 = digits.slice(0, 4);
+      const p2 = digits.slice(4, 10);
+      const p3 = digits.slice(10, 14);
+      return [p1, p2, p3].filter(Boolean).join(" ");
+    }
+
+    return digits
       .slice(0, 16)
       .replace(/(.{4})/g, "$1 ")
       .trim();
