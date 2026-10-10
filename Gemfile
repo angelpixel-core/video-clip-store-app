@@ -32,6 +32,7 @@ gem "packwerk", "~> 3.3"
 gem "solid_cache"
 gem "solid_queue"
 gem "solid_cable"
+gem "payment-sdk", path: "vendor/gems/payment-ruby-sdk"
 
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false

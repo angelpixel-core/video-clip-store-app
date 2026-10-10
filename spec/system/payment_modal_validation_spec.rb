@@ -6,6 +6,9 @@ RSpec.describe "Payment modal validation", type: :system, js: true do
 
     workspace_account(:client, name: "Default Client")
     workspace_account(:pm, name: "Default PM")
+    offer = Offer.create!(key: "video_editing", name: "Video Editing", description: "Video editing services")
+    offer_item_type = OfferItemType.create!(key: "video_type", name: "Video Type", description: "Selectable video editing component", input_kind: "selection")
+    OfferVariant.create!(offer:, offer_item_type:, key: "highlight_reel", name: "Highlight Reel", description: "Short edit", price_cents: 25_000, output_format: "mp4")
     VideoType.create!(name: "Highlight Reel", description: "Short edit", price_cents: 25_000, output_format: "mp4")
   end
 

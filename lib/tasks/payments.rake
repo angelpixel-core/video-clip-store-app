@@ -61,11 +61,12 @@ def resolved_payment_from_env
   return Payments::Domain::Aggregates::Payment.find(explicit_payment_id) if explicit_payment_id.present?
 
   project_id = ENV["PROJECT_ID"].presence
-  return unless project_id.present?
+  if project_id.present?
+    project = Project.find(project_id)
+    payment = project.active_payment || project.payments.order(created_at: :desc).first
+    abort "Project #{project_id} has no payment" unless payment.present?
+    return payment
+  end
 
-  project = Project.find(project_id)
-  payment = project.active_payment || project.payments.order(created_at: :desc).first
-  abort "Project #{project_id} has no payment" unless payment.present?
-
-  payment
+  Payments::Domain::Aggregates::Payment.where(status: "processing").order(created_at: :desc).first
 end

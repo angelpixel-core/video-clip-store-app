@@ -20,6 +20,15 @@ run_compose() {
 }
 
 case "${1:-}" in
+  setup)
+    shift
+    run_compose exec web bundle exec rails db:prepare:with_data "$@"
+    run_compose exec web bundle exec rails db:seed "$@"
+    ;;
+  migrate)
+    shift
+    run_compose exec web bundle exec rails db:migrate:with_data "$@"
+    ;;
   seeds)
     shift
     run_compose exec web bundle exec rails db:seed "$@"
@@ -33,7 +42,7 @@ case "${1:-}" in
     run_compose exec web bundle exec rails console "$@"
     ;;
   *)
-    echo "Usage: db.sh {seeds|maintenance/reset_order_data|console}" >&2
+    echo "Usage: db.sh {setup|migrate|seeds|maintenance/reset_order_data|console}" >&2
     exit 1
     ;;
 esac

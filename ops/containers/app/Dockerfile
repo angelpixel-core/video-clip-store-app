@@ -45,6 +45,7 @@ RUN apk add --no-cache \
   chromium \
   chromium-chromedriver
 
+COPY vendor ./vendor
 COPY Gemfile Gemfile.lock ./
 RUN --mount=type=cache,target=/usr/local/bundle \
   bundle install && \
@@ -83,6 +84,7 @@ RUN apk add --no-cache \
   chromium \
   chromium-chromedriver
 
+COPY vendor ./vendor
 COPY Gemfile Gemfile.lock ./
 RUN --mount=type=cache,target=/usr/local/bundle \
   bundle install && \

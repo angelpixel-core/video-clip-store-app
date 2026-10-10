@@ -4,7 +4,7 @@ module WorkspaceProjectShell
   included do
     before_action :load_project, only: %i[edit update reopen]
     before_action :ensure_draft_project, only: %i[edit update]
-    before_action :load_workspace_project, only: %i[accept complete cancel request_refund approve_refund_request reject_refund_request]
+    before_action :load_workspace_project, only: %i[accept complete cancel request_refund approve_refund_request reject_refund_request simulate_payment_webhook]
     before_action :load_offer_catalog, only: %i[new edit update]
   end
 
