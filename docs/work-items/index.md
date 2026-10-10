@@ -248,3 +248,8 @@ Payments docs are centralized at [Payments Index](../payments.md).
 
 - [x] [Payment Card Backface Isolation and Sandbox Integration](./053-payment-card-backface-isolation-and-sandbox.md)
 
+## 54
+
+- [x] [E2E Operations Walkthrough and Bundle Sync Automation](./054-e2e-operations-walkthrough-and-bundle-sync.md)
+
+
