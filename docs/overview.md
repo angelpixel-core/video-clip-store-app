@@ -19,6 +19,10 @@ This folder organizes the project baseline, decisions, changes, and work items.
 
 - [x] [Sprints Index](./sprints/index.md)
 
+## Roadmaps
+
+- [x] [Roadmap Index](./roadmap/index.md)
+
 ## Future Changes
 
 - [x] [Changes Index](./changes/index.md)
