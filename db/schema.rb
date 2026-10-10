@@ -291,7 +291,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_02_090000) do
     t.string "provider", default: "fake", null: false
     t.string "reference", null: false
     t.datetime "updated_at", null: false
-    t.index ["payment_id"], name: "index_payment_method_references_on_payment_id"
+    t.index ["payment_id"], name: "index_payment_method_references_on_payment_id", unique: true
     t.index ["provider", "method_type"], name: "index_payment_method_references_on_provider_and_method_type"
     t.index ["reference"], name: "index_payment_method_references_on_reference", unique: true
   end
@@ -417,7 +417,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_02_090000) do
     t.string "status", default: "pending", null: false
     t.datetime "updated_at", null: false
     t.index ["payment_id", "status"], name: "index_refunds_on_payment_id_and_status"
+    t.index ["payment_id"], name: "index_refunds_on_payment_id"
     t.index ["payment_method_reference_id", "status"], name: "index_refunds_on_payment_method_reference_id_and_status"
+    t.index ["payment_method_reference_id"], name: "index_refunds_on_payment_method_reference_id"
     t.index ["provider_reference"], name: "index_refunds_on_provider_reference", unique: true
   end
 
