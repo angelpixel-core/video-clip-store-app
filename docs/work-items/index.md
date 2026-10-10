@@ -243,3 +243,8 @@ Payments docs are centralized at [Payments Index](../payments.md).
 ## 50
 
 - [ ] [Grouped RuboCop Reporting](./050-grouped-rubocop-reporting.md)
+
+## 53
+
+- [x] [Payment Card Backface Isolation and Sandbox Integration](./053-payment-card-backface-isolation-and-sandbox.md)
+
