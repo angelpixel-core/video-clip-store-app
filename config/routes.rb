@@ -35,6 +35,7 @@ Rails.application.routes.draw do
       patch :request_refund
       patch :approve_refund_request
       patch :reject_refund_request
+      post :simulate_payment_webhook
     end
 
     resources :comments, only: :create, controller: "comments"

@@ -39,7 +39,12 @@ module Fulfillment
             return legacy_video_type_id.to_i if VideoType.exists?(id: legacy_video_type_id)
 
             offer_variant = OfferVariant.find(legacy_video_type_id)
-            VideoType.find_by!(name: offer_variant.name).id
+            video_type = VideoType.find_or_create_by!(name: offer_variant.name) do |vt|
+              vt.description = offer_variant.description
+              vt.price_cents = offer_variant.price_cents
+              vt.output_format = offer_variant.output_format.presence || "mp4"
+            end
+            video_type.id
           end
         end
       end
