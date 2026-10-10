@@ -28,16 +28,61 @@ services:
       - ../../env/.local/${STACK_ENV}.env
     environment:
       MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD:-root_password}"
-      VITE_RUBY_HOST: "${VITE_RUBY_HOST:-host.docker.internal}"
+      VITE_RUBY_HOST: "${VITE_RUBY_HOST:-localhost}"
+      MARIADB_TLS_DISABLE_PEER_VERIFICATION: "1"
+      RUN_DB_PREPARE: "1"
+    volumes:
+      - ../..:/app
+      - deps_cache:/usr/local/bundle
+      - assets_node_modules:/app/node_modules
+    entrypoint: ["/bin/sh", "/app/ops/containers/app/entrypoint.sh"]
+    command: ["bundle", "exec", "rails", "server", "-b", "0.0.0.0"]
+    ports:
+      - "${APP_HOST_PORT:-20001}:${APP_PORT:-3000}"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:${APP_PORT:-3000}/up >/dev/null"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+    networks:
+      - video_project_submission_app_net
+
+  worker:
+    build:
+      context: ../..
+      dockerfile: ops/containers/app/Dockerfile
+      target: "${APP_IMAGE_STAGE:-dev}"
+      args:
+        RUBY_VERSION: "${RUBY_VERSION:-4.0.3}"
+        BUNDLE_DEPLOYMENT: "${BUNDLE_DEPLOYMENT:-1}"
+        BUNDLE_PATH: "${BUNDLE_PATH:-/usr/local/bundle}"
+        BUNDLE_WITHOUT: "${BUNDLE_WITHOUT:-development:test}"
+        BUNDLE_JOBS: "${BUNDLE_JOBS:-4}"
+        BUNDLE_RETRY: "${BUNDLE_RETRY:-3}"
+        UID: "${UID:-1000}"
+        GID: "${GID:-1000}"
+    container_name: video-project-submission-app-worker
+    depends_on:
+      db:
+        condition: service_healthy
+      web:
+        condition: service_healthy
+    env_file:
+      - ../../env/${STACK_ENV}/app/core.env
+      - ../../env/${STACK_ENV}/app/db.env
+      - ../../env/${STACK_ENV}/app/secrets.local.env
+      - ../../env/${STACK_ENV}/db/secrets.local.env
+      - ../../env/${STACK_ENV}/stack/secrets.local.env
+      - ../../env/.local/${STACK_ENV}.env
+    environment:
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD:-root_password}"
       MARIADB_TLS_DISABLE_PEER_VERIFICATION: "1"
     volumes:
       - ../..:/app
       - deps_cache:/usr/local/bundle
     entrypoint: ["/bin/sh", "/app/ops/containers/app/entrypoint.sh"]
-    command:
-      ["bundle", "exec", "rails", "server", "-b", "0.0.0.0", "-p", "3000"]
-    ports:
-      - "${APP_PORT:-3000}:3000"
+    command: ["bin/jobs"]
     networks:
       - video_project_submission_app_net
 
@@ -63,9 +108,13 @@ services:
       - deps_cache:/usr/local/bundle
       - assets_node_modules:/app/node_modules
     command:
-      ["sh", "-lc", "if [ ! -d node_modules/bootstrap ] || [ ! -d node_modules/jquery ] || [ ! -d node_modules/@popperjs/core ]; then npm ci; fi; exec bundle exec vite dev"]
+      [
+        "sh",
+        "-lc",
+        "if [ ! -d node_modules/bootstrap ] || [ ! -d node_modules/jquery ] || [ ! -d node_modules/@popperjs/core ]; then npm ci; fi; exec bundle exec vite dev",
+      ]
     ports:
-      - "3036:3036"
+      - "${ASSETS_HOST_PORT:-20003}:${ASSETS_PORT:-5173}"
     networks:
       - video_project_submission_app_net
 
@@ -79,20 +128,52 @@ services:
       MYSQL_DATABASE: "${MYSQL_DATABASE:-video_project_submission_app_development}"
       MYSQL_USER: "${MYSQL_USER:-app}"
       MYSQL_PASSWORD: "${MYSQL_PASSWORD:-app_password}"
+    command: ["mysqld", "--port=${DB_PORT:-3306}"]
     ports:
-      - "${MYSQL_PORT:-3306}:3306"
+      - "${DB_HOST_PORT:-20002}:${DB_PORT:-3306}"
     volumes:
       - db_data:/var/lib/mysql
       - ../containers/db/entrypoint/initdb.d:/docker-entrypoint-initdb.d:ro
     healthcheck:
       test:
-        [
-          "CMD-SHELL",
-          "mysqladmin ping -h 127.0.0.1 -u root -p$$MYSQL_ROOT_PASSWORD --silent",
-        ]
+        ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -P ${DB_PORT:-3306} -u root -p$$MYSQL_ROOT_PASSWORD --silent"]
       interval: 5s
       timeout: 5s
       retries: 20
+    networks:
+      - video_project_submission_app_net
+
+  payment-postgres:
+    image: postgres:16-alpine
+    container_name: video-project-submission-app-payment-postgres
+    environment:
+      POSTGRES_USER: ${PAYMENT_POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${PAYMENT_POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${PAYMENT_POSTGRES_DB:-payment_sandbox}
+    ports:
+      - "${PAYMENT_POSTGRES_PORT:-10202}:5432"
+    volumes:
+      - payment_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - video_project_submission_app_net
+
+  payment-sandbox:
+    image: angelszymczak/payment-sandbox:0.1.0
+    container_name: video-project-submission-app-payment-sandbox
+    environment:
+      PORT: 8080
+      DATABASE_URL: ${PAYMENT_DATABASE_URL:-postgres://postgres:postgres@payment-postgres:5432/payment_sandbox?sslmode=disable}
+      NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_LICENSE_KEY:-}
+    ports:
+      - "${PAYMENT_SANDBOX_PORT:-10201}:8080"
+    depends_on:
+      payment-postgres:
+        condition: service_healthy
     networks:
       - video_project_submission_app_net
 
@@ -103,6 +184,8 @@ volumes:
     name: video_project_submission_app_deps_cache
   assets_node_modules:
     name: video_project_submission_app_assets_node_modules
+  payment_db_data:
+    name: video_project_submission_app_payment_db_data
 
 networks:
   video_project_submission_app_net:

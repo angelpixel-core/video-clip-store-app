@@ -21,6 +21,7 @@ Rails.application.configure do
   # Show full error reports.
   config.consider_all_requests_local = true
   config.cache_store = :null_store
+  config.active_job.queue_adapter = :test
 
   # Render exception templates for rescuable exceptions and raise for other exceptions.
   config.action_dispatch.show_exceptions = :rescuable
@@ -50,4 +51,13 @@ Rails.application.configure do
 
   # Raise error when a before_action's only/except options reference missing actions.
   config.action_controller.raise_on_missing_callback_actions = true
+
+  # Allow Action Cable to accept the browser test origin.
+  config.action_cable.disable_request_forgery_protection = true
+
+  # Allow Capybara's local test server host/port during system specs.
+  config.hosts << /127\.0\.0\.1/
+  config.hosts << /localhost/
+  config.hosts << "example.com"
+  config.hosts << "www.example.com"
 end

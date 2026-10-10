@@ -1,0 +1,11 @@
+<div class="border rounded-3 p-3 bg-body-tertiary">
+  <div class="d-flex justify-content-between align-items-start gap-3 mb-2">
+    <div>
+      <strong class="d-block"><%= comment.author.name %></strong>
+      <span class="badge text-bg-secondary text-uppercase"><%= comment.author.role.upcase %></span>
+    </div>
+    <small class="text-body-secondary"><%= l(comment.created_at, format: :short) %></small>
+  </div>
+
+  <p class="mb-0"><%= comment.body %></p>
+</div>

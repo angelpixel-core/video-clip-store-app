@@ -27,3 +27,11 @@ variable "region" {
   description = "Render region for the worker service."
   type        = string
 }
+
+variable "env_vars" {
+  description = "Environment variables for the worker service."
+  type = map(object({
+    value          = optional(string)
+    generate_value = optional(bool)
+  }))
+}

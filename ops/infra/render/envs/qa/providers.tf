@@ -1,3 +1,3 @@
 provider "render" {
-  owner_id = "tea-d99u3cnaqgkc738r033g"
+  owner_id = var.owner_id
 }

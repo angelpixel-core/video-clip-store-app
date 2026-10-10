@@ -29,7 +29,7 @@ jobs:
           bundler-cache: true
 
       - name: Lint code for consistent style
-        run: bin/rubocop -f github
+        run: make lint
 
       - name: Run Dockerized automated tests
         run: make test/ci
@@ -90,7 +90,7 @@ jobs:
           bundler-cache: true
 
       - name: Lint code for consistent style
-        run: bin/rubocop -f github
+        run: make lint
 
       - name: Scan for common Rails security vulnerabilities using static analysis
         run: bin/brakeman --no-pager

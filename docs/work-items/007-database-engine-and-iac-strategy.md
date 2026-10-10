@@ -43,6 +43,20 @@ title: Database Engine and IaC Strategy
 | Push / merge to `main` | release flow | Run the usual checks and create the release tag when applicable. |
 | Any staging/prod deploy trigger | `promote-staging.yml` / infra workflows | Disabled until the workspace plan changes. |
 
+## Portability Matrix
+
+| Area | Hardcoded | Variable / Secret |
+| --- | --- | --- |
+| Terraform module names | `web`, `database`, `worker`, `dns` | n/a |
+| Environment names | `qa`, `staging`, `prod` | n/a |
+| GitHub Actions workflow names | `CI`, `Infra Render`, `Promote Staging` | n/a |
+| Render workspace owner | n/a | `RENDER_OWNER_ID` |
+| Render API auth | n/a | `RENDER_API_KEY` |
+| Rails master key | n/a | `RAILS_MASTER_KEY` |
+| Render service IDs | n/a | `RENDER_QA_SERVICE_ID`, `RENDER_STAGING_SERVICE_ID`, `RENDER_PROD_SERVICE_ID` |
+| Render environment IDs | n/a | `RENDER_QA_ENVIRONMENT_ID`, `RENDER_STAGING_ENVIRONMENT_ID`, `RENDER_PROD_ENVIRONMENT_ID` |
+| Service/import IDs currently adopted | `srv-d9a05ut7vvec738cb0n0`, `dpg-d9a0goecjfls73928u5g-a` | n/a until re-adopting elsewhere |
+
 ## Scope
 
 - MySQL for `dev` and `test`.

@@ -1,0 +1,118 @@
+<div class="modal fade payment-modal-animated" tabindex="-1" aria-hidden="true" data-order-form-target="paymentModal" data-order-form-card-rules-value="<%= order_form.card_rules.to_json %>">
+  <div class="modal-dialog modal-dialog-centered payment-modal-dialog">
+    <div class="modal-content payment-modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title h5"><%= order_form.fields.payment_modal_title %></h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="alert alert-info d-flex justify-content-between align-items-center payment-stagger-1">
+          <span>Total due</span>
+          <strong data-order-form-target="cartTotal">$0.00</strong>
+        </div>
+
+        <p class="text-muted small mb-3 payment-stagger-1"><%= order_form.fields.payment_modal_description %></p>
+
+        <div class="payment-card-stage mb-4 payment-stagger-2">
+          <div class="payment-card-shell" data-order-form-target="paymentCardShell">
+            <!-- Front Face -->
+            <div class="payment-card-face payment-card-face-front" data-order-form-target="paymentCardFront">
+              <div class="payment-card-shine"></div>
+
+              <!-- Top Row: EMV Chip, NFC Contactless, Brand Badge -->
+              <div class="payment-card-top-row">
+                <div class="payment-card-emv-group">
+                  <button type="button" class="payment-card-chip-trigger" data-action="click->order-form#focusPaymentCvc" aria-label="Enter card security code" tabindex="-1">
+                    <span class="visually-hidden">Enter card security code</span>
+                    <svg class="payment-card-chip-svg" viewBox="0 0 54 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                      <defs>
+                        <linearGradient id="emv-gold-grad" x1="0" y1="0" x2="54" y2="40" gradientUnits="userSpaceOnUse">
+                          <stop offset="0%" stop-color="#EED58F"/>
+                          <stop offset="35%" stop-color="#CA9E47"/>
+                          <stop offset="70%" stop-color="#FDF0CD"/>
+                          <stop offset="100%" stop-color="#9C7323"/>
+                        </linearGradient>
+                        <linearGradient id="emv-line-grad" x1="0" y1="0" x2="54" y2="40" gradientUnits="userSpaceOnUse">
+                          <stop offset="0%" stop-color="#6E4F13"/>
+                          <stop offset="100%" stop-color="#4F3607"/>
+                        </linearGradient>
+                      </defs>
+                      <!-- Base chip plate -->
+                      <rect x="1" y="1" width="52" height="38" rx="6" fill="url(#emv-gold-grad)" stroke="#8F681C" stroke-width="1.2"/>
+                      <!-- Outer etched boundary -->
+                      <rect x="4" y="4" width="46" height="32" rx="4" fill="none" stroke="url(#emv-line-grad)" stroke-width="0.8" opacity="0.75"/>
+                      <!-- Circuit connection lines -->
+                      <path d="M4 14H18M4 26H18M36 14H50M36 26H50M18 4V36M36 4V36" stroke="url(#emv-line-grad)" stroke-width="0.9" opacity="0.85"/>
+                      <!-- Central core pad -->
+                      <rect x="18" y="13" width="18" height="14" rx="2" fill="none" stroke="url(#emv-line-grad)" stroke-width="0.9" opacity="0.85"/>
+                    </svg>
+                  </button>
+                </div>
+
+                <!-- Dynamic Brand Badge Target -->
+                <div class="payment-card-brand-badge" data-order-form-target="paymentCardBrandBadge" aria-live="polite">
+                  <span class="payment-card-brand-text">CARD</span>
+                </div>
+              </div>
+
+              <!-- Middle: Card Number Field -->
+              <div class="payment-card-field payment-card-number-field">
+                <label class="payment-card-label" for="payment-card-number">Card number</label>
+                <input id="payment-card-number" type="text" inputmode="numeric" autocomplete="cc-number" class="form-control payment-card-input payment-card-input-lg" placeholder="4242 4242 4242 4242" data-order-form-target="paymentCardNumber" data-action="input->order-form#syncFields focus->order-form#unflipPaymentCard blur->order-form#validatePaymentFieldsOnBlur" aria-describedby="payment-card-error">
+              </div>
+
+              <!-- Bottom Row: Cardholder & Expiry Fields -->
+              <div class="payment-card-bottom-row">
+                <div class="payment-card-field payment-card-field-grow">
+                  <label class="payment-card-label" for="payment-name">Cardholder</label>
+                  <input id="payment-name" type="text" autocomplete="cc-name" class="form-control payment-card-input" placeholder="FULL NAME" data-order-form-target="paymentName" data-action="input->order-form#syncFields focus->order-form#unflipPaymentCard blur->order-form#validatePaymentFieldsOnBlur" aria-describedby="payment-card-error">
+                </div>
+
+                <div class="payment-card-field payment-card-expiry-field">
+                  <label class="payment-card-label" for="payment-card-expiry">Expiry</label>
+                  <input id="payment-card-expiry" type="text" inputmode="numeric" autocomplete="cc-exp" class="form-control payment-card-input" placeholder="MM/YY" data-order-form-target="paymentCardExpiry" data-action="input->order-form#syncFields focus->order-form#unflipPaymentCard blur->order-form#validatePaymentFieldsOnBlur keydown->order-form#handleExpiryKeydown" aria-describedby="payment-card-error">
+                </div>
+              </div>
+            </div>
+
+            <!-- Back Face -->
+            <div class="payment-card-face payment-card-face-back" data-order-form-target="paymentCardBack" data-action="click->order-form#unflipPaymentCard">
+              <div class="payment-card-magnetic-strip"></div>
+              
+              <div class="payment-card-back-body">
+                <div class="payment-card-signature-panel">
+                  <div class="payment-card-signature-lines"></div>
+                  <div class="payment-card-cvc-box" data-action="click->order-form#stopCardFlipPropagation">
+                    <label class="payment-card-label text-dark" for="payment-card-cvc">CVC</label>
+                    <input id="payment-card-cvc" type="text" inputmode="numeric" autocomplete="cc-csc" class="form-control payment-card-input payment-card-input-back" placeholder="123" data-order-form-target="paymentCardCvc" data-action="focus->order-form#flipPaymentCard blur->order-form#onCvcBlur keydown->order-form#handleCvcKeydown input->order-form#syncFields" aria-describedby="payment-card-error">
+                  </div>
+                </div>
+
+                <div class="payment-card-back-notes">
+                  <p class="mb-0">This simulated card is authorized for sample checkout submissions.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p id="payment-card-error" class="payment-card-error d-none mb-3" data-order-form-target="paymentCardError" role="alert" aria-live="polite"></p>
+
+        <div class="mb-3 payment-stagger-3">
+          <label class="form-label" for="payment-email"><%= order_form.fields.billing_email_label %></label>
+          <input id="payment-email" type="email" autocomplete="email" class="form-control" data-order-form-target="paymentEmail" data-action="input->order-form#syncFields focus->order-form#unflipPaymentCard">
+        </div>
+      </div>
+      <div class="modal-footer payment-stagger-4">
+        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal"><%= order_form.fields.cancel_button_label %></button>
+        <button type="button" class="btn btn-primary" data-action="click->order-form#beginFinalize" data-order-form-target="finalizeButton">
+          <span data-order-form-target="finalizeButtonLabel"><%= order_form.fields.finalize_button_label %></span>
+          <span class="d-none d-inline-flex align-items-center gap-2" data-order-form-target="finalizeButtonSpinner">
+            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            <span><%= order_form.fields.finalize_spinner_label %></span>
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,87 @@
+<h1><%= case @recipient_role
+when "pm"
+  case @event_type
+  when "project_created"
+    "New order created"
+  when "project_accepted"
+    "Order accepted"
+  when "project_cancelled"
+    "Order cancelled"
+  when "project_refund_requested"
+    "Refund requested"
+  when "project_refund_approved"
+    "Refund approved"
+  when "project_refund_rejected"
+    "Refund rejected"
+  when "project_reopened"
+    "Order reopened"
+  when "project_rejected"
+    "Order rejected"
+  else
+    "Order update"
+  end
+else
+  case @event_type
+  when "project_created"
+    "Your order was created"
+  when "project_accepted"
+    "Your order was accepted"
+  when "project_cancelled"
+    "Your order was cancelled"
+  when "project_refund_requested"
+    "A refund was requested for your order"
+  when "project_refund_approved"
+    "Your refund request was approved"
+  when "project_refund_rejected"
+    "Your refund request was rejected"
+  when "project_reopened"
+    "Your order was reopened"
+  when "project_rejected"
+    "Your order needs attention"
+  else
+    "Order update"
+  end
+end %></h1>
+
+<p><strong>Order:</strong> <%= @project.name %></p>
+<p><strong>Client:</strong> <%= @project.owner.name %></p>
+<p><strong>Status:</strong> <%= @project.status.humanize %></p>
+<p><strong>Budget:</strong> <%= number_to_currency(@project.total_budget_cents.to_f / 100, unit: (@project.payments.first&.currency || "USD") + " ") %></p>
+
+<% if @recipient_role == "pm" %>
+  <% if @event_type == "project_created" %>
+    <p>This order is ready for review and next-step planning.</p>
+  <% elsif @event_type == "project_accepted" %>
+    <p>The client has been notified and the order is moving forward.</p>
+  <% elsif @event_type == "project_cancelled" %>
+    <p>The client has been notified that the order was cancelled.</p>
+  <% elsif @event_type == "project_refund_requested" %>
+    <p>The client has been notified that the refund request is pending review.</p>
+  <% elsif @event_type == "project_refund_approved" %>
+    <p>The refund request has been approved and the refund is being processed.</p>
+  <% elsif @event_type == "project_refund_rejected" %>
+    <p>The refund request has been rejected.</p>
+  <% elsif @event_type == "project_reopened" %>
+    <p>The client reopened the order so work can continue.</p>
+  <% elsif @event_type == "project_rejected" %>
+    <p>The client should be notified of the requested changes.</p>
+  <% end %>
+<% else %>
+  <% if @event_type == "project_created" %>
+    <p>Next step: Your PM will review the order and move it forward.</p>
+  <% elsif @event_type == "project_accepted" %>
+    <p>Next step: Your PM has accepted the order and work is in progress.</p>
+  <% elsif @event_type == "project_cancelled" %>
+    <p>Next step: The order was cancelled by the PM.</p>
+  <% elsif @event_type == "project_refund_requested" %>
+    <p>Next step: A refund request is pending operator review.</p>
+  <% elsif @event_type == "project_refund_approved" %>
+    <p>Next step: The refund was approved by the operator.</p>
+  <% elsif @event_type == "project_refund_rejected" %>
+    <p>Next step: The refund request was rejected by the operator.</p>
+  <% elsif @event_type == "project_reopened" %>
+    <p>Next step: The client reopened the order for editing.</p>
+  <% elsif @event_type == "project_rejected" %>
+    <p>Next step: Your PM needs changes before the order can move forward.</p>
+  <% end %>
+<% end %>

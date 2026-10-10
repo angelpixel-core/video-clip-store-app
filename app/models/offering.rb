@@ -1,0 +1,2 @@
+class Offering < Offer
+end

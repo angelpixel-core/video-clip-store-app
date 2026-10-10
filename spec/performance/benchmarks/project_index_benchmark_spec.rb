@@ -1,7 +1,7 @@
 require "rails_helper"
 
-RSpec.describe "Project index benchmark" do
-  it "documents the future project index benchmark" do
-    skip "Project index benchmark is not implemented yet"
+RSpec.describe "Order index benchmark" do
+  it "documents the future order index benchmark" do
+    skip "Order index benchmark is not implemented yet"
   end
 end

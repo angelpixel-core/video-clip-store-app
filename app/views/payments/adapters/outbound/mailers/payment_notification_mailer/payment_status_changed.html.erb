@@ -1,0 +1,36 @@
+<h1><%= case @recipient_role
+when "client"
+  @intent.to_status == "failed" ? "Your payment could not be confirmed" : "Your payment was confirmed"
+when "pm"
+  @intent.to_status == "failed" ? "Payment confirmation failed" : "Payment confirmation succeeded"
+else
+  "Payment update"
+end %></h1>
+
+<p><strong>Project:</strong> <%= @project.name %></p>
+<p><strong>Client:</strong> <%= @project.owner.name %></p>
+<p><strong>Payment status:</strong> <%= @intent.from_status.humanize %> -> <%= @intent.to_status.humanize %></p>
+<p><strong>Amount:</strong> <%= @payment.currency %> <%= format("%.2f", @payment.amount_cents.to_f / 100) %></p>
+
+<% if @recipient_role == "client" %>
+  <% if @intent.to_status == "failed" %>
+    <p>We could not confirm this payment. Please try again or contact the PM.</p>
+    <% if @intent.event_type == "payment.failed_final" %>
+      <p><strong>Failure reason:</strong> <%= @intent.payload["failure_reason_code"].presence || "unknown_error" %></p>
+    <% end %>
+  <% else %>
+    <p>Your payment was confirmed and the project can continue.</p>
+  <% end %>
+<% else %>
+  <p><strong>Webhook event id:</strong> <%= @intent.payload["webhook_event_id"] %></p>
+  <p><strong>Provider event id:</strong> <%= @intent.payload["provider_event_id"] %></p>
+  <p><strong>Project status:</strong> <%= @intent.to_status.humanize %></p>
+  <% if @intent.to_status == "failed" %>
+    <p>The payment attempt failed and the client should be nudged to retry.</p>
+    <% if @intent.event_type == "payment.failed_final" %>
+      <p><strong>Failure reason:</strong> <%= @intent.payload["failure_reason_code"].presence || "unknown_error" %></p>
+    <% end %>
+  <% else %>
+    <p>The payment was confirmed and the client can be moved forward.</p>
+  <% end %>
+<% end %>

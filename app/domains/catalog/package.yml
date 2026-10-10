@@ -1,0 +1,5 @@
+enforce_dependencies: true
+dependencies:
+  - app/domains/shared
+  - app/domains/identity
+  - .

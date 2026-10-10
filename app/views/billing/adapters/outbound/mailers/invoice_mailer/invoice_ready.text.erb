@@ -1,0 +1,9 @@
+Your invoice is ready
+
+Project: <%= @project.name %>
+Invoice: <%= @payment.invoice_number %>
+Amount: <%= @payment.currency %> <%= format("%.2f", @payment.amount_cents.to_f / 100) %>
+
+<% if @payment.invoice_document.attached? %>
+Download: <%= rails_blob_url(@payment.invoice_document, disposition: "attachment") %>
+<% end %>

@@ -13,11 +13,11 @@ tags:
 
 ## In Scope
 
-- [ ] Client-facing project list.
-- [ ] Order flow for selecting video types.
-- [ ] Simulated checkout and project creation.
-- [ ] Default PM assignment.
-- [ ] Background notification creation.
+- [x] Client-facing order list.
+- [x] Order flow for selecting video types.
+- [x] Simulated checkout and order creation.
+- [x] Default PM assignment.
+- [x] Background notification creation.
 
 ## Out of Scope
 

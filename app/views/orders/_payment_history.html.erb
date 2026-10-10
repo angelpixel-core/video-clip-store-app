@@ -1,0 +1,145 @@
+<section id="payment-history" class="card shadow-sm border-0" data-role-scope="pm">
+  <div class="card-body p-4">
+    <div class="d-flex justify-content-between align-items-start gap-3 mb-4">
+      <div>
+        <p class="text-uppercase text-body-secondary small mb-1">Payment history</p>
+        <h2 class="h5 mb-0">Webhook events and attempts</h2>
+      </div>
+      <span class="badge text-bg-dark"><%= payments.size %></span>
+    </div>
+
+    <% if payments.any? %>
+      <div class="vstack gap-3">
+        <% payments.each do |payment| %>
+          <article class="border rounded-3 p-3 bg-body-tertiary">
+            <div class="d-flex flex-column flex-md-row justify-content-between gap-3 mb-3">
+              <div>
+                <strong class="d-block">Payment #<%= payment.id %></strong>
+                <small class="text-body-secondary">
+                  Provider: <%= payment.provider %> · Reference: <%= payment.provider_reference.presence || "pending" %>
+                </small>
+              </div>
+
+              <div class="text-md-end">
+                <span class="badge <%= payment.active? ? "text-bg-info" : payment.status == "succeeded" ? "text-bg-success" : payment.status == "failed" ? "text-bg-danger" : "text-bg-secondary" %> text-white text-uppercase">
+                  <%= payment.status %>
+                </span>
+                <div class="small text-body-secondary mt-1">
+                  <%= l(payment.created_at, format: :short) %>
+                </div>
+                <% if payment.confirmed_at.present? %>
+                  <div class="small text-success mt-1">Confirmed <%= l(payment.confirmed_at, format: :short) %></div>
+                <% elsif payment.failed_at.present? %>
+                  <div class="small text-danger mt-1">Failed <%= l(payment.failed_at, format: :short) %></div>
+                <% else %>
+                  <div class="small text-body-secondary mt-1">Awaiting confirmation</div>
+                <% end %>
+              </div>
+            </div>
+
+            <div class="row g-3">
+              <div class="col-12 col-lg-6">
+                <h3 class="h6 text-uppercase text-body-secondary mb-2">Webhook events</h3>
+                <% events = payment.webhook_events.sort_by(&:created_at).reverse %>
+                <% if events.any? %>
+                  <div class="vstack gap-2">
+                    <% events.each do |event| %>
+                      <% attempts = event.processing_attempts.order(:attempt_number) %>
+                      <div class="border rounded-3 bg-white p-3">
+                        <div class="d-flex justify-content-between gap-3 mb-1">
+                          <strong><%= event.event_type %></strong>
+                          <small class="text-body-secondary"><%= l(event.received_at, format: :short) %></small>
+                        </div>
+                        <div class="small text-body-secondary">
+                          Event: <%= event.provider_event_id %>
+                          <% if event.payment_id.present? %>
+                            · Payment #<%= event.payment_id %>
+                          <% end %>
+                          <% if event.project_id.present? %>
+                            · Order #<%= event.project_id %>
+                          <% end %>
+                        </div>
+                        <div class="small text-body-secondary">
+                          Attempts: <%= event.processing_attempts_count %>
+                          <% if event.last_attempted_at.present? %>
+                            · Last attempt <%= l(event.last_attempted_at, format: :short) %>
+                          <% end %>
+                        </div>
+                        <% if attempts.any? %>
+                          <div class="vstack gap-2 mt-2">
+                            <% attempts.each do |attempt| %>
+                              <div class="border rounded-3 bg-body-tertiary p-2">
+                                <div class="d-flex justify-content-between gap-3 mb-1">
+                                  <strong>Attempt #<%= attempt.attempt_number %></strong>
+                                  <small class="text-body-secondary"><%= l(attempt.started_at, format: :short) %></small>
+                                </div>
+                                <div class="small text-body-secondary">
+                                  <span class="badge <%= attempt.status == "succeeded" ? "text-bg-success" : attempt.status == "failed" ? "text-bg-danger" : "text-bg-secondary" %> text-white text-uppercase me-2"><%= attempt.status %></span>
+                                  <% if attempt.finished_at.present? %>
+                                    Finished <%= l(attempt.finished_at, format: :short) %>
+                                  <% else %>
+                                    In progress
+                                  <% end %>
+                                </div>
+                                <% if attempt.error_message.present? %>
+                                  <div class="small text-danger mt-1"><%= attempt.error_message %></div>
+                                <% end %>
+                              </div>
+                            <% end %>
+                          </div>
+                        <% end %>
+                        <div class="small text-body-secondary">
+                          <span class="badge <%= event.applied? ? "text-bg-success" : event.status == "failed" ? "text-bg-danger" : "text-bg-secondary" %> text-white text-uppercase me-2"><%= event.status %></span>
+                          Applied: <%= event.applied? ? "yes" : "no" %>
+                        </div>
+                        <% if event.error_message.present? %>
+                          <div class="small text-danger mt-1"><%= event.error_message %></div>
+                        <% end %>
+                        <% if event.last_failure_message.present? && event.last_failure_message != event.error_message %>
+                          <div class="small text-warning mt-1">Last failure: <%= event.last_failure_message %></div>
+                        <% end %>
+                      </div>
+                    <% end %>
+                  </div>
+                <% else %>
+                  <p class="text-body-secondary mb-0">No webhook events yet.</p>
+                <% end %>
+              </div>
+
+              <div class="col-12 col-lg-6">
+                <h3 class="h6 text-uppercase text-body-secondary mb-2">Payment attempts</h3>
+                <% attempts = payment.payment_attempts.order(created_at: :desc) %>
+                <% if attempts.any? %>
+                  <div class="vstack gap-2">
+                    <% attempts.each do |attempt| %>
+                      <div class="border rounded-3 bg-white p-3">
+                        <div class="d-flex justify-content-between gap-3 mb-1">
+                          <strong><%= attempt.status %></strong>
+                          <small class="text-body-secondary"><%= l(attempt.created_at, format: :short) %></small>
+                        </div>
+                        <div class="small text-body-secondary">
+                          <span class="badge <%= attempt.status == "succeeded" ? "text-bg-success" : attempt.status == "failed" ? "text-bg-danger" : "text-bg-secondary" %> text-white text-uppercase me-2"><%= attempt.status %></span>
+                          Idempotency: <%= attempt.idempotency_key %>
+                        </div>
+                        <% if attempt.provider_reference.present? %>
+                          <div class="small text-body-secondary">Provider ref: <%= attempt.provider_reference %></div>
+                        <% end %>
+                        <% if attempt.error_message.present? %>
+                          <div class="small text-danger mt-1"><%= attempt.error_message %></div>
+                        <% end %>
+                      </div>
+                    <% end %>
+                  </div>
+                <% else %>
+                  <p class="text-body-secondary mb-0">No attempts recorded yet.</p>
+                <% end %>
+              </div>
+            </div>
+          </article>
+        <% end %>
+      </div>
+    <% else %>
+      <p class="text-body-secondary mb-0">No payment history yet.</p>
+    <% end %>
+  </div>
+</section>

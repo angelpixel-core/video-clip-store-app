@@ -30,10 +30,10 @@ Use MySQL for local development and CI validation, then switch to PostgreSQL sta
 
 ## Rationale
 
-- MySQL remains the simplest local and CI baseline for the current project shape.
+- MySQL remains the simplest local and CI baseline for the current application shape.
 - PostgreSQL is the target runtime engine for the deployed environments because it is available natively on Render.
 - Introducing the engine switch at QA ensures the first deployed environment exposes cross-engine issues early enough to fix them before release.
-- The mixed-engine model lets the project honor local development ergonomics while aligning the actual release path with the deployment platform.
+- The mixed-engine model lets the app honor local development ergonomics while aligning the actual release path with the deployment platform.
 
 ## Tradeoffs
 
@@ -58,7 +58,7 @@ Use MySQL for local development and CI validation, then switch to PostgreSQL sta
 
 ## Mitigations
 
-- Keep `schema.rb` as the default schema format while the project stays within a portable subset.
+- Keep `schema.rb` as the default schema format while the app stays within a portable subset.
 - Prefer Rails adapters and portable SQL over engine-specific features.
 - Treat QA as the compatibility checkpoint for the engine switch.
 - Revisit `structure.sql` only if engine-specific features become necessary.

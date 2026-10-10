@@ -1,0 +1,2 @@
+class OfferingVariant < OfferVariant
+end

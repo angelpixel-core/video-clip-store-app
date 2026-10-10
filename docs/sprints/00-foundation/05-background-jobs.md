@@ -14,9 +14,11 @@ tags:
 
 ## Requirements
 
-- [ ] The PM notification must be created asynchronously.
+- [x] The PM notification must be created asynchronously.
 
 ## Implementation Notes
 
-- [ ] Keep the job boundary narrow.
-- [ ] The UI flow should not wait on notification delivery.
+- [x] Keep the job boundary narrow.
+- [x] `NotificationJob` enqueues the PM notification and delegates delivery to `NotificationService`.
+- [x] Development uses Solid Queue locally with a separate worker process.
+- [x] The UI flow should not wait on notification delivery.

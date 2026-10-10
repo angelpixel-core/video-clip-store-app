@@ -13,9 +13,9 @@ resource "render_background_worker" "this" {
     }
   }
 
-  env_vars = {
+  env_vars = merge({
     RAILS_ENV = {
       value = var.environment
     }
-  }
+  }, var.env_vars)
 }

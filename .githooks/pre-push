@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+set -eu
+
+SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+ROOT_DIR=$(CDPATH= cd -- "${SCRIPT_DIR}/.." && pwd)
+
+if [ "${SKIP_LINT:-0}" = "1" ]; then
+  echo "Skipping lint gate because SKIP_LINT=1"
+  exit 0
+fi
+
+echo "Running make lint before push..."
+cd "$ROOT_DIR"
+make lint

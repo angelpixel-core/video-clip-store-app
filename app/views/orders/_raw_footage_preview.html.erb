@@ -1,0 +1,51 @@
+<% return unless project.raw_footage_previewable? %>
+
+<% provider = project.raw_footage_provider %>
+<% preview_mode = local_assigns.fetch(:preview_mode, :card) %>
+<% if preview_mode == :card && project.raw_footage_thumbnail_url.present? %>
+  <%= link_to order_path(project), class: "d-block text-reset text-decoration-none mb-3 youtube-preview" do %>
+    <div class="rounded-3 overflow-hidden bg-dark position-relative youtube-preview-shell raw-footage-preview-shell <%= 'is-portrait' if project.raw_footage_aspect_ratio == '9 / 16' %>" style="aspect-ratio: <%= project.raw_footage_aspect_ratio %>;">
+      <%= image_tag project.raw_footage_thumbnail_url, alt: "YouTube preview for #{project.name.presence || 'order'}", class: "raw-footage-preview-media w-100 h-100 object-fit-cover" %>
+      <div class="position-absolute top-50 start-50 translate-middle">
+        <span class="btn btn-light rounded-pill px-3 shadow-sm">Play preview</span>
+      </div>
+    </div>
+  <% end %>
+<% elsif project.raw_footage_embed_url(parent_host: parent_host).present? %>
+  <div class="rounded-3 overflow-hidden bg-dark position-relative mb-3 raw-footage-preview-shell <%= 'is-portrait' if project.raw_footage_aspect_ratio == '9 / 16' %>" style="aspect-ratio: <%= project.raw_footage_aspect_ratio %>;">
+    <iframe
+      src="<%= project.raw_footage_embed_url(parent_host: parent_host) %>"
+      title="<%= project.name.presence || 'Order video' %>"
+      class="raw-footage-preview-media"
+      allow="autoplay; fullscreen; picture-in-picture"
+      allowfullscreen
+    ></iframe>
+  </div>
+<% elsif provider == "instagram" %>
+  <div class="raw-footage-social-preview mb-3">
+    <blockquote
+      class="instagram-media"
+      data-instgrm-captioned=""
+      data-instgrm-permalink="<%= project.raw_footage_watch_url %>"
+      data-instgrm-version="14"
+      style="background:#FFF; border:0; margin:1px; max-width:540px; min-width:326px; padding:0; width:99.375%;"
+    >
+      <a href="<%= project.raw_footage_watch_url %>" target="_blank" rel="noopener"><%= project.name.presence || "Instagram post" %></a>
+    </blockquote>
+    <%= raw_footage_embed_script_tag(project) %>
+  </div>
+<% elsif provider == "tiktok" %>
+  <div class="raw-footage-social-preview mb-3">
+    <blockquote
+      class="tiktok-embed"
+      cite="<%= project.raw_footage_watch_url %>"
+      data-video-id="<%= project.raw_footage_metadata_hash['video_id'] %>"
+      style="max-width: 605px; min-width: 325px; margin: 0 auto;"
+    >
+      <section>
+        <a href="<%= project.raw_footage_watch_url %>" target="_blank" rel="noopener"><%= project.name.presence || "TikTok video" %></a>
+      </section>
+    </blockquote>
+    <%= raw_footage_embed_script_tag(project) %>
+  </div>
+<% end %>

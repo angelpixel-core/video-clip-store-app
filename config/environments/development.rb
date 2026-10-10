@@ -34,14 +34,25 @@ Rails.application.configure do
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
 
+  # Preview outgoing emails locally in the browser UI.
+  config.action_mailer.delivery_method = :letter_opener_web
+
   # Make template changes take effect immediately.
   config.action_mailer.perform_caching = false
 
   # Set localhost to be used by links generated in mailer templates.
-  config.action_mailer.default_url_options = { host: "localhost", port: 3000 }
+  config.action_mailer.default_url_options = { host: "localhost", port: ENV.fetch("APP_HOST_PORT", ENV.fetch("APP_PORT", 4000)).to_i }
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
+
+  # Send app logs to stdout so worker/job output shows up in docker logs.
+  config.log_tags = [ :request_id ]
+  config.logger = ActiveSupport::TaggedLogging.logger(STDOUT)
+
+  # Local development uses a real Solid Queue worker process.
+  config.active_job.queue_adapter = :solid_queue
+  config.solid_queue.connects_to = { database: { writing: :queue } }
 
   # Raise an error on page load if there are pending migrations.
   config.active_record.migration_error = :page_load
@@ -68,7 +79,7 @@ Rails.application.configure do
   config.action_view.annotate_rendered_view_with_filenames = true
 
   # Uncomment if you wish to allow Action Cable access from any origin.
-  # config.action_cable.disable_request_forgery_protection = true
+  config.action_cable.disable_request_forgery_protection = true
 
   # Raise error when a before_action's only/except options reference missing actions.
   config.action_controller.raise_on_missing_callback_actions = true

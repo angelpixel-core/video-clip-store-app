@@ -1,0 +1,103 @@
+<% content_for :title, "Profile" %>
+
+<div class="container py-4 profile-page">
+  <div class="mb-4">
+    <p class="text-uppercase text-body-secondary mb-1">Account</p>
+    <h1 class="h3 mb-0">Profile</h1>
+  </div>
+
+  <% @profile_contexts.each do |profile| %>
+    <section data-role-scope="<%= profile[:scope] %>" class="card border-0 shadow-sm mb-4 profile-card">
+      <div class="card-body p-4 p-lg-5">
+        <div class="d-flex flex-column flex-md-row gap-4 align-items-md-start">
+          <div class="profile-avatar-shell flex-shrink-0" aria-hidden="true">
+            <% if profile[:record].avatar.attached? %>
+              <%= image_tag url_for(profile[:record].avatar), class: "profile-avatar profile-avatar-image profile-avatar--#{profile[:scope]}", alt: "#{profile[:role_label]} avatar" %>
+            <% else %>
+              <div class="profile-avatar profile-avatar--<%= profile[:scope] %>"><%= profile[:scope] == "client" ? "C" : "P" %></div>
+            <% end %>
+          </div>
+
+          <div class="flex-grow-1 min-w-0">
+            <div class="d-flex flex-column flex-md-row justify-content-between gap-3 align-items-md-center mb-3">
+              <div>
+                <p class="text-uppercase text-body-secondary small mb-1"><%= profile[:role_label] %></p>
+                <h2 class="h4 mb-0"><%= profile[:name] %></h2>
+              </div>
+              <span class="badge text-bg-dark text-uppercase align-self-start">Demo profile</span>
+            </div>
+
+            <dl class="row g-3 mb-4 profile-metadata">
+              <div class="col-12 col-md-6">
+                <dt class="text-uppercase text-body-secondary small mb-1">Email</dt>
+                <dd class="mb-0"><%= profile[:email] %></dd>
+              </div>
+
+              <div class="col-12 col-md-6">
+                <dt class="text-uppercase text-body-secondary small mb-1">Role</dt>
+                <dd class="mb-0"><%= profile[:role_label] %></dd>
+              </div>
+            </dl>
+
+            <div class="profile-token card border-0 bg-body-tertiary">
+              <div class="card-body p-3 p-md-4" data-controller="secret-reveal">
+                <div class="d-flex flex-column flex-md-row justify-content-between gap-3 align-items-md-center mb-3">
+                  <div>
+                    <p class="text-uppercase text-body-secondary small mb-1">Demo token</p>
+                    <h3 class="h6 mb-0">Copyable credential</h3>
+                  </div>
+
+                  <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-outline-secondary btn-sm" data-secret-reveal-target="revealButton" data-action="click->secret-reveal#toggle" aria-pressed="false">Show</button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" data-secret-reveal-target="copyButton" data-action="click->secret-reveal#copy">Copy</button>
+                  </div>
+                </div>
+
+                <code class="profile-token-value d-block rounded-3 px-3 py-2" data-secret-reveal-target="value" data-value="<%= profile[:token] %>"></code>
+
+                <p class="text-body-secondary small mb-0 mt-3">This token is a demo credential for the profile surface.</p>
+              </div>
+            </div>
+
+            <div class="profile-upload card border-0 bg-body-tertiary mt-4">
+              <div class="card-body p-3 p-md-4">
+                <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+                  <div>
+                    <p class="text-uppercase text-body-secondary small mb-1">Avatar</p>
+                    <h3 class="h6 mb-0">Upload or replace image</h3>
+                  </div>
+                </div>
+
+                <%= form_with url: profile_path, method: :patch, local: true, multipart: true, class: "vstack gap-3" do |form| %>
+                  <%= hidden_field_tag "profile[scope]", profile[:scope] %>
+
+                  <div>
+                    <%= label_tag "profile_avatar_#{profile[:scope]}", "Avatar file", class: "form-label" %>
+                    <%= file_field_tag "profile[avatar]", class: "form-control", accept: "image/*", id: "profile_avatar_#{profile[:scope]}" %>
+                  </div>
+
+                  <div>
+                    <%= label_tag "profile_avatar_url_#{profile[:scope]}", "Avatar URL", class: "form-label" %>
+                    <%= url_field_tag "profile[avatar_url]", nil, class: "form-control", placeholder: "https://...", id: "profile_avatar_url_#{profile[:scope]}" %>
+                    <div class="form-text">Optional secure image URL.</div>
+                  </div>
+
+                  <% if profile[:record].avatar.attached? %>
+                    <div class="form-check">
+                      <%= check_box_tag "profile[remove_avatar]", "1", false, class: "form-check-input", id: "profile_remove_avatar_#{profile[:scope]}" %>
+                      <%= label_tag "profile_remove_avatar_#{profile[:scope]}", "Remove current avatar", class: "form-check-label" %>
+                    </div>
+                  <% end %>
+
+                  <div>
+                    <%= submit_tag "Save avatar", class: "btn btn-primary" %>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  <% end %>
+</div>

@@ -26,4 +26,4 @@ tags:
 ## Performance
 
 - [ ] Optimize queries where applicable.
-- [ ] Assume large client and project tables.
+- [ ] Assume large client and order tables.

@@ -5,7 +5,7 @@
 | Resource | Name | Notes |
 | --- | --- | --- |
 | Web service | `video-project-submission-app-qa` | Existing Render service; Rails web runtime for QA. |
-| Worker service | `video-project-submission-app-qa-worker` | Separate background worker for QA queue processing. |
+| Worker service | `video-project-submission-app-qa-worker` | Scaffolded in Terraform, but `enable_worker` stays `false` until Render can host a dedicated QA worker. |
 | PostgreSQL service | `video-project-submission-app-qa-db` | Managed Postgres adopted from the live QA environment. |
 | Hostname | `video-project-submission-app-qa.onrender.com` | Current Render hostname for QA. |
 | TLS | Render-managed | Certificate termination handled by Render. |
@@ -38,7 +38,7 @@ curl -fsS https://video-project-submission-app-qa.onrender.com/up/db
 
 - Use Terraform `import` blocks as the final adoption mechanism.
 - Adopt the existing QA web service and PostgreSQL service into the QA Terraform state.
-- Leave the QA worker absent until the service actually exists in Render.
+- Keep the QA worker disabled by default until Render can host a dedicated QA worker.
 
 ### Verified Render Resources
 
@@ -65,4 +65,4 @@ import {
 ### Follow-Up
 
 - After import, run plan until the QA state is fully represented in code.
-- Only add a worker import once a QA worker service is created in Render.
+- Only add a worker import once a QA worker service is created in Render and `enable_worker` is ready to flip on.

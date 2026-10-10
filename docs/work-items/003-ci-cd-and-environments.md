@@ -164,6 +164,7 @@ flowchart LR
 - Run post-deploy smoke tests automatically with `make test/smoke`.
 - Run selected acceptance scenarios automatically when practical with `make test/acceptance`.
 - Require manual QA validation after the automated gates pass.
+- QA currently runs without a dedicated worker; Terraform keeps the worker scaffolded behind `enable_worker = false` so it can be enabled later if the platform allows it.
 - Trigger the `Promote` workflow in GitHub Actions only after QA signoff.
 - Document exploratory findings, even when the failure is outside the scripted suite.
 

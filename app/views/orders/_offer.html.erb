@@ -1,0 +1,15 @@
+<div class="card h-100 border-0 bg-light" data-order-form-offer-card>
+  <div class="card-body d-flex flex-column gap-3">
+    <div class="d-flex justify-content-between gap-3 align-items-start">
+      <div>
+        <h3 class="h6 mb-1"><%= offer_group.offer.name %></h3>
+        <p class="small text-body-secondary mb-0"><%= offer_group.offer.description %></p>
+      </div>
+      <span class="badge text-bg-secondary text-uppercase"><%= offer_group.variants.count %> options</span>
+    </div>
+
+    <div class="vstack gap-3">
+      <%= render partial: "offer_variant", collection: offer_group.variants, as: :offer_variant %>
+    </div>
+  </div>
+</div>

@@ -20,7 +20,7 @@ Use `schema.rb` for Rails schema output.
 ## Rationale
 
 - Keeps the migration state easy to read and maintain.
-- Matches the current project needs without requiring SQL dump management.
+- Matches the current application needs without requiring SQL dump management.
 - Avoids the extra operational overhead of `structure.sql` unless MySQL-specific features make it necessary later.
 
 ## Notes

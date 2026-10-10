@@ -1,0 +1,20 @@
+<div class="d-inline-flex flex-wrap gap-2 justify-content-end">
+  <% if project.refund_request_pending? %>
+    <%= button_to "Aprobar reembolso", approve_refund_request_order_path(project), method: :patch, form: { data: { controller: "order-action", action: "submit->order-action#submit" } }, class: "btn btn-sm btn-outline-warning" %>
+    <%= button_to "Rechazar reembolso", reject_refund_request_order_path(project), method: :patch, form: { data: { controller: "order-action", action: "submit->order-action#submit" } }, class: "btn btn-sm btn-outline-secondary" %>
+  <% elsif project.can_cancel_order? %>
+    <%= button_to "Cancelar orden", cancel_order_path(project), method: :patch, form: { data: { controller: "order-action", action: "submit->order-action#submit" } }, class: "btn btn-sm btn-outline-danger" %>
+  <% end %>
+
+  <% if project.can_accept_order? %>
+    <%= button_to "Aceptar orden", accept_order_path(project), method: :patch, form: { data: { controller: "order-action", action: "submit->order-action#submit" } }, class: "btn btn-sm btn-outline-primary" %>
+  <% end %>
+
+  <% if project.can_request_refund? %>
+    <%= button_to "Solicitar reembolso", request_refund_order_path(project), method: :patch, form: { data: { controller: "order-action", action: "submit->order-action#submit" } }, class: "btn btn-sm btn-outline-warning" %>
+  <% end %>
+
+  <% if project.in_progress? %>
+    <%= button_to "Marcar como completado", complete_order_path(project), method: :patch, form: { data: { controller: "order-action", action: "submit->order-action#submit" } }, class: "btn btn-sm btn-outline-success" %>
+  <% end %>
+</div>

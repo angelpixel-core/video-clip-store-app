@@ -3,8 +3,13 @@ set -e
 
 echo "Waiting for MySQL..."
 
+MYSQL_HOST="${DB_HOST:-${MYSQL_HOST:-db}}"
+MYSQL_PORT="${DB_PORT:-${MYSQL_PORT:-3306}}"
+MYSQL_USER="${DB_USER:-${MYSQL_USER:-app}}"
+MYSQL_PASSWORD="${DB_PASSWORD:-${MYSQL_PASSWORD:-app_password}}"
+
 for i in 1 2 3 4 5 6 7 8 9 10; do
-  if nc -z "${MYSQL_HOST:-db}" "${MYSQL_PORT:-3306}" >/dev/null 2>&1; then
+  if MYSQL_PWD="$MYSQL_PASSWORD" mysqladmin ping -h "$MYSQL_HOST" -P "$MYSQL_PORT" -u "$MYSQL_USER" --silent >/dev/null 2>&1; then
     break
   fi
   sleep 1
@@ -14,8 +19,10 @@ for i in 1 2 3 4 5 6 7 8 9 10; do
   fi
 done
 
-if [ -f /app/bin/rails ]; then
+if [ "${RUN_DB_PREPARE:-0}" = "1" ] && [ -f /app/bin/rails ]; then
   bundle exec rails db:prepare
 fi
+
+export PORT="${APP_PORT:-${PORT:-3000}}"
 
 exec "$@"

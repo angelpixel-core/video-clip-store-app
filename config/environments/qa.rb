@@ -18,15 +18,30 @@ Rails.application.configure do
   # Cache assets for far-future expiry since they are all digest stamped.
   config.public_file_server.headers = { "cache-control" => "public, max-age=#{1.year.to_i}" }
 
-  # Store uploaded files on the local file system (see config/storage.yml for options).
-  config.active_storage.service = :local
+  # Store uploads in S3-compatible object storage in QA.
+  config.active_storage.service = :amazon
 
   # Log to STDOUT with the current request id as a default log tag.
   config.log_tags = [ :request_id ]
   config.logger   = ActiveSupport::TaggedLogging.logger(STDOUT)
 
+  # QA runs jobs in-process because there is no worker service.
+  config.active_job.queue_adapter = :async
+
   # Change to "debug" to log everything (including potentially personally-identifiable information!).
   config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
+
+  # Send QA mail through SMTP using environment-provided credentials.
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address: ENV.fetch("SMTP_ADDRESS"),
+    port: ENV.fetch("SMTP_PORT", 587).to_i,
+    domain: ENV.fetch("SMTP_DOMAIN", "example.com"),
+    user_name: ENV.fetch("SMTP_USER_NAME"),
+    password: ENV.fetch("SMTP_PASSWORD"),
+    authentication: ENV.fetch("SMTP_AUTHENTICATION", "plain").to_sym,
+    enable_starttls_auto: ENV.fetch("SMTP_ENABLE_STARTTLS_AUTO", "true") != "false"
+  }
 
   # Prevent health checks from clogging up the logs.
   config.silence_healthcheck_path = "/up"

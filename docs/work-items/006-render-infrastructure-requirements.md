@@ -206,6 +206,10 @@ render services -o text
 | Kind | Name | Purpose |
 | --- | --- | --- |
 | Secret | `RENDER_API_KEY` | Authenticates the Render CLI in GitHub Actions. |
+| Variable | `RENDER_OWNER_ID` | Supplies the Render workspace owner identifier to Terraform. |
+| Variable | `RENDER_QA_ADOPTED_WEB_SERVICE_ID` | Supplies the adopted QA web service ID to Terraform imports. |
+| Variable | `RENDER_QA_ADOPTED_DATABASE_ID` | Supplies the adopted QA database ID to Terraform imports. |
+| Variable | `RENDER_QA_ADOPTED_ENVIRONMENT_ID` | Supplies the adopted QA environment ID to Terraform imports. |
 | Secret | `RAILS_MASTER_KEY` | Shared Rails master key for QA, staging, and prod. |
 | Secret | `RENDER_QA_SERVICE_ID` | Targets the QA Render web service. |
 | Secret | `RENDER_STAGING_SERVICE_ID` | Targets the staging Render web service. |

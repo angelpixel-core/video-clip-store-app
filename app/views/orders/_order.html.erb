@@ -1,0 +1,50 @@
+<div class="col-12 col-lg-6" data-order-id="<%= project.id %>">
+  <div class="card h-100 shadow-sm border-0 client-order-card">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+        <% details_path = project.draft? ? edit_order_path(project) : order_path(project) %>
+        <% show_raw_footage_url = !project.raw_footage_previewable? %>
+        <div>
+          <h2 class="h5 mb-1">
+            <%= link_to details_path, class: "client-order-title-link text-reset text-decoration-none", data: { role_scope: "client" } do %>
+              <%= project.name.presence || "Untitled order" %>
+            <% end %>
+          </h2>
+          <% if show_raw_footage_url %>
+            <p class="mb-0 text-body-secondary"><%= project.raw_footage_url.presence || "No footage URL yet" %></p>
+          <% end %>
+        </div>
+        <div class="d-flex flex-column align-items-end gap-2">
+          <div id="<%= project.status_badge_dom_id %>">
+            <%= render "status_badge", project: project %>
+          </div>
+          <% if project.draft? %>
+            <%= link_to "Reanudar", edit_order_path(project), class: "btn btn-sm btn-outline-primary", data: { role_scope: "client" } %>
+          <% end %>
+        </div>
+      </div>
+
+      <%= render "raw_footage_preview", project: project, parent_host: request.host, preview_mode: :card if project.raw_footage_previewable? %>
+
+      <div class="mb-3">
+        <p class="text-uppercase small text-body-secondary mb-2">Selected options</p>
+        <% if project.video_types.any? %>
+          <ul class="list-unstyled mb-0">
+            <% project.video_type_selections.each do |selection| %>
+              <li class="d-flex justify-content-between gap-3 py-1">
+                <span><%= selection.video_type.name %></span>
+                <span class="text-body-secondary">Qty <%= selection.quantity %></span>
+              </li>
+            <% end %>
+          </ul>
+        <% else %>
+          <p class="mb-0 text-body-secondary">No selections recorded yet.</p>
+        <% end %>
+      </div>
+
+      <div class="small text-body-secondary">
+        PM: <%= project.participant.name %>
+      </div>
+    </div>
+  </div>
+</div>

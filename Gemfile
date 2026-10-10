@@ -25,9 +25,14 @@ gem "jbuilder"
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 
 # Use the database-backed adapters for Rails.cache, Active Job, and Action Cable
+gem "aasm", "~> 6.0"
+gem "dry-system", "~> 1.2"
+gem "data_migrate", "~> 11.3.1"
+gem "packwerk", "~> 3.3"
 gem "solid_cache"
 gem "solid_queue"
 gem "solid_cable"
+gem "payment-sdk", path: "vendor/gems/payment-ruby-sdk"
 
 # Reduces boot times through caching; required in config/boot.rb
 gem "bootsnap", require: false
@@ -39,7 +44,8 @@ gem "kamal", require: false
 gem "thruster", require: false
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
-gem "image_processing", "~> 1.2"
+gem "image_processing", "~> 2.0"
+gem "mini_magick", "~> 5.3"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -47,6 +53,7 @@ group :development, :test do
 
   gem "rspec-rails"
   gem "capybara"
+  gem "selenium-webdriver", "~> 4.46"
   gem "cucumber"
   gem "cucumber-rails", require: false
   gem "database_cleaner-active_record"
@@ -65,6 +72,9 @@ group :development, :test do
 end
 
 group :development do
+  # Preview outgoing emails locally in a browser UI.
+  gem "letter_opener_web"
+
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
 end

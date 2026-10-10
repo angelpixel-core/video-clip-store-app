@@ -1,0 +1,83 @@
+<% content_for :title, @project.name.presence || "Order details" %>
+
+<div class="container py-4" data-order-id="<%= @project.id %>">
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+    <div>
+      <p class="text-uppercase text-body-secondary mb-1">Order detail</p>
+      <h1 class="h3 mb-0"><%= @project.name.presence || "Untitled order" %></h1>
+    </div>
+    <%= link_to "Back to orders", orders_path, class: "btn btn-outline-secondary" %>
+  </div>
+
+  <div class="card shadow-sm border-0 mb-4">
+    <div class="card-body p-4">
+      <%= render "raw_footage_preview", project: @project, parent_host: request.host, preview_mode: :show %>
+
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-start gap-3 mb-4">
+        <div>
+          <p class="text-uppercase text-body-secondary small mb-1">Status</p>
+          <div data-order-status-cell>
+            <div id="<%= @project.status_badge_dom_id %>">
+              <%= render "status_badge", project: @project %>
+            </div>
+          </div>
+          <div class="mt-2" data-order-payment-cell>
+            <%= render "workspace_order_payment_badge", project: @project %>
+          </div>
+        </div>
+
+        <div class="d-flex flex-wrap gap-2" data-role-scope="client">
+          <%= render "client_order_actions", project: @project %>
+        </div>
+
+        <div class="d-flex flex-wrap gap-2" data-role-scope="pm">
+          <%= render "workspace_order_actions", project: @project %>
+        </div>
+      </div>
+
+      <% if Rails.env.development? && @project.pending? %>
+        <div class="mt-3 mb-4 p-3 bg-light rounded border border-warning d-flex align-items-center">
+          <strong>🛠️ Dev Tools:</strong>
+          <%= button_to "Simulate Payment Succeeded", simulate_payment_webhook_order_path(@project), method: :post, class: "btn btn-sm btn-outline-warning ms-3" %>
+        </div>
+      <% end %>
+
+      <dl class="row mb-0">
+        <dt class="col-sm-3 text-body-secondary">Client</dt>
+        <dd class="col-sm-9"><%= @project.owner.name %></dd>
+
+        <dt class="col-sm-3 text-body-secondary">PM</dt>
+        <dd class="col-sm-9"><%= @project.participant.name %></dd>
+
+        <dt class="col-sm-3 text-body-secondary">Raw footage</dt>
+        <dd class="col-sm-9"><%= @project.raw_footage_url.presence || "No footage URL yet" %></dd>
+      </dl>
+    </div>
+  </div>
+
+  <div data-order-payment-history>
+    <%= render "payment_history", payments: @payments if @payments.any? %>
+  </div>
+
+  <div id="order-comments" class="card shadow-sm border-0">
+    <div class="card-body p-4">
+      <div class="d-flex justify-content-between align-items-center gap-3 mb-3">
+        <div>
+          <p class="text-uppercase text-body-secondary small mb-1">Conversation</p>
+          <h2 class="h5 mb-0">Comments</h2>
+        </div>
+        <span id="order-comments-count" class="badge text-bg-dark"><%= @comments.size %></span>
+      </div>
+
+      <div id="order-comments-list" class="vstack gap-3 mb-4">
+        <% if @comments.any? %>
+          <%= render partial: "comment", collection: @comments, as: :comment %>
+        <% else %>
+          <p id="order-comments-empty" class="text-body-secondary mb-4">No comments yet.</p>
+        <% end %>
+      </div>
+
+      <%= render "comment_form", project: @project, comment: @comment %>
+    </div>
+  </div>
+</div>

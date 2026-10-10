@@ -8,3 +8,51 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
+
+.pm-notification-card {
+  border: 1px solid rgba(13, 110, 253, 0.18);
+  background: linear-gradient(180deg, rgba(13, 110, 253, 0.04), rgba(13, 110, 253, 0.01));
+  box-shadow: 0 0.5rem 1.25rem rgba(15, 23, 42, 0.06);
+}
+
+.pm-notification-check {
+  white-space: nowrap;
+}
+
+/* Order Checkout Layout */
+.order-layout {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: 1fr;
+  /* On mobile, Cart (sidebar) appears at the top! */
+  grid-template-areas:
+    "sidebar"
+    "main";
+}
+
+.order-layout-main { grid-area: main; }
+.order-layout-sidebar { grid-area: sidebar; }
+
+@media (min-width: 992px) {
+  .order-layout {
+    grid-template-columns: 1fr 350px;
+    grid-template-areas: "main sidebar";
+    align-items: start;
+  }
+}
+
+/* Premium Glassmorphism Aesthetic */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.4) !important;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07) !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  .glass-panel {
+    background: rgba(33, 37, 41, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  }
+}

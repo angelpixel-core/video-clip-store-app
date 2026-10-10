@@ -1,0 +1,88 @@
+<% content_for :title, "Resume Draft" %>
+
+<% order_form = @order_form %>
+<% offer_catalog = @offer_catalog %>
+
+<div class="container py-4" data-controller="order-form" data-order-id="<%= @project.id %>" data-role-scope="client">
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+    <div>
+      <p class="text-uppercase text-body-secondary mb-1">Order flow</p>
+      <h1 class="h3 mb-0"><%= order_form.title %></h1>
+    </div>
+    <%= link_to "Back to orders", orders_path, class: "btn btn-outline-secondary" %>
+  </div>
+
+  <% if @project.errors.any? %>
+    <div class="alert alert-danger">
+      <strong>Please fix the following:</strong>
+      <ul class="mb-0">
+        <% @project.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= form_with model: @project, scope: order_form.param_key, url: order_form.path, method: :patch, data: { action: "submit->order-form#submit", order_form_target: "form" } do |form| %>
+    <%= hidden_field_tag order_form.field_name(:selections_json), @selections_json, data: { order_form_target: "selectionsJson" } %>
+    <%= hidden_field_tag order_form.field_name(:finalize), "0", data: { order_form_target: "finalize" } %>
+
+    <div class="row g-4">
+      <div class="col-12 col-lg-8">
+        <div class="card shadow-sm border-0 mb-4">
+          <div class="card-body">
+            <h2 class="h5 mb-3"><%= order_form.fields.order_details_title %></h2>
+
+            <div class="mb-3">
+              <%= form.label :name, order_form.fields.name_label, class: "form-label" %>
+              <%= form.text_field :name, class: "form-control", placeholder: order_form.fields.name_placeholder, data: { order_form_target: "name", action: "input->order-form#syncFields" } %>
+            </div>
+
+            <div class="mb-0">
+              <%= form.label :raw_footage_url, order_form.fields.raw_footage_url_label, class: "form-label" %>
+              <%= form.url_field :raw_footage_url, class: "form-control", placeholder: order_form.fields.raw_footage_url_placeholder, data: { order_form_target: "rawFootageUrl", action: "input->order-form#syncFields blur->order-form#validateRawFootageUrl" }, aria: { describedby: "raw-footage-url-feedback" } %>
+              <div id="raw-footage-url-feedback" class="invalid-feedback d-none" data-order-form-target="rawFootageUrlFeedback"></div>
+              <div id="raw-footage-preview" class="raw-footage-preview mt-3" data-order-form-target="rawFootagePreview" aria-live="polite" aria-atomic="true"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card shadow-sm border-0">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h2 class="h5 mb-0"><%= order_form.fields.available_offers_title %></h2>
+              <span class="text-body-secondary"><%= offer_catalog.count %> options</span>
+            </div>
+
+            <div class="vstack gap-3">
+              <%= render partial: "offer", collection: offer_catalog.groups, as: :offer_group %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-lg-4">
+        <div class="card shadow-sm border-0 sticky-lg-top" style="top: 1rem;">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h2 class="h5 mb-0"><%= order_form.fields.cart_title %></h2>
+              <span class="badge text-bg-secondary" data-order-form-target="cartTotal">$0.00</span>
+            </div>
+
+            <ul class="list-group list-group-flush mb-3" data-order-form-target="cartItems">
+              <li class="list-group-item text-body-secondary"><%= order_form.fields.empty_cart_text %></li>
+            </ul>
+
+            <div class="d-grid gap-2">
+              <button type="button" class="btn btn-outline-primary disabled" disabled data-order-form-target="reviewButton" data-action="click->order-form#openPaymentModal"><%= order_form.fields.review_button_label %></button>
+            </div>
+
+            <p class="small text-body-secondary mb-0 mt-3" data-order-form-status></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <%= render "payment_modal", form: form, order_form: order_form %>
+  <% end %>
+</div>

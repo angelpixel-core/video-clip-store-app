@@ -1,0 +1,28 @@
+<tr id="order_<%= project.id %>" data-order-id="<%= project.id %>">
+  <td class="text-body-secondary"><%= project.id %></td>
+
+  <td>
+    <%= link_to order_path(project), class: "workspace-project-name-link text-reset text-decoration-none d-inline-block" do %>
+      <span class="fw-semibold workspace-project-name-link-text"><%= project.name.presence || "Untitled order" %></span>
+    <% end %>
+    <div class="text-body-secondary small"><%= project.owner.name %></div>
+  </td>
+
+  <td><%= project.created_at.to_fs(:short) %></td>
+
+  <td><%= number_to_currency(project.total_budget_cents.to_f / 100) %></td>
+
+  <td data-order-payment-cell>
+    <%= render "workspace_order_payment_badge", project: project %>
+  </td>
+
+  <td data-order-status-cell>
+    <span class="badge <%= project.status_badge_class %> text-white text-uppercase">
+      <%= project.status_badge_text %>
+    </span>
+  </td>
+
+  <td class="text-end" data-order-actions-cell>
+    <%= render "workspace_order_actions", project: project %>
+  </td>
+</tr>

@@ -41,8 +41,11 @@ RUN apk add --no-cache \
   pkgconf \
   postgresql-dev \
   yaml-dev \
-  mariadb-connector-c-dev
+  mariadb-connector-c-dev \
+  chromium \
+  chromium-chromedriver
 
+COPY vendor ./vendor
 COPY Gemfile Gemfile.lock ./
 RUN --mount=type=cache,target=/usr/local/bundle \
   bundle install && \
@@ -77,8 +80,11 @@ RUN apk add --no-cache \
   pkgconf \
   postgresql-dev \
   yaml-dev \
-  mariadb-connector-c-dev
+  mariadb-connector-c-dev \
+  chromium \
+  chromium-chromedriver
 
+COPY vendor ./vendor
 COPY Gemfile Gemfile.lock ./
 RUN --mount=type=cache,target=/usr/local/bundle \
   bundle install && \

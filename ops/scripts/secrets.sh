@@ -270,6 +270,10 @@ github_required_names() {
 
 github_var_required_names() {
   printf '%s\n' \
+    "RENDER_OWNER_ID" \
+    "RENDER_QA_ADOPTED_WEB_SERVICE_ID" \
+    "RENDER_QA_ADOPTED_DATABASE_ID" \
+    "RENDER_QA_ADOPTED_ENVIRONMENT_ID" \
     "RENDER_QA_ENVIRONMENT_ID" \
     "RENDER_STAGING_ENVIRONMENT_ID" \
     "RENDER_PROD_ENVIRONMENT_ID"
@@ -287,6 +291,10 @@ github_required_value() {
 
 github_var_required_value() {
   case "$1" in
+    RENDER_OWNER_ID) printf '%s\n' "${RENDER_OWNER_ID:-}" ;;
+    RENDER_QA_ADOPTED_WEB_SERVICE_ID) printf '%s\n' "${RENDER_QA_ADOPTED_WEB_SERVICE_ID:-}" ;;
+    RENDER_QA_ADOPTED_DATABASE_ID) printf '%s\n' "${RENDER_QA_ADOPTED_DATABASE_ID:-}" ;;
+    RENDER_QA_ADOPTED_ENVIRONMENT_ID) printf '%s\n' "${RENDER_QA_ADOPTED_ENVIRONMENT_ID:-}" ;;
     RENDER_QA_ENVIRONMENT_ID) printf '%s\n' "${RENDER_QA_ENVIRONMENT_ID:-}" ;;
     RENDER_STAGING_ENVIRONMENT_ID) printf '%s\n' "${RENDER_STAGING_ENVIRONMENT_ID:-}" ;;
     RENDER_PROD_ENVIRONMENT_ID) printf '%s\n' "${RENDER_PROD_ENVIRONMENT_ID:-}" ;;
