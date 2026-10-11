@@ -60,24 +60,29 @@
   </div>
 
   <div id="order-comments" class="card shadow-sm border-0">
-    <div class="card-body p-4">
-      <div class="d-flex justify-content-between align-items-center gap-3 mb-3">
+    <details class="conversation-details" open>
+      <summary class="card-header bg-body-tertiary border-0 p-4 d-flex justify-content-between align-items-center cursor-pointer user-select-none list-unstyled">
         <div>
           <p class="text-uppercase text-body-secondary small mb-1">Conversation</p>
-          <h2 class="h5 mb-0">Comments</h2>
+          <h2 class="h5 mb-0 d-flex align-items-center gap-2">
+            Comments
+            <span id="order-comments-count" class="badge text-bg-dark fs-6 fw-normal"><%= @comments.size %></span>
+          </h2>
         </div>
-        <span id="order-comments-count" class="badge text-bg-dark"><%= @comments.size %></span>
-      </div>
+        <span class="conversation-chevron text-body-secondary fs-5" aria-hidden="true">▾</span>
+      </summary>
 
-      <div id="order-comments-list" class="vstack gap-3 mb-4">
-        <% if @comments.any? %>
-          <%= render partial: "comment", collection: @comments, as: :comment %>
-        <% else %>
-          <p id="order-comments-empty" class="text-body-secondary mb-4">No comments yet.</p>
-        <% end %>
-      </div>
+      <div class="card-body p-4 pt-2">
+        <div id="order-comments-list" class="vstack gap-3 mb-4">
+          <% if @comments.any? %>
+            <%= render partial: "comment", collection: @comments, as: :comment %>
+          <% else %>
+            <p id="order-comments-empty" class="text-body-secondary mb-4">No comments yet.</p>
+          <% end %>
+        </div>
 
-      <%= render "comment_form", project: @project, comment: @comment %>
-    </div>
+        <%= render "comment_form", project: @project, comment: @comment %>
+      </div>
+    </details>
   </div>
 </div>

@@ -1,11 +1,26 @@
-<div class="border rounded-3 p-3 bg-body-tertiary">
-  <div class="d-flex justify-content-between align-items-start gap-3 mb-2">
-    <div>
-      <strong class="d-block"><%= comment.author.name %></strong>
-      <span class="badge text-bg-secondary text-uppercase"><%= comment.author.role.upcase %></span>
+<div class="border rounded-3 p-3 bg-white shadow-sm" data-controller="clipboard-copy">
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2 pb-2 border-bottom">
+    <div class="d-flex align-items-center gap-2">
+      <strong class="d-inline-block text-dark"><%= comment.author.name %></strong>
+      <span class="badge <%= comment.author.role == "client" ? "text-bg-primary text-white" : "text-bg-dark text-white" %> text-uppercase">
+        <%= comment.author.role.upcase %>
+      </span>
     </div>
-    <small class="text-body-secondary"><%= l(comment.created_at, format: :short) %></small>
+
+    <div class="d-flex align-items-center gap-2">
+      <span class="badge text-bg-light border text-body-secondary fw-normal">
+        <%= l(comment.created_at, format: :short) %>
+      </span>
+      <button type="button"
+              class="btn btn-link p-0 text-body-secondary text-decoration-none lh-1"
+              title="Copiar comentario"
+              aria-label="Copiar comentario"
+              data-action="click->clipboard-copy#copy"
+              data-copy-value="<%= comment.body %>">
+        <span style="font-size: 0.75rem; vertical-align: middle; opacity: 0.75;">📋</span>
+      </button>
+    </div>
   </div>
 
-  <p class="mb-0"><%= comment.body %></p>
+  <p class="mb-0 text-body" style="white-space: pre-wrap;"><%= comment.body %></p>
 </div>
