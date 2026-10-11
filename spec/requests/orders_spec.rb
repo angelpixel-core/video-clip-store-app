@@ -201,4 +201,27 @@ RSpec.describe "Orders requests" do
     project.reload
     expect(project.status).to eq("completed")
   end
+
+  describe "POST /orders/:id/simulate_payment_webhook" do
+    it "forbids webhook simulation when the feature flag is disabled" do
+      project = Project.create!(owner: find_workspace_account(:client, email: "client@example.com"), participant: find_workspace_account(:pm, email: "pm@example.com"), name: "Project", raw_footage_url: "https://example.com/raw.mov", status: :pending)
+
+      post simulate_payment_webhook_order_path(project)
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it "simulates payment webhook when the feature is enabled" do
+      project = Project.create!(owner: find_workspace_account(:client, email: "client@example.com"), participant: find_workspace_account(:pm, email: "pm@example.com"), name: "Project", raw_footage_url: "https://example.com/raw.mov", status: :pending)
+      payment = Payments::Domain::Aggregates::Payment.create!(project: project, status: :processing, provider: "fake", idempotency_key: SecureRandom.uuid, amount_cents: 10_000, currency: "USD")
+
+      allow(Features).to receive(:payment_simulation_devtool_enabled?).and_return(true)
+      expect(Payments::Adapters::Outbound::Webhooks::WebhookSimulator).to receive(:call).and_return(Core::Result::Success.(data: {}))
+
+      post simulate_payment_webhook_order_path(project)
+
+      expect(response).to redirect_to(order_path(project))
+      expect(flash[:notice]).to eq("Simulated Payment Succeeded.")
+    end
+  end
 end

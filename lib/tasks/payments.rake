@@ -4,6 +4,9 @@ namespace :payments do
     deliver_signed_webhook(default_type: "payment.succeeded")
   end
 
+  desc "Simulate a signed payment webhook delivery (alias for simulate_webhook)"
+  task send_signed_fake_webhook: :simulate_webhook
+
   desc "Replay a single webhook event by provider event id"
   task replay_webhook_event: :environment do
     replay_webhook_events([ ENV.fetch("EVENT_ID") ])
