@@ -1,4 +1,4 @@
-<div data-controller="comment-form" class="border rounded-3 p-3">
+<div data-controller="comment-form" class="border rounded-3 p-3 bg-body-tertiary">
   <%= form_with url: order_comments_path(project), scope: :comment, local: true, data: { action: "submit->comment-form#submit" } do |form| %>
     <% if comment.errors.any? %>
       <div class="alert alert-danger">
@@ -13,17 +13,19 @@
 
     <%= hidden_field_tag "comment[author_role]", "client", data: { comment_form_target: "authorRole" } %>
 
-    <div class="d-flex justify-content-between align-items-center gap-3 mb-2">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
       <div>
-        <p class="text-uppercase text-body-secondary small mb-1">New comment</p>
-        <h3 class="h6 mb-0">Posting as <span data-comment-form-target="roleLabel">Client</span></h3>
+        <p class="text-uppercase text-body-secondary small mb-0" style="font-size: 0.75rem;">New comment</p>
+        <h3 class="h6 mb-0 text-dark">
+          Posting as <span class="badge text-bg-light border text-body fw-semibold" data-comment-form-target="roleLabel">Client</span>
+        </h3>
       </div>
-      <span class="badge text-bg-light text-uppercase">Shared thread</span>
+      <span class="badge text-bg-secondary-subtle text-body-secondary border text-uppercase">Shared thread</span>
     </div>
 
     <div class="mb-3">
-      <%= form.label :body, "Message", class: "form-label" %>
-      <%= form.text_area :body, rows: 4, class: "form-control", placeholder: "Write a comment..." %>
+      <%= form.label :body, "Message", class: "form-label fw-medium mb-1" %>
+      <%= form.text_area :body, rows: 3, class: "form-control bg-white", placeholder: "Write a comment or note..." %>
     </div>
 
     <%= form.submit "Post comment", class: "btn btn-primary" %>

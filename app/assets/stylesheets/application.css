@@ -87,3 +87,25 @@ details.payment-history-details:not([open]) > summary .payment-details-chevron,
 details.payment-subgroup-details:not([open]) > summary .payment-subgroup-chevron {
   transform: rotate(-90deg);
 }
+
+/* Conversation Disclosures & Comments */
+details.conversation-details > summary {
+  list-style: none;
+}
+
+details.conversation-details > summary::-webkit-details-marker {
+  display: none;
+}
+
+details.conversation-details > summary .conversation-chevron {
+  display: inline-block;
+  transition: transform 0.2s ease-in-out;
+}
+
+details.conversation-details[open] > summary .conversation-chevron {
+  transform: rotate(0deg);
+}
+
+details.conversation-details:not([open]) > summary .conversation-chevron {
+  transform: rotate(-90deg);
+}
