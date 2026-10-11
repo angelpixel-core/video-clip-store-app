@@ -56,3 +56,34 @@
     border: 1px solid rgba(255, 255, 255, 0.1) !important;
   }
 }
+
+/* Payment History Disclosures & Typography */
+.cursor-pointer {
+  cursor: pointer;
+}
+
+details.payment-history-details > summary,
+details.payment-subgroup-details > summary {
+  list-style: none;
+}
+
+details.payment-history-details > summary::-webkit-details-marker,
+details.payment-subgroup-details > summary::-webkit-details-marker {
+  display: none;
+}
+
+details.payment-history-details > summary .payment-details-chevron,
+details.payment-subgroup-details > summary .payment-subgroup-chevron {
+  display: inline-block;
+  transition: transform 0.2s ease-in-out;
+}
+
+details.payment-history-details[open] > summary .payment-details-chevron,
+details.payment-subgroup-details[open] > summary .payment-subgroup-chevron {
+  transform: rotate(0deg);
+}
+
+details.payment-history-details:not([open]) > summary .payment-details-chevron,
+details.payment-subgroup-details:not([open]) > summary .payment-subgroup-chevron {
+  transform: rotate(-90deg);
+}
