@@ -35,7 +35,7 @@
         </div>
       </div>
 
-      <% if Rails.env.development? && @project.pending? %>
+      <% if Features.payment_simulation_devtool_enabled? && @project.pending? && !@project.payment_paid? && @project.active_payment.present? %>
         <div class="mt-3 mb-4 p-3 bg-light rounded border border-warning d-flex align-items-center">
           <strong>🛠️ Dev Tools:</strong>
           <%= button_to "Simulate Payment Succeeded", simulate_payment_webhook_order_path(@project), method: :post, class: "btn btn-sm btn-outline-warning ms-3" %>

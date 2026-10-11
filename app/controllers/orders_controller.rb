@@ -6,12 +6,14 @@ class OrdersController < ApplicationController
 
 
   def simulate_payment_webhook
-    return head :forbidden unless Rails.env.development?
+    return head :forbidden unless Features.payment_simulation_devtool_enabled?
 
     payment = @workspace_project.active_payment || @workspace_project.payments.order(created_at: :desc).first
     if payment.present?
+      port = ENV.fetch("APP_PORT", 3000)
+      url = ENV["WEBHOOK_URL"].presence || "http://127.0.0.1:#{port}/payments/webhooks/fake/events"
       result = Payments::Adapters::Outbound::Webhooks::WebhookSimulator.call(
-        webhook_url: "http://127.0.0.1:3000/payments/webhooks/fake/events",
+        webhook_url: url,
         provider: "fake",
         event_id: "evt_#{SecureRandom.hex(4)}",
         type: "payment.succeeded",
