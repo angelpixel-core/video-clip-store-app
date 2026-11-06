@@ -20,6 +20,9 @@ module Payments
             provider_reference: provider_reference.presence || payment.provider_reference
           )
 
+          Billing::GenerateInvoiceJob.perform_later(payment.id)
+          payment.project&.broadcast_status_badge!
+
           Core::Result::Success.(data: { payment: payment, event: Payments::Domain::Events::PaymentCaptured.new(payment: payment) })
         end
 

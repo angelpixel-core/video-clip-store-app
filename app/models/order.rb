@@ -9,7 +9,7 @@ class Order < ApplicationRecord
 
   has_many :video_type_selections, foreign_key: :project_id, dependent: :destroy
   has_many :video_types, through: :video_type_selections
-  has_many :payments, class_name: "Payments::Domain::Aggregates::Payment", foreign_key: :project_id, dependent: :destroy
+  has_many :payments, class_name: "Payments::Infrastructure::Persistence::Payment::PaymentRecord", foreign_key: :project_id, dependent: :destroy
   has_many :notifications, foreign_key: :project_id, dependent: :destroy
   has_many :comments, foreign_key: :project_id, dependent: :destroy
 

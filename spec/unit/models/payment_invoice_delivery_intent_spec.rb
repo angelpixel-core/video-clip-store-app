@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Payments::Domain::Entities::PaymentInvoiceDeliveryIntent do
+RSpec.describe Payments::Infrastructure::Persistence::Payment::PaymentInvoiceDeliveryIntentRecord do
   it "enqueues the dispatch job after commit when created" do
     client = workspace_account(:client, name: "Client")
     pm = workspace_account(:pm, name: "PM")

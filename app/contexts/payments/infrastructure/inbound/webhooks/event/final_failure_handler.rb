@@ -34,6 +34,8 @@ module Payments
                   provider_reference: payment.provider_reference.presence || event_payload_provider_reference(event)
                 )
 
+                payment.project&.broadcast_status_badge!
+
                 update_payment_attempt!(payment:, event:, error_message: failure_message)
                 event.mark_failed!(failure_message, attempt: current_attempt, failure_reason_code: failure_reason_code)
 

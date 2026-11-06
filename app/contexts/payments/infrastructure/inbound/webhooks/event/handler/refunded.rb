@@ -24,6 +24,8 @@ module Payments
                   processed_at: Time.current
                 )
 
+                payment.project&.broadcast_status_badge!
+
                 update_payment_attempt!(status: :succeeded)
                 record_notification_intent!(from_status: from_status, to_status: :refunded, event_type: "payment.refunded")
                 event.mark_processed!(attempt: attempt)

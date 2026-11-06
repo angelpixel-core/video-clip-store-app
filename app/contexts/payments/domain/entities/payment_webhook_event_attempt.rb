@@ -1,35 +1,41 @@
 module Payments
   module Domain
     module Entities
-      class PaymentWebhookEventAttempt < ApplicationRecord
+      class PaymentWebhookEventAttempt
         STATUSES = %w[started succeeded failed].freeze
 
-        belongs_to :payment_webhook_event, class_name: "Payments::Domain::Entities::PaymentWebhookEvent"
+        attr_reader :id, :payment_webhook_event_id, :attempt_number, :status,
+                    :started_at, :finished_at, :error_message, :created_at, :updated_at
 
-        before_validation :normalize_status
-        before_validation :stamp_started_at, on: :create
-
-        validates :attempt_number, presence: true, numericality: { only_integer: true, greater_than: 0 }
-        validates :status, presence: true, inclusion: { in: STATUSES }
-        validates :started_at, presence: true
-        validates :attempt_number, uniqueness: { scope: :payment_webhook_event_id }
-
-        def succeed!
-          update!(status: :succeeded, finished_at: Time.current, error_message: nil)
+        def initialize(
+          id: nil,
+          payment_webhook_event_id: nil,
+          attempt_number: 1,
+          status: "started",
+          started_at: nil,
+          finished_at: nil,
+          error_message: nil,
+          created_at: nil,
+          updated_at: nil
+        )
+          @id = id
+          @payment_webhook_event_id = payment_webhook_event_id
+          @attempt_number = attempt_number.to_i
+          @status = status.to_s.presence || "started"
+          @started_at = started_at || Time.current
+          @finished_at = finished_at
+          @error_message = error_message
+          @created_at = created_at
+          @updated_at = updated_at
         end
 
-        def fail!(message)
-          update!(status: :failed, finished_at: Time.current, error_message: message)
+        def self.record_class
+          Payments::Infrastructure::Persistence::Webhook::Event::PaymentWebhookEventAttemptRecord
         end
 
-        private
-
-        def normalize_status
-          self.status = status.to_s.presence || "started"
-        end
-
-        def stamp_started_at
-          self.started_at ||= Time.current
+        class << self
+          delegate :find, :find_by, :find_by!, :where, :count, :create, :create!,
+                   :all, to: :record_class
         end
       end
     end

@@ -8,7 +8,7 @@ module Ordering
           belongs_to :owner, class_name: "Identity::Domain::Aggregates::Account", foreign_key: :owner_account_id
           belongs_to :participant, class_name: "Identity::Domain::Aggregates::Account", foreign_key: :participant_account_id
           has_many :order_line_records, class_name: "Ordering::Infrastructure::Persistence::Order::OrderLineRecord", foreign_key: :order_id, dependent: :destroy, inverse_of: :order_record
-          has_many :payments, class_name: "Payments::Domain::Aggregates::Payment", foreign_key: :project_id, primary_key: :id, dependent: :destroy
+          has_many :payments, class_name: "Payments::Infrastructure::Persistence::Payment::PaymentRecord", foreign_key: :project_id, primary_key: :id, dependent: :destroy
           has_one :source_video_record, class_name: "Ordering::Infrastructure::Persistence::Order::SourceVideoRecord", foreign_key: :order_id, dependent: :destroy, inverse_of: :order_record
 
           def video_type_selections

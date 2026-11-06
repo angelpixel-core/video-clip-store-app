@@ -23,6 +23,7 @@ module Payments
             Core::Result::Success.(data: { payment: payment, refund: result.data.fetch(:refund) })
           else
             refund.update!(status: :failed, processed_at: Time.current, reason: reason.presence || refund.reason)
+            payment.project&.broadcast_status_badge!
             Core::Result::Success.(data: { payment: payment, refund: refund })
           end
         rescue ActiveRecord::RecordInvalid => e

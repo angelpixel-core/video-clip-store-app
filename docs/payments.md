@@ -30,10 +30,11 @@ Use this page as the single entry point for payment-related docs.
 - [x] [Application Boundaries and Repositories](./work-items/041-application-boundaries-and-repositories.md)
 - [x] [Order Workflow Orchestration](./work-items/042-order-workflow-orchestration.md)
 - [x] [Payment Final Failure Notifications](./work-items/043-payment-final-failure-notifications.md)
+- [x] [Payments Domain POPO and ActiveRecord Persistence Decoupling](./work-items/060-payments-domain-popo-decoupling.md)
 
 ## Related Entry Points
 
 - [Project Documentation Overview](./overview.md)
 - [Changes Index](./changes/index.md)
 - [Work Items Index](./work-items/index.md)
-- [Payments Route Map](../app/domains/payments/README.md)
+- [Payments Route Map](../app/contexts/payments/README.md)

@@ -17,6 +17,9 @@ module Payments
                   provider_reference: payment.provider_reference.presence || event_payload_provider_reference
                 )
 
+                Billing::GenerateInvoiceJob.perform_later(payment.id)
+                payment.project&.broadcast_status_badge!
+
                 update_payment_attempt!(status: :succeeded)
                 record_notification_intent!(from_status: from_status, to_status: :succeeded)
                 event.mark_processed!(attempt: attempt)
