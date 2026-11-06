@@ -51,7 +51,7 @@ def replay_webhook_events(provider_event_ids)
     event = Payments::Domain::Entities::PaymentWebhookEvent.find_by(provider_event_id: provider_event_id)
 
     if event.present?
-      Payments::Infrastructure::Inbound::Webhooks::Event::Job.perform_later(event.id)
+      Payments::ProcessWebhookEventJob.perform_later(event.id)
       puts "Replayed #{event.provider}:#{event.provider_event_id}"
     else
       warn "Skipping missing event #{provider_event_id}"

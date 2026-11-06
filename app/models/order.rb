@@ -192,7 +192,7 @@ class Order < ApplicationRecord
 
   def payment_history_html
     ApplicationController.render(
-      partial: "orders/payment_history",
+      partial: "ordering/orders/payment_history",
       locals: { payments: payments.order(created_at: :desc) }
     )
   end
@@ -350,8 +350,8 @@ class Order < ApplicationRecord
       {
         type: "status_updated",
         order_id: id,
-        status_badge_html: ApplicationController.render(partial: "orders/status_badge", locals: { project: current_project }),
-        payment_badge_html: ApplicationController.render(partial: "orders/workspace_order_payment_badge", locals: { project: current_project }),
+        status_badge_html: ApplicationController.render(partial: "ordering/orders/status_badge", locals: { project: current_project }),
+        payment_badge_html: ApplicationController.render(partial: "ordering/orders/workspace_order_payment_badge", locals: { project: current_project }),
         payment_history_html: current_project.payment_history_html
       }
     )

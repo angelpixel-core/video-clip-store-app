@@ -41,7 +41,7 @@ module Payments
               )
               event.synchronize_payment_context!(payment_for_event(event_data))
 
-              Payments::Infrastructure::Inbound::Webhooks::Event::Job.perform_later(event.id)
+              Payments::ProcessWebhookEventJob.perform_later(event.id)
 
               success(created: created, event: event)
             rescue ActiveRecord::RecordNotUnique

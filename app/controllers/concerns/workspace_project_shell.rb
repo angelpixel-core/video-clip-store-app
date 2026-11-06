@@ -168,7 +168,7 @@ module WorkspaceProjectShell
   end
 
   def order_form_for(project)
-    Orders::OrderFormPresenter.new(project:, path: order_path(project))
+    Ordering::OrderFormPresenter.new(project:, path: order_path(project))
   end
 
   def process_workspace_action(event:, success_notice:, stale_alert:)
@@ -228,7 +228,7 @@ module WorkspaceProjectShell
       status_badge_class: @workspace_project.status_badge_class,
       payment_badge_text: @workspace_project.payment_badge_text,
       payment_badge_class: @workspace_project.payment_badge_class,
-      action_cell_html: ApplicationController.render(partial: "orders/workspace_order_actions", locals: { project: @workspace_project })
+      action_cell_html: ApplicationController.render(partial: "ordering/orders/workspace_order_actions", locals: { project: @workspace_project })
     }
   end
 end

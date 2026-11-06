@@ -17,7 +17,7 @@ RSpec.describe Payments::Domain::Entities::PaymentInvoiceDeliveryIntent do
 
     intent = described_class.create!(payment: payment, status: :pending, scheduled_at: Time.current)
 
-    expect(Billing::Application::Handlers::DispatchInvoiceJob).to receive(:perform_later).with(intent.id)
+    expect(Billing::DispatchInvoiceJob).to receive(:perform_later).with(intent.id)
 
     intent.send(:enqueue_dispatch_job)
   end

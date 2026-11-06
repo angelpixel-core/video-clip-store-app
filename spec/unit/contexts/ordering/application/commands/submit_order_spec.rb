@@ -8,7 +8,7 @@ RSpec.describe Ordering::Application::Commands::SubmitOrder do
     video_type = VideoType.create!(name: "Highlight Reel", description: "Short edit", price_cents: 25_000, output_format: "mp4")
     repository = Fulfillment::Infrastructure::Persistence::Order::Repository.new
 
-    expect(NotificationJob).to receive(:perform_later).with(order.id)
+    expect(Notifications::NotificationJob).to receive(:perform_later).with(order.id)
 
     result = described_class.call(
       order: order,
