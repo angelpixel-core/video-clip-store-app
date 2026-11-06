@@ -48,7 +48,7 @@ class ProjectNotificationMailer < ApplicationMailer
 
     mail(
       to: recipient_email(project, recipient_role),
-      subject: ProjectNotificationSubject.call(project:, recipient_role:, event_type:),
+      subject: Notifications::Application::Notifications::ProjectNotificationSubject.call(project:, recipient_role:, event_type:),
       template_name: "notification"
     )
   end

@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Orders::Notifications::Service do
+RSpec.describe Notifications::Application::Notifications::OrderEventService do
   it "creates a notification and delivers emails to client and pm" do
     client = workspace_account(:client, name: "Client")
     pm = workspace_account(:pm, name: "PM")

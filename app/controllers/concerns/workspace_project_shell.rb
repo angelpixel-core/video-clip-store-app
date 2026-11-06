@@ -70,7 +70,7 @@ module WorkspaceProjectShell
   end
 
   def reopen
-    result = Orders::ActionService.call(project: @project, event: :reopen)
+    result = Fulfillment::Application::Services::ActionService.call(project: @project, event: :reopen)
 
     if result.success?
       redirect_to edit_order_path(@project), notice: "Order reopened."
@@ -172,7 +172,7 @@ module WorkspaceProjectShell
   end
 
   def process_workspace_action(event:, success_notice:, stale_alert:)
-    result = Orders::ActionService.call(project: @workspace_project, event: event)
+    result = Fulfillment::Application::Services::ActionService.call(project: @workspace_project, event: event)
 
     if result.success?
       respond_workspace_action_success(success_notice)

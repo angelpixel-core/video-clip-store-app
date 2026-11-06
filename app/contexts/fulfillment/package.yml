@@ -5,3 +5,4 @@ dependencies:
   - app/contexts/identity
   - app/contexts/catalog
   - app/contexts/payments
+  - app/contexts/notifications

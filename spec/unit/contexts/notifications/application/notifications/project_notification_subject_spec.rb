@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe ProjectNotificationSubject do
+RSpec.describe Notifications::Application::Notifications::ProjectNotificationSubject do
   it "builds the pm subject for accepted orders" do
     client = workspace_account(:client, name: "Client")
     pm = workspace_account(:pm, name: "PM")

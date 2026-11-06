@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Orders::ActionService do
+RSpec.describe Fulfillment::Application::Services::ActionService do
   it "accepts a pending order, marks unread pm notifications as read, and creates a client notification" do
     client = workspace_account(:client, email: "client@example.com", name: "Client")
     pm = workspace_account(:pm, email: "pm@example.com", name: "PM")
