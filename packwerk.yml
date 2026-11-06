@@ -1,3 +1,4 @@
 package_paths:
   - .
-  - app/domains/*
+  - app/shared_kernel
+  - app/contexts/*

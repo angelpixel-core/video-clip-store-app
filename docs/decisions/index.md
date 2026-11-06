@@ -25,3 +25,4 @@ Use this folder for architecture and implementation decisions that support Sprin
 - [x] [Billing Presentation and Adapter Taxonomy](./10-billing-presentation-and-adapter-taxonomy.md)
 - [x] [Catalog Offer Vocabulary](./11-catalog-offer-vocabulary.md)
 - [x] [Availability vs Capacity](./12-availability-vs-capacity.md)
+- [x] [Bounded Contexts and Rails Interface Taxonomy](./13-bounded-contexts-and-rails-interface-taxonomy.md)
