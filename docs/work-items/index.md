@@ -260,4 +260,21 @@ Payments docs are centralized at [Payments Index](../payments.md).
 
 - [x] [Conversation and Comments UI Refinement](./056-conversation-comments-ui-refinement.md)
 
+## 57
+
+- [ ] [Contexts, Shared Kernel and Legacy Folder Cleanup (Phase 1)](./057-contexts-shared-kernel-and-legacy-cleanup.md)
+
+## 58
+
+- [ ] [Context Infrastructure Unification and Ordering/Fulfillment Alignment (Phase 2)](./058-context-infrastructure-and-ordering-alignment.md)
+
+## 59
+
+- [ ] [Rails Interface Layer Segmented by Context (Phase 3)](./059-rails-interface-layer-by-context.md)
+
+## 60
+
+- [ ] [Payments Domain POPO and ActiveRecord Persistence Decoupling (Phase 4)](./060-payments-domain-popo-decoupling.md)
+
+
 
