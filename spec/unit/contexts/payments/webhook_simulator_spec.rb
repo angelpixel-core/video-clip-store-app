@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Payments::Adapters::Outbound::Webhooks::WebhookSimulator do
+RSpec.describe Payments::Infrastructure::Outbound::Webhooks::WebhookSimulator do
   let(:webhook_url) { "http://example.com/payments/webhooks/fake/events" }
 
   it "returns a failure when the webhook url is missing" do

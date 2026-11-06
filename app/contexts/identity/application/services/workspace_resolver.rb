@@ -4,7 +4,7 @@ module Identity
       class WorkspaceResolver
         def initialize(
           query: Identity::Application::Queries::ResolveWorkspaceAccount,
-          account_repository: Identity::Adapters::Persistence::Account::Repository.new,
+          account_repository: Identity::Infrastructure::Persistence::Account::Repository.new,
           user_repository: Identity::Domain::Repositories::UserRepository
         )
           @query = query

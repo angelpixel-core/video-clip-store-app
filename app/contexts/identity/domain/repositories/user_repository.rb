@@ -3,7 +3,7 @@ module Identity
     module Repositories
       class UserRepository
         def self.repository
-          @repository ||= Identity::Adapters::Persistence::User::Repository.new
+          @repository ||= Identity::Infrastructure::Persistence::User::Repository.new
         end
 
         def self.find_by_email(email)

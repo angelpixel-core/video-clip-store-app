@@ -8,7 +8,7 @@ RSpec.describe Ordering::Application::Commands::ProcessSubmission do
     video_type = VideoType.create!(name: "Highlight Reel", description: "Short edit", price_cents: 25_000, output_format: "mp4")
     project.video_type_selections.create!(video_type: video_type, quantity: 1)
 
-    submission = Ordering::Application::DTO::Submission.from_order(project, fulfillment_account: pm)
+    submission = Ordering::Application::DTOs::Submission.from_order(project, fulfillment_account: pm)
     payment = instance_double(Payments::Domain::Aggregates::Payment, id: 456, active?: false)
     payment_result = Core::Result::Success.(data: { payment: payment })
     reservation = instance_double("CapacityReservation", order_id: project.id)

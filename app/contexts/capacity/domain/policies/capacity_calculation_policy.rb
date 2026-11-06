@@ -14,7 +14,7 @@ module Capacity
         end
 
         def self.active_order_units
-          Ordering::Adapters::Persistence::Order::OrderRecord
+          Ordering::Infrastructure::Persistence::Order::OrderRecord
             .where(status: %w[placed confirmed])
             .joins(:order_line_records)
             .sum("order_lines.quantity")
@@ -22,7 +22,7 @@ module Capacity
         end
 
         def self.active_reservation_units
-          Capacity::Adapters::Persistence::CapacityReservation::CapacityReservationRecord
+          Capacity::Infrastructure::Persistence::CapacityReservation::CapacityReservationRecord
             .where(status: "reserved")
             .sum(:units)
             .to_i

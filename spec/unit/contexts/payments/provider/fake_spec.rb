@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Payments::Adapters::Outbound::Gateways::Fake do
+RSpec.describe Payments::Infrastructure::Outbound::Gateways::Fake do
   it "returns a success result for a valid payment" do
     client = workspace_account(:client, name: "Client")
     pm = workspace_account(:pm, name: "PM")

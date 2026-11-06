@@ -23,7 +23,7 @@ Rails.application.routes.draw do
   end
 
   namespace :payments do
-    post "webhooks/:provider/events", to: "adapters/inbound/webhooks/payment_webhooks#create", as: :webhook_events
+    post "webhooks/:provider/events", to: "infrastructure/inbound/webhooks/payment_webhooks#create", as: :webhook_events
   end
 
   resources :orders, only: %i[index show new edit update] do

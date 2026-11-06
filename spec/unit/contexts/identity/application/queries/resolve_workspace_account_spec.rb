@@ -7,7 +7,7 @@ RSpec.describe Identity::Application::Queries::ResolveWorkspaceAccount do
     workspace = build_client_account(email: "client@example.com", name: "Client")
 
     user_repository = class_double(Identity::Domain::Repositories::UserRepository).as_stubbed_const
-    account_repository = instance_double(Identity::Adapters::Persistence::Account::Repository)
+    account_repository = instance_double(Identity::Infrastructure::Persistence::Account::Repository)
 
     user = Identity::Domain::Aggregates::User.create!(name: "Client User", email: "client@example.com", access_state: :active)
 
@@ -26,7 +26,7 @@ RSpec.describe Identity::Application::Queries::ResolveWorkspaceAccount do
 
   it "returns nil when the workspace user cannot be resolved" do
     user_repository = class_double(Identity::Domain::Repositories::UserRepository).as_stubbed_const
-    account_repository = instance_double(Identity::Adapters::Persistence::Account::Repository)
+    account_repository = instance_double(Identity::Infrastructure::Persistence::Account::Repository)
 
     allow(user_repository).to receive(:find_by_email).and_return(nil)
 

@@ -6,7 +6,7 @@ module Identity
           email:,
           role:,
           user_repository: Identity::Domain::Repositories::UserRepository,
-          account_repository: Identity::Adapters::Persistence::Account::Repository.new
+          account_repository: Identity::Infrastructure::Persistence::Account::Repository.new
         )
           @email = email
           @role = role
@@ -18,7 +18,7 @@ module Identity
           email:,
           role:,
           user_repository: Identity::Domain::Repositories::UserRepository,
-          account_repository: Identity::Adapters::Persistence::Account::Repository.new
+          account_repository: Identity::Infrastructure::Persistence::Account::Repository.new
         )
           new(email:, role:, user_repository:, account_repository:).call
         end

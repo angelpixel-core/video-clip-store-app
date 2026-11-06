@@ -8,6 +8,8 @@ Rails.autoloaders.each do |autoloader|
     "payment_id" => "PaymentID",
     "order_id" => "OrderID",
     "invoice_id" => "InvoiceID",
-    "arca" => "ARCA"
+    "arca" => "ARCA",
+    "di" => "DI",
+    "dtos" => "DTOs"
   )
 end

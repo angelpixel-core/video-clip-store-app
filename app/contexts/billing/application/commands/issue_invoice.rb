@@ -8,8 +8,8 @@ module Billing
 
         def initialize(payment:, repository: nil, tax_gateway: nil, billing_identity: nil)
           @payment = payment
-          @repository = repository || Billing::Adapters::Persistence::Invoice::Repository.new
-          @tax_gateway = tax_gateway || Billing::Adapters::Outbound::Integrations::TaxProviders::ARCA::TaxDocumentGateway.new
+          @repository = repository || Billing::Infrastructure::Persistence::Invoice::Repository.new
+          @tax_gateway = tax_gateway || Billing::Infrastructure::Outbound::Integrations::TaxProviders::ARCA::TaxDocumentGateway.new
           @billing_identity = billing_identity || Billing::Domain::ValueObjects::BillingIdentity.new(name: payment.project.owner.name)
         end
 

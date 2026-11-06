@@ -12,7 +12,7 @@ class OrdersController < ApplicationController
     if payment.present?
       port = ENV.fetch("APP_PORT", 3000)
       url = ENV["WEBHOOK_URL"].presence || "http://127.0.0.1:#{port}/payments/webhooks/fake/events"
-      result = Payments::Adapters::Outbound::Webhooks::WebhookSimulator.call(
+      result = Payments::Infrastructure::Outbound::Webhooks::WebhookSimulator.call(
         webhook_url: url,
         provider: "fake",
         event_id: "evt_#{SecureRandom.hex(4)}",

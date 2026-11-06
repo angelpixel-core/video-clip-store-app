@@ -216,7 +216,7 @@ RSpec.describe "Orders requests" do
       payment = Payments::Domain::Aggregates::Payment.create!(project: project, status: :processing, provider: "fake", idempotency_key: SecureRandom.uuid, amount_cents: 10_000, currency: "USD")
 
       allow(Features).to receive(:payment_simulation_devtool_enabled?).and_return(true)
-      expect(Payments::Adapters::Outbound::Webhooks::WebhookSimulator).to receive(:call).and_return(Core::Result::Success.(data: {}))
+      expect(Payments::Infrastructure::Outbound::Webhooks::WebhookSimulator).to receive(:call).and_return(Core::Result::Success.(data: {}))
 
       post simulate_payment_webhook_order_path(project)
 

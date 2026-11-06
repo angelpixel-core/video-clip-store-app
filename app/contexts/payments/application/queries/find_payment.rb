@@ -16,7 +16,7 @@ module Payments
 
           return Core::Result::Failure.(message: "Payment not found.", code: :not_found) if payment.blank?
 
-          Core::Result::Success.(data: { payment: Payments::Application::DTO::PaymentDTO.from_payment(payment) })
+          Core::Result::Success.(data: { payment: Payments::Application::DTOs::PaymentDTO.from_payment(payment) })
         end
 
         private

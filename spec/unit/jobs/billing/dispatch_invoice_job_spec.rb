@@ -18,7 +18,7 @@ RSpec.describe Billing::Application::Handlers::DispatchInvoiceJob do
     intent = Payments::Domain::Entities::PaymentInvoiceDeliveryIntent.create!(payment: payment, status: :pending, scheduled_at: Time.current)
 
     mail = instance_double(ActionMailer::MessageDelivery)
-    expect(Billing::Adapters::Outbound::Mailers::InvoiceMailer).to receive(:invoice_ready).with(intent).and_return(mail)
+    expect(Billing::Infrastructure::Outbound::Mailers::InvoiceMailer).to receive(:invoice_ready).with(intent).and_return(mail)
     expect(mail).to receive(:deliver_now)
 
     described_class.perform_now(intent.id)

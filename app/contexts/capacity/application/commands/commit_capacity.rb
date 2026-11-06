@@ -2,7 +2,7 @@ module Capacity
   module Application
     module Commands
       class CommitCapacity
-        def self.call(order_id:, repository: Capacity::Adapters::Persistence::CapacityReservation::Repository.new)
+        def self.call(order_id:, repository: Capacity::Infrastructure::Persistence::CapacityReservation::Repository.new)
           new(order_id:, repository:).call
         end
 

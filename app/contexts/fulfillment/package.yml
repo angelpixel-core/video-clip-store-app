@@ -6,3 +6,4 @@ dependencies:
   - app/contexts/catalog
   - app/contexts/payments
   - app/contexts/notifications
+  - .

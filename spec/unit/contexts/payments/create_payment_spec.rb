@@ -46,7 +46,7 @@ RSpec.describe Payments::Application::Commands::CreatePayment do
     pm = workspace_account(:pm, email: "pm@example.com", name: "PM")
     project = Project.create!(owner: client, participant: pm, name: "Project", raw_footage_url: "https://example.com/raw.mov", status: :pending)
 
-    allow(Payments::Adapters::Outbound::Gateways::Fake).to receive(:call).and_return(
+    allow(Payments::Infrastructure::Outbound::Gateways::Fake).to receive(:call).and_return(
       Core::Result::Failure.(message: "Rejected", code: :provider_rejected, data: { payment_id: 123 })
     )
 

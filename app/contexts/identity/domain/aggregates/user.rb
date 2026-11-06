@@ -1,7 +1,7 @@
 module Identity
   module Domain
     module Aggregates
-      class User < Identity::Adapters::Persistence::User::UserRecord
+      class User < Identity::Infrastructure::Persistence::User::UserRecord
       end
     end
   end

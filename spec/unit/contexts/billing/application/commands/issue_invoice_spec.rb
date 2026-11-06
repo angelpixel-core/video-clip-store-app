@@ -22,7 +22,7 @@ RSpec.describe Billing::Application::Commands::IssueInvoice do
 
     expect do
       @result = described_class.call(payment: payment)
-    end.to change(Billing::Adapters::Persistence::Invoice::InvoiceRecord, :count).by(1)
+    end.to change(Billing::Infrastructure::Persistence::Invoice::InvoiceRecord, :count).by(1)
 
     expect(@result).to be_success
     invoice = @result.data.fetch(:invoice)

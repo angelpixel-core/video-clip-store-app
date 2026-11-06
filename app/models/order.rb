@@ -198,7 +198,7 @@ class Order < ApplicationRecord
   end
 
   def sync_order_listing!
-    order = Ordering::Adapters::Persistence::Order::OrderRecord.find_or_initialize_by(id: id)
+    order = Ordering::Infrastructure::Persistence::Order::OrderRecord.find_or_initialize_by(id: id)
     order.owner_account_id = owner_account_id
     order.participant_account_id = participant_account_id
     order.name = name

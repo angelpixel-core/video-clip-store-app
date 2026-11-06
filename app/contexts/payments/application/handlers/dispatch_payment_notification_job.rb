@@ -10,8 +10,8 @@ module Payments
           return if intent.sent?
 
           Rails.logger.info("Payment notification #{intent.event_type} for payment #{intent.payment_id} (#{intent.from_status} -> #{intent.to_status})")
-          Payments::Adapters::Outbound::Mailers::PaymentNotificationMailer.payment_status_changed(intent, recipient_role: :client).deliver_now
-          Payments::Adapters::Outbound::Mailers::PaymentNotificationMailer.payment_status_changed(intent, recipient_role: :pm).deliver_now
+          Payments::Infrastructure::Outbound::Mailers::PaymentNotificationMailer.payment_status_changed(intent, recipient_role: :client).deliver_now
+          Payments::Infrastructure::Outbound::Mailers::PaymentNotificationMailer.payment_status_changed(intent, recipient_role: :pm).deliver_now
           intent.mark_sent!
         rescue StandardError => e
           intent.mark_failed!(e.message) if intent.present?

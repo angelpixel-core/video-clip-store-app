@@ -7,10 +7,10 @@ RSpec.describe Capacity::Domain::Policies::CapacityCalculationPolicy do
     reservation_scope = instance_double(ActiveRecord::Relation)
 
     allow(ENV).to receive(:fetch).with("CAPACITY_TOTAL_UNITS", 100).and_return("3")
-    allow(Ordering::Adapters::Persistence::Order::OrderRecord).to receive(:where).with(status: %w[placed confirmed]).and_return(order_scope)
+    allow(Ordering::Infrastructure::Persistence::Order::OrderRecord).to receive(:where).with(status: %w[placed confirmed]).and_return(order_scope)
     allow(order_scope).to receive(:joins).with(:order_line_records).and_return(order_scope)
     allow(order_scope).to receive(:sum).with("order_lines.quantity").and_return(1)
-    allow(Capacity::Adapters::Persistence::CapacityReservation::CapacityReservationRecord).to receive(:where).with(status: "reserved").and_return(reservation_scope)
+    allow(Capacity::Infrastructure::Persistence::CapacityReservation::CapacityReservationRecord).to receive(:where).with(status: "reserved").and_return(reservation_scope)
     allow(reservation_scope).to receive(:sum).with(:units).and_return(1)
 
     expect(described_class.available_units_for(offer)).to eq(1)
@@ -22,10 +22,10 @@ RSpec.describe Capacity::Domain::Policies::CapacityCalculationPolicy do
     reservation_scope = instance_double(ActiveRecord::Relation)
 
     allow(ENV).to receive(:fetch).with("CAPACITY_TOTAL_UNITS", 100).and_return("1")
-    allow(Ordering::Adapters::Persistence::Order::OrderRecord).to receive(:where).with(status: %w[placed confirmed]).and_return(order_scope)
+    allow(Ordering::Infrastructure::Persistence::Order::OrderRecord).to receive(:where).with(status: %w[placed confirmed]).and_return(order_scope)
     allow(order_scope).to receive(:joins).with(:order_line_records).and_return(order_scope)
     allow(order_scope).to receive(:sum).with("order_lines.quantity").and_return(1)
-    allow(Capacity::Adapters::Persistence::CapacityReservation::CapacityReservationRecord).to receive(:where).with(status: "reserved").and_return(reservation_scope)
+    allow(Capacity::Infrastructure::Persistence::CapacityReservation::CapacityReservationRecord).to receive(:where).with(status: "reserved").and_return(reservation_scope)
     allow(reservation_scope).to receive(:sum).with(:units).and_return(2)
 
     expect(described_class.available_units_for(offer)).to eq(0)
