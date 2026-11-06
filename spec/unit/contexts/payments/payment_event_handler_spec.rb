@@ -62,9 +62,11 @@ RSpec.describe Payments::Infrastructure::Inbound::Webhooks::Event::Handler do
     )
   end
 
-  it "processes a succeeded event once" do
+  it "processes a succeeded event once and enqueues invoice generation" do
     payment = build_payment
     event = build_event(payment: payment)
+
+    expect(Billing::GenerateInvoiceJob).to receive(:perform_later).with(payment.id)
 
     result = described_class.(event: event)
 

@@ -25,6 +25,8 @@ module Payments
             reason: reason
           )
 
+          payment.project&.broadcast_status_badge!
+
           Core::Result::Success.(data: { payment: payment, refund: refund })
         end
 

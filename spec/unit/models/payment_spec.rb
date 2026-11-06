@@ -72,7 +72,7 @@ RSpec.describe Payments::Infrastructure::Persistence::Payment::PaymentRecord do
     expect(duplicate.errors[:idempotency_key]).to be_present
   end
 
-  it "enqueues invoice generation after a payment succeeds" do
+  it "does not trigger invoice generation directly on record update" do
     client = workspace_account(:client, name: "Client")
     pm = workspace_account(:pm, name: "PM")
     project = Project.create!(owner: client, participant: pm, status: :draft)
@@ -85,7 +85,7 @@ RSpec.describe Payments::Infrastructure::Persistence::Payment::PaymentRecord do
       currency: "usd"
     )
 
-    expect(Billing::GenerateInvoiceJob).to receive(:perform_later).with(payment.id)
+    expect(Billing::GenerateInvoiceJob).not_to receive(:perform_later)
 
     payment.update!(status: :succeeded, confirmed_at: Time.current)
   end

@@ -20,7 +20,6 @@ module Payments
 
           before_validation :normalize_provider
           before_validation :normalize_status
-          after_commit :broadcast_payment_project_status
 
           validates :status, presence: true, inclusion: { in: STATUSES }
           validates :provider, presence: true
@@ -46,10 +45,6 @@ module Payments
             return if payment_method_reference.blank? || payment_method_reference.payment_id == payment_id
 
             errors.add(:payment_method_reference, "must belong to the same payment")
-          end
-
-          def broadcast_payment_project_status
-            payment&.project&.broadcast_status_badge!
           end
         end
       end

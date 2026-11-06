@@ -83,7 +83,7 @@ RSpec.describe Payments::ProcessWebhookEventJob do
   end
 
   it "retries deadlocks" do
-    allow(Payments::Domain::Entities::PaymentWebhookEvent).to receive(:find_by).and_raise(ActiveRecord::Deadlocked)
+    allow(Payments::Infrastructure::Persistence::Webhook::Event::Repository).to receive(:find_by_id).and_raise(ActiveRecord::Deadlocked)
 
     assert_enqueued_jobs 1 do
       described_class.perform_now(123)

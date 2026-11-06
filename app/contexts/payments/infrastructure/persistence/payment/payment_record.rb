@@ -21,9 +21,6 @@ module Payments
           before_validation :normalize_provider
           before_validation :normalize_currency
 
-          after_commit :enqueue_invoice_generation_job, on: :update
-          after_commit :broadcast_project_payment_state, on: :update
-
           validates :status, presence: true, inclusion: { in: STATUSES }
           validates :provider, presence: true
           validates :idempotency_key, presence: true, uniqueness: true
@@ -87,18 +84,6 @@ module Payments
 
           def normalize_currency
             self.currency = currency.to_s.strip.upcase.presence || "USD"
-          end
-
-          def enqueue_invoice_generation_job
-            return unless saved_change_to_status? && succeeded?
-
-            Billing::GenerateInvoiceJob.perform_later(id)
-          end
-
-          def broadcast_project_payment_state
-            return unless previous_changes.key?("status")
-
-            project&.broadcast_status_badge!
           end
 
           def only_one_active_payment_per_project

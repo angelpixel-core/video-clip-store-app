@@ -17,6 +17,8 @@ module Payments
                   provider_reference: payment.provider_reference.presence || event_payload_provider_reference
                 )
 
+                payment.project&.broadcast_status_badge!
+
                 update_payment_attempt!(status: :failed, error_message: "Payment failed via webhook.")
                 record_notification_intent!(from_status: from_status, to_status: :failed)
                 event.mark_processed!(attempt: attempt)

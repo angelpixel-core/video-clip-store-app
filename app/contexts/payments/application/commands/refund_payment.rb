@@ -26,6 +26,8 @@ module Payments
             reason: refund.reason
           )
 
+          payment.project&.broadcast_status_badge!
+
           Core::Result::Success.(data: { payment: payment, refund: refund, provider_result: provider_result })
         rescue ActiveRecord::RecordInvalid => e
           failure(e.message, :refund_update_failed)
