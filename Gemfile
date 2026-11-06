@@ -9,7 +9,7 @@ gem "mysql2", "~> 0.5"
 
 group :production, :qa do
   # Use PostgreSQL for Render runtime environments, including QA.
-  gem "pg", "~> 1.5"
+  gem "pg", "~> 1.7"
 end
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
