@@ -262,7 +262,7 @@ Payments docs are centralized at [Payments Index](../payments.md).
 
 ## 57
 
-- [ ] [Contexts, Shared Kernel and Legacy Folder Cleanup (Phase 1)](./057-contexts-shared-kernel-and-legacy-cleanup.md)
+- [x] [Contexts, Shared Kernel and Legacy Folder Cleanup (Phase 1)](./057-contexts-shared-kernel-and-legacy-cleanup.md)
 
 ## 58
 
