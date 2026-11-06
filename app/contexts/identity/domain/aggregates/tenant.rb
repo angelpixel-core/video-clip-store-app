@@ -1,7 +1,7 @@
 module Identity
   module Domain
     module Aggregates
-      class Tenant < Identity::Adapters::Persistence::Tenant::TenantRecord
+      class Tenant < Identity::Infrastructure::Persistence::Tenant::TenantRecord
       end
     end
   end

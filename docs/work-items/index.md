@@ -266,7 +266,7 @@ Payments docs are centralized at [Payments Index](../payments.md).
 
 ## 58
 
-- [ ] [Context Infrastructure Unification and Ordering/Fulfillment Alignment (Phase 2)](./058-context-infrastructure-and-ordering-alignment.md)
+- [x] [Context Infrastructure Unification and Ordering/Fulfillment Alignment (Phase 2)](./058-context-infrastructure-and-ordering-alignment.md)
 
 ## 59
 

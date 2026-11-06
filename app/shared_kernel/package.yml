@@ -1,2 +1,4 @@
 enforce_dependencies: true
-dependencies: []
+dependencies:
+  - app/contexts/payments
+  - app/contexts/billing

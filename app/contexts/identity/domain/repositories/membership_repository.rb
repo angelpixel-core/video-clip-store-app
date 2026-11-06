@@ -3,7 +3,7 @@ module Identity
     module Repositories
       class MembershipRepository
         def self.repository
-          @repository ||= Identity::Adapters::Persistence::Membership::Repository.new
+          @repository ||= Identity::Infrastructure::Persistence::Membership::Repository.new
         end
 
         def self.find_by_user(user)

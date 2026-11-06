@@ -1,7 +1,7 @@
 module Identity
   module Domain
     module Aggregates
-      class Membership < Identity::Adapters::Persistence::Membership::MembershipRecord
+      class Membership < Identity::Infrastructure::Persistence::Membership::MembershipRecord
       end
     end
   end

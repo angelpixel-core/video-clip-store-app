@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Payments::Adapters::Inbound::Webhooks::Event::FinalFailureHandler do
+RSpec.describe Payments::Infrastructure::Inbound::Webhooks::Event::FinalFailureHandler do
   def build_payment(status: :processing)
     client = workspace_account(:client, email: "client@example.com", name: "Client")
     pm = workspace_account(:pm, email: "pm@example.com", name: "PM")

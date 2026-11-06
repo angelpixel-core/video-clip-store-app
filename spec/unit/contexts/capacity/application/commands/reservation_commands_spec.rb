@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe "Capacity reservation commands" do
-  let(:repository) { instance_double(Capacity::Adapters::Persistence::CapacityReservation::Repository) }
+  let(:repository) { instance_double(Capacity::Infrastructure::Persistence::CapacityReservation::Repository) }
 
   it "reserves capacity through the repository" do
     allow(repository).to receive(:find_by_order_id).with(123).and_return(nil)

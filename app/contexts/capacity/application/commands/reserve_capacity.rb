@@ -2,7 +2,7 @@ module Capacity
   module Application
     module Commands
       class ReserveCapacity
-        def self.call(order_id:, units:, expires_at: nil, repository: Capacity::Adapters::Persistence::CapacityReservation::Repository.new)
+        def self.call(order_id:, units:, expires_at: nil, repository: Capacity::Infrastructure::Persistence::CapacityReservation::Repository.new)
           new(order_id:, units:, expires_at:, repository:).call
         end
 

@@ -28,7 +28,7 @@ module Ordering
         end
 
         def total_count
-          Ordering::Adapters::Persistence::Order::OrderRecord.where.not(status: :draft).count
+          Ordering::Infrastructure::Persistence::Order::OrderRecord.where.not(status: :draft).count
         end
 
         def sort
@@ -57,7 +57,7 @@ module Ordering
         end
 
         def order_scope
-          Ordering::Adapters::Persistence::Order::OrderRecord
+          Ordering::Infrastructure::Persistence::Order::OrderRecord
             .left_outer_joins(:order_line_records)
             .select(<<~SQL.squish)
               orders.*,

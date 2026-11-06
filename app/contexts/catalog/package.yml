@@ -2,4 +2,5 @@ enforce_dependencies: true
 dependencies:
   - app/shared_kernel
   - app/contexts/identity
+  - app/contexts/capacity
   - .

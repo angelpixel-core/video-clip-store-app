@@ -11,7 +11,7 @@ module Payments
         end
 
         def call
-          Payments::Adapters::Inbound::Webhooks::Event::Handler.call(event: event)
+          Payments::Infrastructure::Inbound::Webhooks::Event::Handler.call(event: event)
         end
 
         private

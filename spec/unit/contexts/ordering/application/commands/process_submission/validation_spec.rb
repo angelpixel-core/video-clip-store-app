@@ -6,7 +6,7 @@ RSpec.describe Ordering::Application::Commands::ProcessSubmission do
     pm = workspace_account(:pm, name: "PM")
     project = Project.create!(owner: client, participant: pm, name: "Project", raw_footage_url: "https://example.com/raw.mov", status: :pending)
 
-    submission = Ordering::Application::DTO::Submission.from_order(project, fulfillment_account: pm)
+    submission = Ordering::Application::DTOs::Submission.from_order(project, fulfillment_account: pm)
 
     result = described_class.call(
       submission: submission,

@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Payments::Adapters::Inbound::Webhooks::Event::Handler do
+RSpec.describe Payments::Infrastructure::Inbound::Webhooks::Event::Handler do
   def build_payment(status: :processing)
     client = workspace_account(:client, name: "Client")
     pm = workspace_account(:pm, name: "PM")
@@ -123,10 +123,10 @@ RSpec.describe Payments::Adapters::Inbound::Webhooks::Event::Handler do
     payment = build_payment
     event = build_event(payment: payment, demo_fail_once: true)
 
-    expect { described_class.(event: event) }.to raise_error(Payments::Domain::Errors::DemoTransientFailure, Payments::Adapters::Inbound::Webhooks::Event::Handler::DEMO_FAILURE_MESSAGE)
+    expect { described_class.(event: event) }.to raise_error(Payments::Domain::Errors::DemoTransientFailure, Payments::Infrastructure::Inbound::Webhooks::Event::Handler::DEMO_FAILURE_MESSAGE)
     expect(event.reload.status).to eq("failed")
     expect(event.processing_attempts_count).to eq(1)
-    expect(event.last_failure_message).to eq(Payments::Adapters::Inbound::Webhooks::Event::Handler::DEMO_FAILURE_MESSAGE)
+    expect(event.last_failure_message).to eq(Payments::Infrastructure::Inbound::Webhooks::Event::Handler::DEMO_FAILURE_MESSAGE)
     expect(event.processing_attempts.first.status).to eq("failed")
     expect(payment.payment_notification_intents.count).to eq(0)
 
@@ -145,12 +145,12 @@ RSpec.describe Payments::Adapters::Inbound::Webhooks::Event::Handler do
     payment = build_payment
     event = build_event(payment: payment, demo_fail_always: true)
 
-    expect { described_class.(event: event) }.to raise_error(Payments::Domain::Errors::DemoTransientFailure, Payments::Adapters::Inbound::Webhooks::Event::Handler::DEMO_FAILURE_MESSAGE)
+    expect { described_class.(event: event) }.to raise_error(Payments::Domain::Errors::DemoTransientFailure, Payments::Infrastructure::Inbound::Webhooks::Event::Handler::DEMO_FAILURE_MESSAGE)
     expect(event.reload.status).to eq("failed")
     expect(event.processing_attempts_count).to eq(1)
-    expect(event.last_failure_message).to eq(Payments::Adapters::Inbound::Webhooks::Event::Handler::DEMO_FAILURE_MESSAGE)
+    expect(event.last_failure_message).to eq(Payments::Infrastructure::Inbound::Webhooks::Event::Handler::DEMO_FAILURE_MESSAGE)
 
-    expect { described_class.(event: event.reload) }.to raise_error(Payments::Domain::Errors::DemoTransientFailure, Payments::Adapters::Inbound::Webhooks::Event::Handler::DEMO_FAILURE_MESSAGE)
+    expect { described_class.(event: event.reload) }.to raise_error(Payments::Domain::Errors::DemoTransientFailure, Payments::Infrastructure::Inbound::Webhooks::Event::Handler::DEMO_FAILURE_MESSAGE)
     expect(event.reload.status).to eq("failed")
     expect(event.processing_attempts_count).to eq(2)
     expect(event.processing_attempts.order(:attempt_number).pluck(:status)).to eq(%w[failed failed])

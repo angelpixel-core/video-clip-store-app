@@ -37,6 +37,6 @@ class CommentsController < ApplicationController
   end
 
   def project_repository
-    @project_repository ||= Fulfillment::Adapters::Persistence::Order::Repository.new
+    @project_repository ||= Fulfillment::Infrastructure::Persistence::Order::Repository.new
   end
 end
