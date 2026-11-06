@@ -144,7 +144,7 @@ RSpec.describe "Project show payment history", type: :system, js: true do
       received_at: Time.current
     )
 
-    Payments::Infrastructure::Inbound::Webhooks::Event::Job.perform_now(event.id)
+    Payments::ProcessWebhookEventJob.perform_now(event.id)
 
     visit order_path(project)
 

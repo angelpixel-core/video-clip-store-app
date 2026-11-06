@@ -81,8 +81,8 @@ module Notifications
 
         def email_deliveries
           [
-            -> { ProjectNotificationMailer.public_send(event_type, project, recipient_role: :client).deliver_now },
-            -> { ProjectNotificationMailer.public_send(event_type, project, recipient_role: :pm).deliver_now }
+            -> { ::Notifications::ProjectNotificationMailer.public_send(event_type, project, recipient_role: :client).deliver_now },
+            -> { ::Notifications::ProjectNotificationMailer.public_send(event_type, project, recipient_role: :pm).deliver_now }
           ]
         end
 

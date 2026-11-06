@@ -85,7 +85,7 @@ RSpec.describe Payments::Domain::Aggregates::Payment do
       currency: "usd"
     )
 
-    expect(Billing::Application::Handlers::GenerateInvoiceJob).to receive(:perform_later).with(payment.id)
+    expect(Billing::GenerateInvoiceJob).to receive(:perform_later).with(payment.id)
 
     payment.update!(status: :succeeded, confirmed_at: Time.current)
   end

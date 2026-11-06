@@ -23,7 +23,7 @@ RSpec.describe Payments::Domain::Entities::PaymentNotificationIntent do
       scheduled_at: Time.current
     )
 
-    expect(Payments::Application::Handlers::DispatchPaymentNotificationJob).to receive(:perform_later).with(intent.id)
+    expect(Payments::DispatchPaymentNotificationJob).to receive(:perform_later).with(intent.id)
 
     intent.send(:enqueue_dispatch_job)
   end

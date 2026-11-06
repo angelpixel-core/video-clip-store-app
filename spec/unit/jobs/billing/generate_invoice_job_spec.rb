@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Billing::Application::Handlers::GenerateInvoiceJob do
+RSpec.describe Billing::GenerateInvoiceJob do
   it "attaches an invoice and creates a payment invoice delivery intent once" do
     client = workspace_account(:client, name: "Client")
     pm = workspace_account(:pm, name: "PM")

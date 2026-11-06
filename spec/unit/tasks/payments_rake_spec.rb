@@ -253,7 +253,7 @@ RSpec.describe "payments rake tasks" do
 
     ENV["EVENT_ID"] = event.provider_event_id
 
-    expect(Payments::Infrastructure::Inbound::Webhooks::Event::Job).to receive(:perform_later).with(event.id)
+    expect(Payments::ProcessWebhookEventJob).to receive(:perform_later).with(event.id)
 
     Rake::Task["payments:replay_webhook_event"].invoke
   end
@@ -278,8 +278,8 @@ RSpec.describe "payments rake tasks" do
       received_at: Time.current
     )
 
-    expect(Payments::Infrastructure::Inbound::Webhooks::Event::Job).to receive(:perform_later).with(failed.id).ordered
-    expect(Payments::Infrastructure::Inbound::Webhooks::Event::Job).to receive(:perform_later).with(received.id).ordered
+    expect(Payments::ProcessWebhookEventJob).to receive(:perform_later).with(failed.id).ordered
+    expect(Payments::ProcessWebhookEventJob).to receive(:perform_later).with(received.id).ordered
 
     Rake::Task["payments:replay_failed_webhook_events"].invoke
   end

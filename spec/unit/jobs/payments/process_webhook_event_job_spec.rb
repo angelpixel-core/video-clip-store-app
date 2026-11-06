@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Payments::Infrastructure::Inbound::Webhooks::Event::Job do
+RSpec.describe Payments::ProcessWebhookEventJob do
   include ActiveJob::TestHelper
 
   it "uses the shared bounded retry policy" do

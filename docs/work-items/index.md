@@ -270,7 +270,7 @@ Payments docs are centralized at [Payments Index](../payments.md).
 
 ## 59
 
-- [ ] [Rails Interface Layer Segmented by Context (Phase 3)](./059-rails-interface-layer-by-context.md)
+- [x] [Rails Interface Layer Segmented by Context (Phase 3)](./059-rails-interface-layer-by-context.md)
 
 ## 60
 

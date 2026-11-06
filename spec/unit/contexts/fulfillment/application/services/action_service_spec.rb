@@ -13,8 +13,8 @@ RSpec.describe Fulfillment::Application::Services::ActionService do
 
     client_mail = instance_double(ActionMailer::MessageDelivery, deliver_now: true)
     pm_mail = instance_double(ActionMailer::MessageDelivery, deliver_now: true)
-    expect(ProjectNotificationMailer).to receive(:project_accepted).with(project, recipient_role: :client).and_return(client_mail)
-    expect(ProjectNotificationMailer).to receive(:project_accepted).with(project, recipient_role: :pm).and_return(pm_mail)
+    expect(Notifications::ProjectNotificationMailer).to receive(:project_accepted).with(project, recipient_role: :client).and_return(client_mail)
+    expect(Notifications::ProjectNotificationMailer).to receive(:project_accepted).with(project, recipient_role: :pm).and_return(pm_mail)
 
     result = described_class.call(project: project, event: :accept)
 
@@ -32,8 +32,8 @@ RSpec.describe Fulfillment::Application::Services::ActionService do
 
     client_mail = instance_double(ActionMailer::MessageDelivery, deliver_now: true)
     pm_mail = instance_double(ActionMailer::MessageDelivery, deliver_now: true)
-    expect(ProjectNotificationMailer).to receive(:project_cancelled).with(project, recipient_role: :client).and_return(client_mail)
-    expect(ProjectNotificationMailer).to receive(:project_cancelled).with(project, recipient_role: :pm).and_return(pm_mail)
+    expect(Notifications::ProjectNotificationMailer).to receive(:project_cancelled).with(project, recipient_role: :client).and_return(client_mail)
+    expect(Notifications::ProjectNotificationMailer).to receive(:project_cancelled).with(project, recipient_role: :pm).and_return(pm_mail)
 
     result = described_class.call(project: project, event: :cancel)
 
@@ -49,8 +49,8 @@ RSpec.describe Fulfillment::Application::Services::ActionService do
 
     client_mail = instance_double(ActionMailer::MessageDelivery, deliver_now: true)
     pm_mail = instance_double(ActionMailer::MessageDelivery, deliver_now: true)
-    expect(ProjectNotificationMailer).to receive(:project_reopened).with(project, recipient_role: :client).and_return(client_mail)
-    expect(ProjectNotificationMailer).to receive(:project_reopened).with(project, recipient_role: :pm).and_return(pm_mail)
+    expect(Notifications::ProjectNotificationMailer).to receive(:project_reopened).with(project, recipient_role: :client).and_return(client_mail)
+    expect(Notifications::ProjectNotificationMailer).to receive(:project_reopened).with(project, recipient_role: :pm).and_return(pm_mail)
 
     result = described_class.call(project: project, event: :reopen)
 
@@ -66,8 +66,8 @@ RSpec.describe Fulfillment::Application::Services::ActionService do
 
     client_mail = instance_double(ActionMailer::MessageDelivery, deliver_now: true)
     pm_mail = instance_double(ActionMailer::MessageDelivery, deliver_now: true)
-    expect(ProjectNotificationMailer).to receive(:project_completed).with(project, recipient_role: :client).and_return(client_mail)
-    expect(ProjectNotificationMailer).to receive(:project_completed).with(project, recipient_role: :pm).and_return(pm_mail)
+    expect(Notifications::ProjectNotificationMailer).to receive(:project_completed).with(project, recipient_role: :client).and_return(client_mail)
+    expect(Notifications::ProjectNotificationMailer).to receive(:project_completed).with(project, recipient_role: :pm).and_return(pm_mail)
 
     result = described_class.call(project: project, event: :complete)
 
@@ -86,7 +86,7 @@ RSpec.describe Fulfillment::Application::Services::ActionService do
 
     payment = Payments::Application::Commands::CreatePayment.call(project: project).data.fetch(:payment)
     payment.update!(status: :succeeded)
-    allow(ProjectNotificationMailer).to receive(:project_refund_requested).and_return(instance_double(ActionMailer::MessageDelivery, deliver_now: true))
+    allow(Notifications::ProjectNotificationMailer).to receive(:project_refund_requested).and_return(instance_double(ActionMailer::MessageDelivery, deliver_now: true))
 
     result = described_class.call(project: project, event: :request_refund)
 

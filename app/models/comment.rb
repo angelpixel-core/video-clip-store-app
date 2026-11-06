@@ -39,7 +39,7 @@ class Comment < ApplicationRecord
       "order_comments_#{project.id}",
       {
         type: "comments_updated",
-        comment_html: ApplicationController.render(partial: "orders/comment", locals: { comment: comment }),
+        comment_html: ApplicationController.render(partial: "ordering/orders/comment", locals: { comment: comment }),
         comment_count: project.comments.count
       }
     )

@@ -35,7 +35,7 @@ module Payments
         private
 
         def enqueue_dispatch_job
-          Billing::Application::Handlers::DispatchInvoiceJob.perform_later(id)
+          Billing::DispatchInvoiceJob.perform_later(id)
         end
 
         def normalize_status

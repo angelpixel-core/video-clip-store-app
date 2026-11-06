@@ -8,8 +8,8 @@ RSpec.describe Notifications::Application::Notifications::OrderEventService do
 
     client_mail = instance_double(ActionMailer::MessageDelivery, deliver_now: true)
     pm_mail = instance_double(ActionMailer::MessageDelivery, deliver_now: true)
-    expect(ProjectNotificationMailer).to receive(:project_created).with(project, recipient_role: :client).and_return(client_mail)
-    expect(ProjectNotificationMailer).to receive(:project_created).with(project, recipient_role: :pm).and_return(pm_mail)
+    expect(Notifications::ProjectNotificationMailer).to receive(:project_created).with(project, recipient_role: :client).and_return(client_mail)
+    expect(Notifications::ProjectNotificationMailer).to receive(:project_created).with(project, recipient_role: :pm).and_return(pm_mail)
 
     expect do
       described_class.call(project: project, event_type: :project_created)
