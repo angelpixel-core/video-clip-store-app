@@ -1,0 +1,7 @@
+enforce_dependencies: true
+dependencies:
+  - app/shared_kernel
+  - app/contexts/ordering
+  - app/contexts/identity
+  - app/contexts/catalog
+  - app/contexts/payments
