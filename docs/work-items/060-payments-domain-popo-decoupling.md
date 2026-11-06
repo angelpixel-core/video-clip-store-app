@@ -47,8 +47,8 @@ title: Payments Domain POPO and ActiveRecord Persistence Decoupling (Phase 4)
 - [x] **Step 1: Extract ActiveRecord Persistence Records in `payments/infrastructure/persistence/`**
   - [x] Create/extract ActiveRecord record classes (`PaymentRecord`, `PaymentAttemptRecord`, `PaymentMethodReferenceRecord`, `RefundRecord`, `PaymentWebhookEventRecord`, `PaymentWebhookEventAttemptRecord`, `PaymentNotificationIntentRecord`, `PaymentInvoiceDeliveryIntentRecord`) bound to their existing database tables (`self.table_name = ...`).
   - [x] Build bidirectional `Mapper` classes in `app/contexts/payments/infrastructure/persistence/` following the `billing` and `ordering` mapper pattern.
-- [ ] **Step 2: Convert `payments/domain/` Classes to Pure Ruby Domain Objects (POPOs)**
-  - [ ] Refactor `Payments::Domain::Aggregates::Payment` and `Payments::Domain::Entities::*` into framework-free domain classes enforcing domain invariants and transitions.
+- [x] **Step 2: Convert `payments/domain/` Classes to Pure Ruby Domain Objects (POPOs)**
+  - [x] Refactor `Payments::Domain::Aggregates::Payment` and `Payments::Domain::Entities::*` into framework-free domain classes enforcing domain invariants and transitions.
 - [ ] **Step 3: Move Side-Effect Callbacks (`after_commit`) to Application Layer**
   - [ ] Move invoice generation job enqueueing and ActionCable status broadcasting out of ActiveRecord `after_commit` callbacks into explicit Application Command / Event Handler steps.
 - [ ] **Step 4: Update Repositories and Specs**
@@ -57,8 +57,8 @@ title: Payments Domain POPO and ActiveRecord Persistence Decoupling (Phase 4)
 
 ## Checklist
 
-- [ ] Zero classes inside `app/contexts/payments/domain/` inherit from `ApplicationRecord`.
-- [ ] All persistence records and mappers for `payments` live under `app/contexts/payments/infrastructure/persistence/`.
+- [x] Zero classes inside `app/contexts/payments/domain/` inherit from `ApplicationRecord`.
+- [x] All persistence records and mappers for `payments` live under `app/contexts/payments/infrastructure/persistence/`.
 - [ ] Invoice generation and realtime UI broadcasts are triggered explicitly by application use cases/handlers rather than hidden model callbacks.
 
 ## Validation

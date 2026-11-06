@@ -7,25 +7,21 @@ module Payments
             def to_domain(record)
               return if record.nil?
 
-              if Payments::Domain::Entities::PaymentWebhookEvent < ApplicationRecord
-                record
-              else
-                Payments::Domain::Entities::PaymentWebhookEvent.new(
-                  id: record.id,
-                  provider: record.provider,
-                  provider_event_id: record.provider_event_id,
-                  event_type: record.event_type,
-                  status: record.status,
-                  payload: record.payload,
-                  signature: record.signature,
-                  payment_id: record.payment_id,
-                  project_id: record.project_id,
-                  received_at: record.received_at,
-                  processed_at: record.processed_at,
-                  created_at: record.created_at,
-                  updated_at: record.updated_at
-                )
-              end
+              Payments::Domain::Entities::PaymentWebhookEvent.new(
+                id: record.id,
+                provider: record.provider,
+                provider_event_id: record.provider_event_id,
+                event_type: record.event_type,
+                status: record.status,
+                payload: record.payload,
+                signature: record.signature,
+                payment_id: record.payment_id,
+                project_id: record.project_id,
+                received_at: record.received_at,
+                processed_at: record.processed_at,
+                created_at: record.created_at,
+                updated_at: record.updated_at
+              )
             end
 
             def to_record(event)
@@ -53,4 +49,3 @@ module Payments
     end
   end
 end
-

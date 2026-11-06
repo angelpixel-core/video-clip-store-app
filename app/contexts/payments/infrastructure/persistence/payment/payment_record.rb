@@ -112,4 +112,3 @@ module Payments
     end
   end
 end
-

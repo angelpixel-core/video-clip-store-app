@@ -1,22 +1,39 @@
 module Payments
   module Domain
     module Entities
-      class PaymentAttempt < ApplicationRecord
-        belongs_to :payment, class_name: "Payments::Domain::Aggregates::Payment"
-
+      class PaymentAttempt
         STATUSES = %w[pending submitted succeeded failed].freeze
 
-        before_validation :normalize_provider
+        attr_reader :id, :payment_id, :status, :provider, :idempotency_key,
+                    :provider_reference, :created_at, :updated_at
 
-        validates :status, presence: true, inclusion: { in: STATUSES }
-        validates :provider, presence: true
-        validates :idempotency_key, presence: true, uniqueness: true
-        validates :provider_reference, uniqueness: true, allow_nil: true
+        def initialize(
+          id: nil,
+          payment_id: nil,
+          status: "pending",
+          provider: "fake",
+          idempotency_key: nil,
+          provider_reference: nil,
+          created_at: nil,
+          updated_at: nil
+        )
+          @id = id
+          @payment_id = payment_id
+          @status = status.to_s.presence || "pending"
+          @provider = provider.to_s.presence || "fake"
+          @idempotency_key = idempotency_key
+          @provider_reference = provider_reference.presence
+          @created_at = created_at
+          @updated_at = updated_at
+        end
 
-        private
+        def self.record_class
+          Payments::Infrastructure::Persistence::Payment::PaymentAttemptRecord
+        end
 
-        def normalize_provider
-          self.provider = provider.to_s.strip.presence || "fake"
+        class << self
+          delegate :find, :find_by, :find_by!, :where, :count, :create, :create!,
+                   :all, to: :record_class
         end
       end
     end

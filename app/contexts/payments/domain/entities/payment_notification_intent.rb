@@ -1,33 +1,43 @@
 module Payments
   module Domain
     module Entities
-      class PaymentNotificationIntent < ApplicationRecord
+      class PaymentNotificationIntent
         STATUSES = %w[pending sent failed].freeze
 
-        belongs_to :payment, class_name: "Payments::Domain::Aggregates::Payment"
-        belongs_to :project, class_name: "Order", foreign_key: :project_id
+        attr_reader :id, :payment_id, :project_id, :event_type, :from_status,
+                    :to_status, :status, :payload, :scheduled_at, :processed_at,
+                    :attempts_count, :last_error, :created_at, :updated_at
 
-        after_commit :enqueue_dispatch_job, on: :create
-
-        before_validation :normalize_status
-        before_validation :normalize_payload
-        before_validation :stamp_scheduled_at, on: :create
-
-        validates :event_type, presence: true
-        validates :from_status, presence: true
-        validates :to_status, presence: true
-        validates :status, presence: true, inclusion: { in: STATUSES }
-        validates :payload, presence: true
-        validates :scheduled_at, presence: true
-        validates :payment_id, uniqueness: { scope: :event_type }
-
-        def mark_sent!
-          update!(status: :sent, processed_at: Time.current, last_error: nil)
-        end
-
-        def mark_failed!(message)
-          increment!(:attempts_count)
-          update!(status: :failed, last_error: message, processed_at: nil)
+        def initialize(
+          id: nil,
+          payment_id: nil,
+          project_id: nil,
+          event_type: nil,
+          from_status: nil,
+          to_status: nil,
+          status: "pending",
+          payload: {},
+          scheduled_at: nil,
+          processed_at: nil,
+          attempts_count: 0,
+          last_error: nil,
+          created_at: nil,
+          updated_at: nil
+        )
+          @id = id
+          @payment_id = payment_id
+          @project_id = project_id
+          @event_type = event_type
+          @from_status = from_status
+          @to_status = to_status
+          @status = status.to_s.presence || "pending"
+          @payload = (payload || {}).to_h
+          @scheduled_at = scheduled_at || Time.current
+          @processed_at = processed_at
+          @attempts_count = attempts_count.to_i
+          @last_error = last_error
+          @created_at = created_at
+          @updated_at = updated_at
         end
 
         def pending?
@@ -42,30 +52,13 @@ module Payments
           status == "failed"
         end
 
-        private
-
-        def enqueue_dispatch_job
-          Payments::DispatchPaymentNotificationJob.perform_later(id)
+        def self.record_class
+          Payments::Infrastructure::Persistence::Payment::PaymentNotificationIntentRecord
         end
 
-        def normalize_status
-          self.status = status.to_s.presence || "pending"
-        end
-
-        def normalize_payload
-          self.payload = (payload || {}).to_h
-        end
-
-        def order
-          project
-        end
-
-        def order=(value)
-          self.project = value
-        end
-
-        def stamp_scheduled_at
-          self.scheduled_at ||= Time.current
+        class << self
+          delegate :find, :find_by, :find_by!, :where, :count, :create, :create!,
+                   :all, to: :record_class
         end
       end
     end

@@ -1,94 +1,77 @@
 module Payments
   module Domain
     module Entities
-        class PaymentWebhookEvent < ApplicationRecord
+      class PaymentWebhookEvent
         STATUSES = %w[received processed failed].freeze
 
-        belongs_to :payment, class_name: "Payments::Domain::Aggregates::Payment", optional: true
-        belongs_to :project, class_name: "Order", foreign_key: :project_id, optional: true
-        has_many :processing_attempts, class_name: "Payments::Domain::Entities::PaymentWebhookEventAttempt", dependent: :destroy
+        attr_reader :id, :provider, :provider_event_id, :event_type, :status,
+                    :payload, :signature, :payment_id, :project_id, :received_at,
+                    :processed_at, :processing_attempts_count, :last_attempted_at,
+                    :last_failure_at, :last_failure_message, :failure_reason_code,
+                    :error_message, :created_at, :updated_at
 
-        before_validation :normalize_provider
-        before_validation :normalize_status
-        before_validation :normalize_payload
-        before_validation :stamp_received_at, on: :create
-
-        validates :provider, presence: true
-        validates :provider_event_id, presence: true, uniqueness: { scope: :provider }
-        validates :event_type, presence: true
-        validates :status, presence: true, inclusion: { in: STATUSES }
-        validates :payload, presence: true
-        validates :received_at, presence: true
+        def initialize(
+          id: nil,
+          provider: "fake",
+          provider_event_id: nil,
+          event_type: nil,
+          status: "received",
+          payload: {},
+          signature: nil,
+          payment_id: nil,
+          project_id: nil,
+          received_at: nil,
+          processed_at: nil,
+          processing_attempts_count: 0,
+          last_attempted_at: nil,
+          last_failure_at: nil,
+          last_failure_message: nil,
+          failure_reason_code: nil,
+          error_message: nil,
+          created_at: nil,
+          updated_at: nil
+        )
+          @id = id
+          @provider = provider.to_s.presence || "fake"
+          @provider_event_id = provider_event_id
+          @event_type = event_type
+          @status = status.to_s.presence || "received"
+          @payload = (payload || {}).to_h
+          @signature = signature
+          @payment_id = payment_id
+          @project_id = project_id
+          @received_at = received_at || Time.current
+          @processed_at = processed_at
+          @processing_attempts_count = processing_attempts_count.to_i
+          @last_attempted_at = last_attempted_at
+          @last_failure_at = last_failure_at
+          @last_failure_message = last_failure_message
+          @failure_reason_code = failure_reason_code
+          @error_message = error_message
+          @created_at = created_at
+          @updated_at = updated_at
+        end
 
         def references_payment?(payment)
           data = payload.to_h.fetch("data", {}).to_h
-          data["payment_id"].to_s == payment.id.to_s || data["provider_reference"].to_s == payment.provider_reference.to_s
+          target_id = payment.respond_to?(:id) ? payment.id.to_s : nil
+          target_ref = payment.respond_to?(:provider_reference) ? payment.provider_reference.to_s : nil
+          data["payment_id"].to_s == target_id || data["provider_reference"].to_s == target_ref
         end
 
         def applied?
           status == "processed"
         end
 
-        def record_processing_attempt!
-          now = Time.current
-          attempt = processing_attempts.create!(
-            attempt_number: processing_attempts.count + 1,
-            status: :started,
-            started_at: now
-          )
-          increment!(:processing_attempts_count)
-          update!(last_attempted_at: now)
-          attempt
+        def self.record_class
+          Payments::Infrastructure::Persistence::Webhook::Event::PaymentWebhookEventRecord
         end
 
-        def mark_failed!(message, attempt: nil, failure_reason_code: nil)
-          attempt&.fail!(message)
-          update!(
-            status: :failed,
-            error_message: message,
-            last_failure_at: Time.current,
-            last_failure_message: message,
-            failure_reason_code: failure_reason_code.presence || self.failure_reason_code
-          )
+        class << self
+          delegate :find, :find_by, :find_by!, :find_or_initialize_by, :where,
+                   :count, :create, :create!, :all, :order, :first, :last, to: :record_class
         end
-
-        def mark_processed!(attempt: nil)
-          attempt&.succeed!
-          update!(status: :processed, processed_at: Time.current, error_message: nil)
-        end
-
-        def synchronize_payment_context!(payment)
-          return unless payment.present?
-
-          update!(payment: payment, project: payment.project) if self.payment_id != payment.id || self.project_id != payment.project_id
-        end
-
-        def order
-          project
-        end
-
-        def order=(value)
-          self.project = value
-        end
-
-        private
-
-        def normalize_provider
-          self.provider = provider.to_s.strip.downcase
-        end
-
-        def normalize_status
-          self.status = status.to_s.presence || "received"
-        end
-
-        def normalize_payload
-          self.payload = (payload || {}).to_h
-        end
-
-        def stamp_received_at
-          self.received_at ||= Time.current
-        end
-        end
+      end
     end
   end
 end

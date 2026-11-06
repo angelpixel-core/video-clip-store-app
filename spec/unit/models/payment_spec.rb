@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Payments::Domain::Aggregates::Payment do
+RSpec.describe Payments::Infrastructure::Persistence::Payment::PaymentRecord do
   it "is an ActiveRecord model" do
     expect(described_class.superclass).to eq(ApplicationRecord)
   end

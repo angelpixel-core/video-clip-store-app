@@ -1,52 +1,76 @@
 module Payments
   module Domain
     module Entities
-      class Refund < ApplicationRecord
-        belongs_to :payment, class_name: "Payments::Domain::Aggregates::Payment"
-        belongs_to :payment_method_reference, class_name: "Payments::Domain::Entities::PaymentMethodReference"
-
+      class Refund
         STATUSES = %w[refund_pending refund_processing refunded failed].freeze
 
-        scope :refund_pending, -> { where(status: "refund_pending") }
-        scope :refund_processing, -> { where(status: "refund_processing") }
-        scope :refunded, -> { where(status: "refunded") }
-        scope :failed, -> { where(status: "failed") }
+        attr_reader :id, :payment_id, :payment_method_reference_id, :amount_cents,
+                    :status, :provider, :provider_reference, :reason, :metadata,
+                    :created_at, :updated_at
 
-        scope :pending, -> { refund_pending }
-        scope :processed, -> { refunded }
+        def initialize(
+          id: nil,
+          payment_id: nil,
+          payment_method_reference_id: nil,
+          amount_cents: 0,
+          status: "refund_pending",
+          provider: "fake",
+          provider_reference: nil,
+          reason: nil,
+          metadata: {},
+          created_at: nil,
+          updated_at: nil
+        )
+          @id = id
+          @payment_id = payment_id
+          @payment_method_reference_id = payment_method_reference_id
+          @amount_cents = amount_cents.to_i
+          @status = normalize_status(status)
+          @provider = normalize_provider(provider)
+          @provider_reference = provider_reference.presence
+          @reason = reason
+          @metadata = (metadata || {}).to_h
+          @created_at = created_at
+          @updated_at = updated_at
+        end
 
-        before_validation :normalize_provider
-        before_validation :normalize_status
-        after_commit :broadcast_payment_project_status
+        def pending?
+          status == "refund_pending"
+        end
 
-        validates :status, presence: true, inclusion: { in: STATUSES }
-        validates :provider, presence: true
-        validates :amount_cents, numericality: { only_integer: true, greater_than: 0 }
-        validates :provider_reference, uniqueness: true, allow_nil: true
-        validate :payment_method_reference_belongs_to_payment
+        def processing?
+          status == "refund_processing"
+        end
+
+        def refunded?
+          status == "refunded"
+        end
+
+        def failed?
+          status == "failed"
+        end
+
+        def self.record_class
+          Payments::Infrastructure::Persistence::Refund::RefundRecord
+        end
+
+        class << self
+          delegate :find, :find_by, :find_by!, :where, :count, :create, :create!,
+                   :all, :refund_pending, :refund_processing, :refunded, :failed,
+                   :pending, :processed, :order, :first, :last, to: :record_class
+        end
 
         private
 
-        def normalize_provider
-          self.provider = provider.to_s.strip.presence || "fake"
+        def normalize_provider(val)
+          val.to_s.strip.presence || "fake"
         end
 
-        def normalize_status
-          normalized = status.to_s.strip.downcase.presence || "refund_pending"
+        def normalize_status(val)
+          normalized = val.to_s.strip.downcase.presence || "refund_pending"
           normalized = "refund_pending" if normalized == "pending"
           normalized = "refunded" if normalized == "processed"
-
-          self.status = normalized
-        end
-
-        def payment_method_reference_belongs_to_payment
-          return if payment_method_reference.blank? || payment_method_reference.payment_id == payment_id
-
-          errors.add(:payment_method_reference, "must belong to the same payment")
-        end
-
-        def broadcast_payment_project_status
-          payment&.project&.broadcast_status_badge!
+          normalized
         end
       end
     end

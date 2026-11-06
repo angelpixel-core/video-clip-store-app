@@ -6,25 +6,21 @@ module Payments
           def to_domain(record)
             return if record.nil?
 
-            if Payments::Domain::Aggregates::Payment < ApplicationRecord
-              record
-            else
-              Payments::Domain::Aggregates::Payment.new(
-                id: record.id,
-                project_id: record.project_id,
-                status: record.status,
-                provider: record.provider,
-                idempotency_key: record.idempotency_key,
-                amount_cents: record.amount_cents,
-                currency: record.currency,
-                provider_reference: record.provider_reference,
-                invoice_number: record.invoice_number,
-                invoice_generated_at: record.invoice_generated_at,
-                invoice_emailed_at: record.invoice_emailed_at,
-                created_at: record.created_at,
-                updated_at: record.updated_at
-              )
-            end
+            Payments::Domain::Aggregates::Payment.new(
+              id: record.id,
+              project_id: record.project_id,
+              status: record.status,
+              provider: record.provider,
+              idempotency_key: record.idempotency_key,
+              amount_cents: record.amount_cents,
+              currency: record.currency,
+              provider_reference: record.provider_reference,
+              invoice_number: record.invoice_number,
+              invoice_generated_at: record.invoice_generated_at,
+              invoice_emailed_at: record.invoice_emailed_at,
+              created_at: record.created_at,
+              updated_at: record.updated_at
+            )
           end
 
           def to_record(payment)
@@ -51,4 +47,3 @@ module Payments
     end
   end
 end
-

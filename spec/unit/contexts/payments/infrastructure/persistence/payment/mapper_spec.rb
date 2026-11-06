@@ -28,4 +28,3 @@ RSpec.describe Payments::Infrastructure::Persistence::Payment::Mapper do
     expect(back_to_record.amount_cents).to eq(20_000)
   end
 end
-

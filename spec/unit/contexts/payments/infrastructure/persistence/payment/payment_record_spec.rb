@@ -22,4 +22,3 @@ RSpec.describe Payments::Infrastructure::Persistence::Payment::PaymentRecord do
     expect(record.succeeded?).to be(true)
   end
 end
-

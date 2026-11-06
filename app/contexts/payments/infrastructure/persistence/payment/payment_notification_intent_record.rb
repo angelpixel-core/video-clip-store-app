@@ -66,9 +66,12 @@ module Payments
           def normalize_payload
             self.payload = (payload || {}).to_h
           end
+
+          def stamp_scheduled_at
+            self.scheduled_at ||= Time.current
+          end
         end
       end
     end
   end
 end
-

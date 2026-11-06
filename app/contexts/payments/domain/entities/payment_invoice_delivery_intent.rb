@@ -1,27 +1,32 @@
 module Payments
   module Domain
     module Entities
-      class PaymentInvoiceDeliveryIntent < ApplicationRecord
+      class PaymentInvoiceDeliveryIntent
         STATUSES = %w[pending sent failed].freeze
 
-        belongs_to :payment, class_name: "Payments::Domain::Aggregates::Payment"
+        attr_reader :id, :payment_id, :status, :scheduled_at, :processed_at,
+                    :attempts_count, :last_error, :created_at, :updated_at
 
-        after_commit :enqueue_dispatch_job, on: :create
-
-        before_validation :normalize_status
-        before_validation :stamp_scheduled_at, on: :create
-
-        validates :status, presence: true, inclusion: { in: STATUSES }
-        validates :scheduled_at, presence: true
-        validates :payment_id, uniqueness: true
-
-        def mark_sent!
-          update!(status: :sent, processed_at: Time.current, last_error: nil)
-        end
-
-        def mark_failed!(message)
-          increment!(:attempts_count)
-          update!(status: :failed, last_error: message, processed_at: nil)
+        def initialize(
+          id: nil,
+          payment_id: nil,
+          status: "pending",
+          scheduled_at: nil,
+          processed_at: nil,
+          attempts_count: 0,
+          last_error: nil,
+          created_at: nil,
+          updated_at: nil
+        )
+          @id = id
+          @payment_id = payment_id
+          @status = status.to_s.presence || "pending"
+          @scheduled_at = scheduled_at || Time.current
+          @processed_at = processed_at
+          @attempts_count = attempts_count.to_i
+          @last_error = last_error
+          @created_at = created_at
+          @updated_at = updated_at
         end
 
         def pending?
@@ -32,18 +37,13 @@ module Payments
           status == "sent"
         end
 
-        private
-
-        def enqueue_dispatch_job
-          Billing::DispatchInvoiceJob.perform_later(id)
+        def self.record_class
+          Payments::Infrastructure::Persistence::Payment::PaymentInvoiceDeliveryIntentRecord
         end
 
-        def normalize_status
-          self.status = status.to_s.presence || "pending"
-        end
-
-        def stamp_scheduled_at
-          self.scheduled_at ||= Time.current
+        class << self
+          delegate :find, :find_by, :find_by!, :where, :count, :create, :create!,
+                   :all, to: :record_class
         end
       end
     end
