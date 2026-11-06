@@ -135,6 +135,83 @@ Required bootstrap records live in `db/data/`. The repository keeps demo content
 
 When you need the bootstrap data path explicitly, use the Rails data-migration flow documented in `db/data/README.md`.
 
+## End-to-End Walkthrough & Operations Guide
+
+This guide walks through the full order lifecycle from creation to delivery, explaining how payments are processed, how the PM accepts an order, and how to unblock payments in local development.
+
+### Order Lifecycle States
+
+1. **`draft`**: Client customizes editing selections and attaches raw footage (`/orders/new` -> `/orders/:id/edit`).
+2. **`pending`**: Client submits the order with simulated payment details. Payment intent is created in `processing`.
+3. **`paid`**: Asynchronous payment confirmation webhook is ingested (`payment.succeeded`). Order unlocks for PM fulfillment.
+4. **`in_progress`**: PM/Editor reviews the paid order and clicks **"Aceptar orden"**. The project enters production.
+5. **`completed`**: PM/Editor delivers final video assets and clicks **"Marcar como completado"**.
+
+---
+
+### Step-by-Step Walkthrough
+
+#### 1. Start the Environment
+
+```sh
+make stack/up STACK_ARGS="-d --build"
+```
+
+Open `http://localhost:20001` in your browser. (Email notifications can be previewed at `http://localhost:20001/letter_opener`).
+
+#### 2. Create and Submit an Order (Client Role)
+
+1. Ensure the top navbar role switcher is set to **Client**.
+2. Click **"New Order"** or navigate to `/orders/new`.
+3. Choose editing packages from the catalog (e.g. Social Clips, Highlights).
+4. Enter an **Order Name** and paste a **Raw Footage URL** (e.g. cloud storage or Vimeo link).
+5. Click **"Proceed to Payment"** to open the interactive 3D payment card modal.
+6. Enter credit card details (you can interact with the card or flip it to view/enter CVC) and click **"Pagar orden"**.
+7. The order is submitted and appears in the orders list with status **Pending** and payment badge **"Pago en proceso"**.
+
+#### 3. Confirming / Unblocking the Payment (Webhook Processing)
+
+Because real-world payment gateways (and the sandbox) process transactions asynchronously, orders remain in `pending` until a webhook confirms the transaction. To complete the payment in local development:
+
+- **Method A — From the Web UI (Dev Tools):**
+  1. Open the order detail page (`/orders/:id`).
+  2. Notice the yellow **"🛠️ Dev Tools"** box above the order details.
+  3. Click **"Simulate Payment Succeeded"**.
+  4. The webhook is fired internally. The payment badge switches to **"Pagado"** in real time via ActionCable, and the PDF invoice is issued.
+
+- **Method B — From the Terminal:**
+  Run the signed webhook trigger targeting the order ID:
+  ```sh
+  make payments/send_signed_fake_webhook PROJECT_ID=<id>
+  ```
+  *(Replace `<id>` with the numerical order ID, e.g. `PROJECT_ID=1`)*.
+
+#### 4. Accept the Order (Project Manager Role)
+
+1. In the top navbar, switch the role to **PM**.
+2. Navigate to the PM Workspace orders table at `/orders`.
+3. Open the order detail page (`/orders/:id`).
+4. Notice that now that the payment is confirmed, the **"Aceptar orden"** button is unlocked.
+5. Click **"Aceptar orden"** -> the order transitions to **`In Progress`** (`in_progress`).
+
+#### 5. Production & Final Delivery (Editor Role)
+
+1. The editor downloads the footage from the **Raw footage** link.
+2. The team can exchange notes and timestamps using the **Comments** thread on the order page.
+3. Once editing and asset delivery are finished, the PM clicks **"Marcar como completado"**.
+4. The order status updates to **`Completed`** (`completed`).
+
+---
+
+### Exception Flows
+
+- **Cancellation & Reopening:**
+  - Before payment is finalized, an order can be cancelled by clicking **"Cancelar orden"**.
+  - Cancelled orders can be reopened back into draft state by clicking **"Reabrir orden"**.
+- **Refund Requests:**
+  - Once paid, a client or PM can click **"Solicitar reembolso"**.
+  - In the PM view, buttons to **"Aprobar reembolso"** or **"Rechazar reembolso"** will appear.
+
 ## Configuration
 
 Environment templates live under `env/` and are split by consumer:

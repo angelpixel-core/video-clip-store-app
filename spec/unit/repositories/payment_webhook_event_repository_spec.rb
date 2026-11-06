@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Payments::Adapters::Persistence::Webhook::Event::Repository do
+RSpec.describe Payments::Infrastructure::Persistence::Webhook::Event::Repository do
   def build_payment
     Payments::Domain::Aggregates::Payment.create!(
       project: Project.create!(

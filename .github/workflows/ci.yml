@@ -17,7 +17,7 @@ concurrency:
 jobs:
   push_fast_checks:
     if: github.event_name == 'push'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout code
@@ -37,7 +37,7 @@ jobs:
   sync_pr_to_development:
     if: github.event_name == 'push'
     needs: push_fast_checks
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout code
@@ -78,7 +78,7 @@ jobs:
 
   pr_merge_gate:
     if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout code

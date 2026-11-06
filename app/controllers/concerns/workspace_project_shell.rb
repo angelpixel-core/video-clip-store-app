@@ -31,7 +31,7 @@ module WorkspaceProjectShell
   def new
     client_workspace = workspace_for(:client)
     pm_workspace = workspace_for(:pm)
-    result = Fulfillment::Application::Commands::CreateDraftOrder.call(client_workspace: client_workspace, pm_workspace: pm_workspace, repository: project_repository)
+    result = Ordering::Application::Commands::CreateDraftOrder.call(client_workspace: client_workspace, pm_workspace: pm_workspace, repository: project_repository)
     project = result.data.fetch(:order)
 
     redirect_to edit_order_path(project)
@@ -47,7 +47,7 @@ module WorkspaceProjectShell
     selections = parsed_selections
     finalize = finalize_submission?
 
-    result = Fulfillment::Application::Commands::UpdateOrder.call(
+    result = Ordering::Application::Commands::UpdateOrder.call(
       order: @project,
       participant: workspace_for(:pm),
       attributes: project_attributes,
@@ -70,7 +70,7 @@ module WorkspaceProjectShell
   end
 
   def reopen
-    result = Orders::ActionService.call(project: @project, event: :reopen)
+    result = Fulfillment::Application::Services::ActionService.call(project: @project, event: :reopen)
 
     if result.success?
       redirect_to edit_order_path(@project), notice: "Order reopened."
@@ -168,11 +168,11 @@ module WorkspaceProjectShell
   end
 
   def order_form_for(project)
-    Orders::OrderFormPresenter.new(project:, path: order_path(project))
+    Ordering::OrderFormPresenter.new(project:, path: order_path(project))
   end
 
   def process_workspace_action(event:, success_notice:, stale_alert:)
-    result = Orders::ActionService.call(project: @workspace_project, event: event)
+    result = Fulfillment::Application::Services::ActionService.call(project: @workspace_project, event: event)
 
     if result.success?
       respond_workspace_action_success(success_notice)
@@ -218,7 +218,7 @@ module WorkspaceProjectShell
   end
 
   def project_repository
-    @project_repository ||= Fulfillment::Adapters::Persistence::Order::Repository.new
+    @project_repository ||= Fulfillment::Infrastructure::Persistence::Order::Repository.new
   end
 
   def workspace_row_action_payload
@@ -228,7 +228,7 @@ module WorkspaceProjectShell
       status_badge_class: @workspace_project.status_badge_class,
       payment_badge_text: @workspace_project.payment_badge_text,
       payment_badge_class: @workspace_project.payment_badge_class,
-      action_cell_html: ApplicationController.render(partial: "orders/workspace_order_actions", locals: { project: @workspace_project })
+      action_cell_html: ApplicationController.render(partial: "ordering/orders/workspace_order_actions", locals: { project: @workspace_project })
     }
   end
 end

@@ -16,7 +16,7 @@ RSpec.describe "Payments webhooks requests" do
   end
 
   def webhook_signature(body)
-    OpenSSL::HMAC.hexdigest("SHA256", Payments::Adapters::Inbound::Webhooks::Event::Ingest::WEBHOOK_SECRET, body)
+    OpenSSL::HMAC.hexdigest("SHA256", Payments::Infrastructure::Inbound::Webhooks::Event::Ingest::WEBHOOK_SECRET, body)
   end
 
   def build_payment(status: :processing)

@@ -91,9 +91,9 @@ RSpec.describe "Project show payment history", type: :system, js: true do
     expect(page).to have_css("#payment-history", visible: :visible)
     expect(page).to have_css("#payment-history", text: "Webhook events and attempts")
     expect(page).to have_css("#payment-history", text: "payment.succeeded")
-    expect(page).to have_css("#payment-history", text: "Event: evt_123")
+    expect(page).to have_css("#payment-history", text: /Event:\s*evt_123/)
     expect(page).to have_css("#payment-history", text: "Payment ##{payment.id}")
-    expect(page).to have_css("#payment-history", text: "Project ##{project.id}")
+    expect(page).to have_css("#payment-history", text: "Order ##{project.id}")
     expect(page).to have_css("#payment-history", text: "Attempts: 1")
     expect(page).to have_css("#payment-history", text: "submitted")
     expect(page).to have_css("#payment-history", text: "PROCESSED")
@@ -144,17 +144,17 @@ RSpec.describe "Project show payment history", type: :system, js: true do
       received_at: Time.current
     )
 
-    Payments::Adapters::Inbound::Webhooks::Event::Job.perform_now(event.id)
+    Payments::ProcessWebhookEventJob.perform_now(event.id)
 
     visit order_path(project)
 
     switch_workspace_to("PM")
 
     expect(page).to have_css("#payment-history", text: "succeeded")
-    expect(page).to have_css("#payment-history", text: "Confirmed")
-    expect(page).to have_css("#payment-history", text: "Event: evt_456")
+    expect(page).to have_css("#payment-history", text: "Confirmado")
+    expect(page).to have_css("#payment-history", text: /Event:\s*evt_456/)
     expect(page).to have_css("#payment-history", text: "Payment ##{payment.id}")
-    expect(page).to have_css("#payment-history", text: "Project ##{project.id}")
+    expect(page).to have_css("#payment-history", text: "Order ##{project.id}")
     expect(page).to have_css("#payment-history", text: "Attempts: 1")
     expect(page).to have_css("#payment-history", text: "Attempt #1")
     expect(page).to have_css("#payment-history", text: payment.reload.confirmed_at.to_fs(:short))

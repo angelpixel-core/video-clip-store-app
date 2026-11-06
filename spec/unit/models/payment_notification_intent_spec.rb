@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Payments::Domain::Entities::PaymentNotificationIntent do
+RSpec.describe Payments::Infrastructure::Persistence::Payment::PaymentNotificationIntentRecord do
   it "enqueues the dispatcher job after commit when created" do
     payment = Payments::Domain::Aggregates::Payment.create!(
       project: Project.create!(owner: workspace_account(:client, name: "Client"), participant: workspace_account(:pm, name: "PM"), name: "Project", raw_footage_url: "https://example.com/raw.mov", status: :pending),
@@ -23,7 +23,7 @@ RSpec.describe Payments::Domain::Entities::PaymentNotificationIntent do
       scheduled_at: Time.current
     )
 
-    expect(Payments::Application::Handlers::DispatchPaymentNotificationJob).to receive(:perform_later).with(intent.id)
+    expect(Payments::DispatchPaymentNotificationJob).to receive(:perform_later).with(intent.id)
 
     intent.send(:enqueue_dispatch_job)
   end

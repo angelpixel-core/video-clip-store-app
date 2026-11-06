@@ -248,3 +248,33 @@ Payments docs are centralized at [Payments Index](../payments.md).
 
 - [x] [Payment Card Backface Isolation and Sandbox Integration](./053-payment-card-backface-isolation-and-sandbox.md)
 
+## 54
+
+- [x] [E2E Operations Walkthrough and Bundle Sync Automation](./054-e2e-operations-walkthrough-and-bundle-sync.md)
+
+## 55
+
+- [x] [Payment History UI Refinement, Dev Tools Guard and Webhook CLI Fix](./055-payment-history-ui-and-webhook-cli.md)
+
+## 56
+
+- [x] [Conversation and Comments UI Refinement](./056-conversation-comments-ui-refinement.md)
+
+## 57
+
+- [x] [Contexts, Shared Kernel and Legacy Folder Cleanup (Phase 1)](./057-contexts-shared-kernel-and-legacy-cleanup.md)
+
+## 58
+
+- [x] [Context Infrastructure Unification and Ordering/Fulfillment Alignment (Phase 2)](./058-context-infrastructure-and-ordering-alignment.md)
+
+## 59
+
+- [x] [Rails Interface Layer Segmented by Context (Phase 3)](./059-rails-interface-layer-by-context.md)
+
+## 60
+
+- [x] [Payments Domain POPO and ActiveRecord Persistence Decoupling (Phase 4)](./060-payments-domain-popo-decoupling.md)
+
+
+

@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Payments::Domain::Entities::PaymentInvoiceDeliveryIntent do
+RSpec.describe Payments::Infrastructure::Persistence::Payment::PaymentInvoiceDeliveryIntentRecord do
   it "enqueues the dispatch job after commit when created" do
     client = workspace_account(:client, name: "Client")
     pm = workspace_account(:pm, name: "PM")
@@ -17,7 +17,7 @@ RSpec.describe Payments::Domain::Entities::PaymentInvoiceDeliveryIntent do
 
     intent = described_class.create!(payment: payment, status: :pending, scheduled_at: Time.current)
 
-    expect(Billing::Application::Handlers::DispatchInvoiceJob).to receive(:perform_later).with(intent.id)
+    expect(Billing::DispatchInvoiceJob).to receive(:perform_later).with(intent.id)
 
     intent.send(:enqueue_dispatch_job)
   end

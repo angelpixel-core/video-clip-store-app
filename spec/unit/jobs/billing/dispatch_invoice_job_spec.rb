@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Billing::Application::Handlers::DispatchInvoiceJob do
+RSpec.describe Billing::DispatchInvoiceJob do
   it "delivers the invoice email and marks the intent sent" do
     client = workspace_account(:client, name: "Client")
     pm = workspace_account(:pm, name: "PM")
@@ -18,7 +18,7 @@ RSpec.describe Billing::Application::Handlers::DispatchInvoiceJob do
     intent = Payments::Domain::Entities::PaymentInvoiceDeliveryIntent.create!(payment: payment, status: :pending, scheduled_at: Time.current)
 
     mail = instance_double(ActionMailer::MessageDelivery)
-    expect(Billing::Adapters::Outbound::Mailers::InvoiceMailer).to receive(:invoice_ready).with(intent).and_return(mail)
+    expect(Billing::InvoiceMailer).to receive(:invoice_ready).with(intent).and_return(mail)
     expect(mail).to receive(:deliver_now)
 
     described_class.perform_now(intent.id)

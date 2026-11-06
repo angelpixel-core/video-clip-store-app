@@ -1,0 +1,196 @@
+<section id="payment-history" class="card shadow-sm border-0" data-role-scope="pm">
+  <details class="payment-history-details" open>
+    <summary class="card-header bg-body-tertiary border-0 p-4 d-flex justify-content-between align-items-center cursor-pointer user-select-none list-unstyled">
+      <div>
+        <p class="text-uppercase text-body-secondary small mb-1">Payment history</p>
+        <h2 class="h5 mb-0 d-flex align-items-center gap-2">
+          Webhook events and attempts
+          <span class="badge text-bg-dark fs-6 fw-normal"><%= payments.size %></span>
+        </h2>
+      </div>
+      <span class="payment-details-chevron text-body-secondary fs-5" aria-hidden="true">▾</span>
+    </summary>
+
+    <div class="card-body p-4 pt-2">
+      <% if payments.any? %>
+        <div class="vstack gap-3">
+          <% payments.each do |payment| %>
+            <article class="border rounded-3 bg-body-tertiary overflow-hidden">
+              <!-- Normalized Payment Header -->
+              <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 p-3 bg-white border-bottom">
+                <div class="d-flex align-items-center gap-2">
+                  <span class="badge <%= payment.active? ? "text-bg-info text-white" : payment.status == "succeeded" ? "text-bg-success" : payment.status == "failed" ? "text-bg-danger" : "text-bg-secondary" %> text-uppercase px-2 py-1">
+                    <%= payment.status %>
+                  </span>
+                  <div>
+                    <strong class="d-inline-block">Payment #<%= payment.id %></strong>
+                    <small class="text-body-secondary ms-2">
+                      Provider: <%= payment.provider %> · Ref: <%= render_short_reference(payment.provider_reference) %>
+                    </small>
+                  </div>
+                </div>
+
+                <div class="d-flex flex-wrap align-items-center gap-2 small">
+                  <span class="badge text-bg-light border text-body-secondary fw-normal">
+                    Iniciado: <%= l(payment.created_at, format: :short) %>
+                  </span>
+                  <% if payment.confirmed_at.present? %>
+                    <span class="badge text-bg-success-subtle text-success border border-success-subtle fw-semibold">
+                      Confirmado: <%= l(payment.confirmed_at, format: :short) %>
+                    </span>
+                  <% elsif payment.failed_at.present? %>
+                    <span class="badge text-bg-danger-subtle text-danger border border-danger-subtle fw-semibold">
+                      Falló: <%= l(payment.failed_at, format: :short) %>
+                    </span>
+                  <% else %>
+                    <span class="badge text-bg-warning-subtle text-warning-emphasis border border-warning-subtle fw-normal">
+                      Esperando confirmación
+                    </span>
+                  <% end %>
+                </div>
+              </div>
+
+              <!-- Content Subgroups -->
+              <div class="p-3">
+                <div class="row g-3">
+                  <div class="col-12 col-lg-6">
+                    <% events = payment.webhook_events.sort_by(&:created_at).reverse %>
+                    <details class="payment-subgroup-details" open>
+                      <summary class="d-flex justify-content-between align-items-center mb-2 cursor-pointer user-select-none list-unstyled">
+                        <h3 class="h6 text-uppercase text-body-secondary mb-0 d-flex align-items-center gap-2">
+                          Webhook events
+                          <span class="badge text-bg-secondary-subtle text-body-secondary border fw-normal"><%= events.size %></span>
+                        </h3>
+                        <span class="payment-subgroup-chevron text-body-secondary small" aria-hidden="true">▾</span>
+                      </summary>
+
+                      <% if events.any? %>
+                        <div class="vstack gap-2">
+                          <% events.each do |event| %>
+                            <% attempts = event.processing_attempts.order(:attempt_number) %>
+                            <div class="border rounded-3 bg-white p-3 shadow-sm">
+                              <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+                                <div>
+                                  <span class="badge <%= event.applied? ? "text-bg-success" : event.status == "failed" ? "text-bg-danger" : "text-bg-secondary" %> text-uppercase me-1">
+                                    <%= event.status %>
+                                  </span>
+                                  <strong class="font-monospace text-dark"><%= event.event_type %></strong>
+                                </div>
+                                <small class="text-body-secondary text-nowrap"><%= l(event.received_at, format: :short) %></small>
+                              </div>
+
+                              <div class="small text-body-secondary mb-1 d-flex flex-wrap align-items-center gap-2">
+                                <span>Event: <%= render_short_reference(event.provider_event_id) %></span>
+                                <% if event.payment_id.present? %>
+                                  <span>· Payment #<%= event.payment_id %></span>
+                                <% end %>
+                                <% if event.project_id.present? %>
+                                  <span>· Order #<%= event.project_id %></span>
+                                <% end %>
+                              </div>
+
+                              <div class="small text-body-secondary mb-2 d-flex flex-wrap align-items-center gap-2">
+                                <span>Attempts: <strong><%= event.processing_attempts_count %></strong></span>
+                                <% if event.last_attempted_at.present? %>
+                                  <span>· Último intento: <%= l(event.last_attempted_at, format: :short) %></span>
+                                <% end %>
+                                <span>· Applied: <strong class="<%= event.applied? ? "text-success" : "text-body-secondary" %>"><%= event.applied? ? "yes" : "no" %></strong></span>
+                              </div>
+
+                              <% if attempts.any? %>
+                                <div class="vstack gap-2 mt-2 pt-2 border-top">
+                                  <% attempts.each do |attempt| %>
+                                    <div class="border rounded-2 bg-body-tertiary p-2">
+                                      <div class="d-flex justify-content-between align-items-center gap-2 mb-1">
+                                        <div>
+                                          <span class="badge <%= attempt.status == "succeeded" ? "text-bg-success" : attempt.status == "failed" ? "text-bg-danger" : "text-bg-secondary" %> text-uppercase me-1">
+                                            <%= attempt.status %>
+                                          </span>
+                                          <strong class="small">Attempt #<%= attempt.attempt_number %></strong>
+                                        </div>
+                                        <small class="text-body-secondary text-nowrap"><%= l(attempt.started_at, format: :short) %></small>
+                                      </div>
+                                      <div class="small text-body-secondary">
+                                        <% if attempt.finished_at.present? %>
+                                          Finalizado <%= l(attempt.finished_at, format: :short) %>
+                                        <% else %>
+                                          En progreso
+                                        <% end %>
+                                      </div>
+                                      <% if attempt.error_message.present? %>
+                                        <div class="small text-danger mt-1 font-monospace"><%= attempt.error_message %></div>
+                                      <% end %>
+                                    </div>
+                                  <% end %>
+                                </div>
+                              <% end %>
+
+                              <% if event.error_message.present? %>
+                                <div class="small text-danger mt-2 font-monospace"><%= event.error_message %></div>
+                              <% end %>
+                              <% if event.last_failure_message.present? && event.last_failure_message != event.error_message %>
+                                <div class="small text-warning-emphasis mt-1">Last failure: <%= event.last_failure_message %></div>
+                              <% end %>
+                            </div>
+                          <% end %>
+                        </div>
+                      <% else %>
+                        <p class="text-body-secondary mb-0 small">No webhook events yet.</p>
+                      <% end %>
+                    </details>
+                  </div>
+
+                  <div class="col-12 col-lg-6">
+                    <% attempts = payment.payment_attempts.order(created_at: :desc) %>
+                    <details class="payment-subgroup-details" open>
+                      <summary class="d-flex justify-content-between align-items-center mb-2 cursor-pointer user-select-none list-unstyled">
+                        <h3 class="h6 text-uppercase text-body-secondary mb-0 d-flex align-items-center gap-2">
+                          Payment attempts
+                          <span class="badge text-bg-secondary-subtle text-body-secondary border fw-normal"><%= attempts.size %></span>
+                        </h3>
+                        <span class="payment-subgroup-chevron text-body-secondary small" aria-hidden="true">▾</span>
+                      </summary>
+
+                      <% if attempts.any? %>
+                        <div class="vstack gap-2">
+                          <% attempts.each do |attempt| %>
+                            <div class="border rounded-3 bg-white p-3 shadow-sm">
+                              <div class="d-flex justify-content-between align-items-center gap-2 mb-2">
+                                <div>
+                                  <span class="badge <%= attempt.status == "succeeded" ? "text-bg-success" : attempt.status == "failed" ? "text-bg-danger" : "text-bg-secondary" %> text-uppercase me-1">
+                                    <%= attempt.status %>
+                                  </span>
+                                  <strong><%= attempt.status %></strong>
+                                </div>
+                                <small class="text-body-secondary text-nowrap"><%= l(attempt.created_at, format: :short) %></small>
+                              </div>
+                              <div class="small text-body-secondary mb-1">
+                                Idempotency: <%= render_short_reference(attempt.idempotency_key) %>
+                              </div>
+                              <% if attempt.provider_reference.present? %>
+                                <div class="small text-body-secondary mb-1">
+                                  Provider ref: <%= render_short_reference(attempt.provider_reference) %>
+                                </div>
+                              <% end %>
+                              <% if attempt.error_message.present? %>
+                                <div class="small text-danger mt-1 font-monospace"><%= attempt.error_message %></div>
+                              <% end %>
+                            </div>
+                          <% end %>
+                        </div>
+                      <% else %>
+                        <p class="text-body-secondary mb-0 small">No attempts recorded yet.</p>
+                      <% end %>
+                    </details>
+                  </div>
+                </div>
+              </div>
+            </article>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-body-secondary mb-0">No payment history yet.</p>
+      <% end %>
+    </div>
+  </details>
+</section>

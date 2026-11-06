@@ -243,7 +243,7 @@ RSpec.describe "Orders requests (detailed)" do
           ].to_json
         }
       }
-    end.to have_enqueued_job(NotificationJob).with(draft.id)
+    end.to have_enqueued_job(Notifications::NotificationJob).with(draft.id)
 
     expect(response).to redirect_to(orders_path)
 

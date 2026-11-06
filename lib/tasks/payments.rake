@@ -4,6 +4,9 @@ namespace :payments do
     deliver_signed_webhook(default_type: "payment.succeeded")
   end
 
+  desc "Simulate a signed payment webhook delivery (alias for simulate_webhook)"
+  task send_signed_fake_webhook: :simulate_webhook
+
   desc "Replay a single webhook event by provider event id"
   task replay_webhook_event: :environment do
     replay_webhook_events([ ENV.fetch("EVENT_ID") ])
@@ -32,7 +35,7 @@ def deliver_signed_webhook(default_type:)
   simulator_args[:demo_fail_once] = true if ENV["DEMO_FAIL_ONCE"].present?
   simulator_args[:demo_fail_always] = true if ENV["DEMO_FAIL_ALWAYS"].present?
 
-  result = Payments::Adapters::Outbound::Webhooks::WebhookSimulator.(**simulator_args)
+  result = Payments::Infrastructure::Outbound::Webhooks::WebhookSimulator.(**simulator_args)
 
   if result.success?
     puts "Webhook delivered (#{result.data[:status_code]}): #{result.data[:body]}"
@@ -48,7 +51,7 @@ def replay_webhook_events(provider_event_ids)
     event = Payments::Domain::Entities::PaymentWebhookEvent.find_by(provider_event_id: provider_event_id)
 
     if event.present?
-      Payments::Adapters::Inbound::Webhooks::Event::Job.perform_later(event.id)
+      Payments::ProcessWebhookEventJob.perform_later(event.id)
       puts "Replayed #{event.provider}:#{event.provider_event_id}"
     else
       warn "Skipping missing event #{provider_event_id}"

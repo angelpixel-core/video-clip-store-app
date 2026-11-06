@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Payments::Adapters::Inbound::Webhooks::Event::Job do
+RSpec.describe Payments::ProcessWebhookEventJob do
   include ActiveJob::TestHelper
 
   it "uses the shared bounded retry policy" do
@@ -10,7 +10,7 @@ RSpec.describe Payments::Adapters::Inbound::Webhooks::Event::Job do
   it "delegates exhausted retries to the final failure handler" do
     error = Payments::Domain::Errors::DemoTransientFailure.new("boom")
 
-    expect(Payments::Adapters::Inbound::Webhooks::Event::FinalFailureHandler).to receive(:call).with(
+    expect(Payments::Infrastructure::Inbound::Webhooks::Event::FinalFailureHandler).to receive(:call).with(
       payment_webhook_event_id: 123,
       error: error
     )
@@ -25,7 +25,7 @@ RSpec.describe Payments::Adapters::Inbound::Webhooks::Event::Job do
     job.executions = described_class::MAX_RETRY_ATTEMPTS
     expect(job.executions).to eq(described_class::MAX_RETRY_ATTEMPTS)
 
-    expect(Payments::Adapters::Inbound::Webhooks::Event::FinalFailureHandler).to receive(:call).with(
+    expect(Payments::Infrastructure::Inbound::Webhooks::Event::FinalFailureHandler).to receive(:call).with(
       payment_webhook_event_id: 123,
       error: error
     )
@@ -70,20 +70,20 @@ RSpec.describe Payments::Adapters::Inbound::Webhooks::Event::Job do
       received_at: Time.current
     )
 
-    service = instance_double(Payments::Adapters::Inbound::Webhooks::Event::Handler)
-    expect(Payments::Adapters::Inbound::Webhooks::Event::Handler).to receive(:call).with(event: event).and_return(service)
+    service = instance_double(Payments::Infrastructure::Inbound::Webhooks::Event::Handler)
+    expect(Payments::Infrastructure::Inbound::Webhooks::Event::Handler).to receive(:call).with(event: event).and_return(service)
 
     described_class.perform_now(event.id)
   end
 
   it "does nothing when the event is missing" do
-    expect(Payments::Adapters::Inbound::Webhooks::Event::Handler).not_to receive(:call)
+    expect(Payments::Infrastructure::Inbound::Webhooks::Event::Handler).not_to receive(:call)
 
     described_class.perform_now(-1)
   end
 
   it "retries deadlocks" do
-    allow(Payments::Domain::Entities::PaymentWebhookEvent).to receive(:find_by).and_raise(ActiveRecord::Deadlocked)
+    allow(Payments::Infrastructure::Persistence::Webhook::Event::Repository).to receive(:find_by_id).and_raise(ActiveRecord::Deadlocked)
 
     assert_enqueued_jobs 1 do
       described_class.perform_now(123)
@@ -136,7 +136,7 @@ RSpec.describe Payments::Adapters::Inbound::Webhooks::Event::Job do
 
     expect(event.status).to eq("processed")
     expect(event.processing_attempts_count).to eq(2)
-    expect(event.last_failure_message).to eq(Payments::Adapters::Inbound::Webhooks::Event::Handler::DEMO_FAILURE_MESSAGE)
+    expect(event.last_failure_message).to eq(Payments::Infrastructure::Inbound::Webhooks::Event::Handler::DEMO_FAILURE_MESSAGE)
     expect(event.processing_attempts.order(:attempt_number).pluck(:status)).to eq(%w[failed succeeded])
     expect(payment.reload.status).to eq("succeeded")
   end

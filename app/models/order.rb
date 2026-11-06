@@ -9,7 +9,7 @@ class Order < ApplicationRecord
 
   has_many :video_type_selections, foreign_key: :project_id, dependent: :destroy
   has_many :video_types, through: :video_type_selections
-  has_many :payments, class_name: "Payments::Domain::Aggregates::Payment", foreign_key: :project_id, dependent: :destroy
+  has_many :payments, class_name: "Payments::Infrastructure::Persistence::Payment::PaymentRecord", foreign_key: :project_id, dependent: :destroy
   has_many :notifications, foreign_key: :project_id, dependent: :destroy
   has_many :comments, foreign_key: :project_id, dependent: :destroy
 
@@ -192,13 +192,13 @@ class Order < ApplicationRecord
 
   def payment_history_html
     ApplicationController.render(
-      partial: "orders/payment_history",
+      partial: "ordering/orders/payment_history",
       locals: { payments: payments.order(created_at: :desc) }
     )
   end
 
   def sync_order_listing!
-    order = Ordering::Adapters::Persistence::Order::OrderRecord.find_or_initialize_by(id: id)
+    order = Ordering::Infrastructure::Persistence::Order::OrderRecord.find_or_initialize_by(id: id)
     order.owner_account_id = owner_account_id
     order.participant_account_id = participant_account_id
     order.name = name
@@ -350,8 +350,8 @@ class Order < ApplicationRecord
       {
         type: "status_updated",
         order_id: id,
-        status_badge_html: ApplicationController.render(partial: "orders/status_badge", locals: { project: current_project }),
-        payment_badge_html: ApplicationController.render(partial: "orders/workspace_order_payment_badge", locals: { project: current_project }),
+        status_badge_html: ApplicationController.render(partial: "ordering/orders/status_badge", locals: { project: current_project }),
+        payment_badge_html: ApplicationController.render(partial: "ordering/orders/workspace_order_payment_badge", locals: { project: current_project }),
         payment_history_html: current_project.payment_history_html
       }
     )

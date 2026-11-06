@@ -1,6 +1,6 @@
 require "rails_helper"
 
-RSpec.describe Payments::Application::Handlers::DispatchPaymentNotificationJob do
+RSpec.describe Payments::DispatchPaymentNotificationJob do
   it "dispatches a pending intent and marks it sent" do
     payment = Payments::Domain::Aggregates::Payment.create!(
       project: Project.create!(owner: workspace_account(:client, email: "client@example.com", name: "Client"), participant: workspace_account(:pm, email: "pm@example.com", name: "PM"), name: "Project", raw_footage_url: "https://example.com/raw.mov", status: :pending),
@@ -23,8 +23,8 @@ RSpec.describe Payments::Application::Handlers::DispatchPaymentNotificationJob d
       scheduled_at: Time.current
     )
 
-    expect(Payments::Adapters::Outbound::Mailers::PaymentNotificationMailer).to receive(:payment_status_changed).with(intent, recipient_role: :client).and_return(instance_double(ActionMailer::MessageDelivery, deliver_now: true))
-    expect(Payments::Adapters::Outbound::Mailers::PaymentNotificationMailer).to receive(:payment_status_changed).with(intent, recipient_role: :pm).and_return(instance_double(ActionMailer::MessageDelivery, deliver_now: true))
+    expect(Payments::PaymentNotificationMailer).to receive(:payment_status_changed).with(intent, recipient_role: :client).and_return(instance_double(ActionMailer::MessageDelivery, deliver_now: true))
+    expect(Payments::PaymentNotificationMailer).to receive(:payment_status_changed).with(intent, recipient_role: :pm).and_return(instance_double(ActionMailer::MessageDelivery, deliver_now: true))
 
     described_class.perform_now(intent.id)
 
@@ -55,7 +55,7 @@ RSpec.describe Payments::Application::Handlers::DispatchPaymentNotificationJob d
       scheduled_at: Time.current
     )
 
-    allow(Payments::Adapters::Outbound::Mailers::PaymentNotificationMailer).to receive(:payment_status_changed).and_raise(StandardError, "boom")
+    allow(Payments::PaymentNotificationMailer).to receive(:payment_status_changed).and_raise(StandardError, "boom")
 
     expect do
       described_class.perform_now(intent.id)
@@ -67,7 +67,7 @@ RSpec.describe Payments::Application::Handlers::DispatchPaymentNotificationJob d
   end
 
   it "does nothing for missing or already sent intents" do
-    expect(Payments::Adapters::Outbound::Mailers::PaymentNotificationMailer).not_to receive(:payment_status_changed)
+    expect(Payments::PaymentNotificationMailer).not_to receive(:payment_status_changed)
 
     described_class.perform_now(-1)
 
@@ -93,7 +93,7 @@ RSpec.describe Payments::Application::Handlers::DispatchPaymentNotificationJob d
       processed_at: Time.current
     )
 
-    expect(Payments::Adapters::Outbound::Mailers::PaymentNotificationMailer).not_to receive(:payment_status_changed)
+    expect(Payments::PaymentNotificationMailer).not_to receive(:payment_status_changed)
 
     described_class.perform_now(intent.id)
   end

@@ -1,6 +1,11 @@
 #!/usr/bin/env sh
 set -e
 
+if ! bundle check >/dev/null 2>&1; then
+  echo "Gems out of sync with Gemfile.lock, running bundle install..."
+  bundle install
+fi
+
 echo "Waiting for MySQL..."
 
 MYSQL_HOST="${DB_HOST:-${MYSQL_HOST:-db}}"
