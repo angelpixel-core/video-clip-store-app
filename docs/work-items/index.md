@@ -276,5 +276,10 @@ Payments docs are centralized at [Payments Index](../payments.md).
 
 - [x] [Payments Domain POPO and ActiveRecord Persistence Decoupling (Phase 4)](./060-payments-domain-popo-decoupling.md)
 
+## 61
+
+- [ ] [CI Workflow Main Branch Pull Request Trigger](./061-ci-main-branch-trigger.md)
+
+
 
 
