@@ -255,9 +255,9 @@ GEM
       logger
     mini_mime (1.1.5)
     mini_portile2 (2.8.9)
-    minitest (6.0.6)
+    minitest (6.1.0)
       drb (~> 2.0)
-      prism (~> 1.5)
+      prism (>= 1.5, < 3)
     msgpack (1.8.3)
     multi_test (1.1.0)
     mutex_m (0.3.0)
@@ -285,19 +285,19 @@ GEM
     nokogiri (1.19.7-x86_64-linux-gnu)
       racc (~> 1.4)
     ostruct (0.6.3)
-    packwerk (3.3.0)
+    packwerk (3.3.1)
       activesupport (>= 6.0)
       ast
       benchmark
       better_html
       bundler
       constant_resolver (>= 0.3)
-      parallel (< 2)
+      parallel
       parser
       prism (>= 1.4.0)
       zeitwerk (>= 2.6.1)
-    parallel (1.28.0)
-    parser (3.3.11.1)
+    parallel (2.3.0)
+    parser (3.3.13.0)
       ast (~> 2.4.1)
       racc
     pg (1.6.3)
@@ -620,7 +620,7 @@ CHECKSUMS
   mini_magick (5.3.2) sha256=a7ef54b480b15283c396eb8343d9e088471f54b31d9974cb7e523cc57598609f
   mini_mime (1.1.5) sha256=8681b7e2e4215f2a159f9400b5816d85e9d8c6c6b491e96a12797e798f8bccef
   mini_portile2 (2.8.9) sha256=0cd7c7f824e010c072e33f68bc02d85a00aeb6fce05bb4819c03dfd3c140c289
-  minitest (6.0.6) sha256=153ea36d1d987a62942382b61075745042a2b3123b1cd48f4c3675af9cc7d6f1
+  minitest (6.1.0) sha256=ff373595aa8888631e8a5463986a76b3845346ae6d7fa46e139c1633d418076e
   msgpack (1.8.3) sha256=8bda4a6428d3244e50d6bd55854d354edbada88a4e1f4f5731a39a0f86bee6a1
   multi_test (1.1.0) sha256=e9e550cdd863fb72becfe344aefdcd4cbd26ebf307847f4a6c039a4082324d10
   mutex_m (0.3.0) sha256=cfcb04ac16b69c4813777022fdceda24e9f798e48092a2b817eb4c0a782b0751
@@ -636,9 +636,9 @@ CHECKSUMS
   nokogiri (1.19.7) sha256=abe94507c54cb18f872777b16bdca4aad32b1abdc4c52fe843f1c80fbdf992b8
   nokogiri (1.19.7-x86_64-linux-gnu) sha256=25865ccb462f714e712fdf8906fde07849cb6704a808e3d629d75baa5af5dd3b
   ostruct (0.6.3) sha256=95a2ed4a4bd1d190784e666b47b2d3f078e4a9efda2fccf18f84ddc6538ed912
-  packwerk (3.3.0) sha256=5a23dfb161ce225dea02a7171dd038b21b77b7c685e37edd635cd75fb8b1a74f
-  parallel (1.28.0) sha256=33e6de1484baf2524792d178b0913fc8eb94c628d6cfe45599ad4458c638c970
-  parser (3.3.11.1) sha256=d17ace7aabe3e72c3cc94043714be27cc6f852f104d81aa284c2281aecc65d54
+  packwerk (3.3.1) sha256=095d3c295ec52c21bd7fef393462d892cae2e3cbfa98e740fcd0ef5529afd3d2
+  parallel (2.3.0) sha256=f75a3e904101ce6a1ccb6b8dc800cbafd42166d83330192438dcf29395167a6f
+  parser (3.3.13.0) sha256=e02f9b63c2fe05b0c68f692ba4df89b3cb113b663964f75d988fbebfd6c3deca
   payment-sdk (0.1.0)
   pg (1.6.3) sha256=1388d0563e13d2758c1089e35e973a3249e955c659592d10e5b77c468f628a99
   pg (1.6.3-x86_64-linux) sha256=5d9e188c8f7a0295d162b7b88a768d8452a899977d44f3274d1946d67920ae8d
